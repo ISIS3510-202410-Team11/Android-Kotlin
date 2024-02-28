@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.StartActivity.StartActivity"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@color/md_theme_light_onPrimary"
+    >
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo">
+
+        </ImageView>
+
+
+
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id ="@+id/singUpbutton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sing Up"
+            android:textColor="@color/md_theme_light_onPrimary"
+            android:background="#5DB075"
+            android:textSize="30dp"
+            android:textAlignment="center"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            app:backgroundTint="@color/md_theme_light_primary"
+
+
+            />
+
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id ="@+id/logInbutton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Log In"
+            android:textColor="@color/md_theme_light_onPrimary"
+            android:background="#5DB075"
+            android:textSize="30dp"
+            android:textAlignment="center"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            app:backgroundTint="@color/md_theme_light_primary"
+            />
+
+
+
+
+</LinearLayout>
+
