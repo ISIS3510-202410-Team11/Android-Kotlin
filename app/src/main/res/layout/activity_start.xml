@@ -15,7 +15,10 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/logo">
+            android:src="@drawable/logo"
+
+            android:contentDescription="ride share logo, green text for ride and darker green for share">
+
 
         </ImageView>
 
@@ -23,41 +26,43 @@
 
 
 
-        <androidx.appcompat.widget.AppCompatButton
+
+        <Button
             android:id ="@+id/singUpbutton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Sing Up"
             android:textColor="@color/md_theme_light_onPrimary"
-            android:background="#5DB075"
-            android:textSize="30dp"
+            android:textSize="30sp"
             android:textAlignment="center"
-            android:layout_margin="10dp"
-            android:padding="10dp"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:padding="5dp"
+            android:layout_margin="5dp"
+            style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
             app:backgroundTint="@color/md_theme_light_primary"
-
+            app:cornerRadius="100dp"
 
             />
 
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id ="@+id/logInbutton"
+        <Button
+
+            android:id="@+id/logInbutton"
+            style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="5dp"
             android:text="Log In"
-            android:textColor="@color/md_theme_light_onPrimary"
-            android:background="#5DB075"
-            android:textSize="30dp"
             android:textAlignment="center"
-            android:padding="10dp"
-            android:layout_margin="10dp"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:textColor="@color/md_theme_light_onPrimary"
+            android:textSize="30sp"
             app:backgroundTint="@color/md_theme_light_primary"
+            app:cornerRadius="100dp"
             />
-
-
 
 
 </LinearLayout>
