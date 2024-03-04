@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.SingUpActivity" />
+        <activity android:name=".activities.singUp.SingUpActivity" />
         <activity android:name=".activities.logIn.logInActivity" />
         <activity
             android:name=".MainActivity"/>
