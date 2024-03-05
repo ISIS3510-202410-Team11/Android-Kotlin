@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_margin="20dp"
     tools:context=".activities.singUp.SingUpActivity"
     android:scrollbars="vertical"
     android:background="@color/md_theme_light_onPrimary"
@@ -13,11 +12,21 @@
     >
 
     <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/md_theme_light_onPrimary"
+        android:orientation="vertical"
+        android:padding="25dp"
+        >
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
         android:textAlignment="center"
+
         android:background="@color/md_theme_light_onPrimary"
 
         >
@@ -126,7 +135,7 @@
 
 
             />
-
+    </LinearLayout>
 
     </LinearLayout>
 
