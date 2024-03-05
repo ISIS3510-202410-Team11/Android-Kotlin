@@ -3,9 +3,8 @@
 
     <style name="Theme.ShareRide" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowNoTitle">true</item>
-
-
-    <item name="materialButtonStyle" >@style/Widget.Material3.Button</item>
+        <item name="materialButtonStyle" >@style/Widget.Material3.Button</item>
+        <item name="editTextStyle">@style/Widget.Material3.TextInputEditText.OutlinedBox</item>
 
     </style>
 
