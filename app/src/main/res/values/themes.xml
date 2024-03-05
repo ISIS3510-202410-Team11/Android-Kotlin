@@ -9,4 +9,9 @@
     </style>
 
 
+    <style name="Widget.MyApp.BottomNavigationView" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="iconSize">24dp</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+
 </resources>
