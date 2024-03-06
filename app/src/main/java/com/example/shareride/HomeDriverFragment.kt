@@ -5,8 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.constraintlayout.widget.ConstraintSet
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.shareride.activities.card_history.CustomAdapterCard
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -19,15 +20,16 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class HomeDriverFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+
+    override fun onCreate(  savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
+
     }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +37,23 @@ class HomeDriverFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home_driver, container, false)
+    }
+
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        val titles = listOf("Universidad de los andes", "Lugar2","Lugar2")
+        val directions = listOf("calle 123, #44 -98", "calle2 ","calle 123, #44 -98")
+        val adapter = CustomAdapterCard(titles, directions)
+
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+
+        recyclerView.adapter = adapter
+
+
     }
 
     companion object {
