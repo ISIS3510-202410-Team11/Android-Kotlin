@@ -12,7 +12,7 @@ class StartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
         val singUpButton: Button = findViewById(R.id.singUpbutton)
-        //val loginInButton: Button = findViewById(R.id.logInbutton)
+        //val loginInButton: Button = findViewById(R.id.logInButton)
 
         singUpButton.setOnClickListener{
             val intent = Intent(this, SingUpActivity::class.java)
@@ -20,6 +20,7 @@ class StartActivity : AppCompatActivity() {
 
 
         }
+
 
 
 
