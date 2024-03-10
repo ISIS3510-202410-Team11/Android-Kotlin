@@ -36,7 +36,7 @@ class HomeDriverFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home_driver, container, false)
+        return inflater.inflate(R.layout.fragment_home_passenger, container, false)
     }
 
 
