@@ -52,10 +52,10 @@ class SingUpActivity : AppCompatActivity() {
             if (warningName.visibility == View.GONE && warningEmail.visibility== View.GONE && warningPassword.visibility == View.GONE && !box_driver.isChecked){
                 val intent = Intent(this, MainActivityDriver::class.java)
                 startActivity(intent)
-                TODO("Pasarlo a base de datos")
+                //TODO:"Pasarlo a base de datos"
             }
             else if(warningName.visibility == View.GONE && warningEmail.visibility== View.GONE && warningPassword.visibility == View.GONE && box_driver.isChecked){
-                TODO("Redirects to vehicle form")
+                //TODO:"Redirects to vehicle form"
 
 
             }

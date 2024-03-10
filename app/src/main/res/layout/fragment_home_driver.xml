@@ -77,7 +77,6 @@
             android:layout_height="200dp"
             android:orientation="vertical"
             android:fillViewport="true"
-            android:background="#D6D4D4"
 
             >
             <androidx.recyclerview.widget.RecyclerView
@@ -86,7 +85,9 @@
                 android:nestedScrollingEnabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:fadeScrollbars="false"
+                android:scrollbars="vertical">
 
 
             </androidx.recyclerview.widget.RecyclerView>
