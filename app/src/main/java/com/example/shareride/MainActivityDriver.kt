@@ -3,6 +3,7 @@ package com.example.shareride
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import com.example.shareride.activities.fragments.profilePassengerFragment
 import com.example.shareride.databinding.ActivityMainBinding
 
 class MainActivityDriver : AppCompatActivity() {
@@ -17,6 +18,7 @@ class MainActivityDriver : AppCompatActivity() {
 
             when(it.itemId){
                 R.id.home_it -> replaceFragment(HomeDriverFragment())
+                R.id.account_it -> replaceFragment(profilePassengerFragment())
 
                 else->{
 
