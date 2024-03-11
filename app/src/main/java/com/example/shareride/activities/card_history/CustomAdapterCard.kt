@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shareride.R
+import com.example.shareride.clases.Transport
 
 class CustomAdapterCard(private val titles: List<String>, private val directions: List<String>) :
     RecyclerView.Adapter<CustomAdapterCard.ViewHolder>() {
