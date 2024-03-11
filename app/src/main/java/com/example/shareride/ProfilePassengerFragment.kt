@@ -6,12 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Switch
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shareride.activities.card_history.CustomAdapterCard
+import com.example.shareride.activities.card_history.CustomVehicleCard
 import com.example.shareride.activities.singUp.SingUpActivity
+import com.example.shareride.clases.Transport
 
 /**
  * A simple [Fragment] subclass.
@@ -43,10 +46,15 @@ class ProfilePassengerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        val recylceViewCars = view.findViewById<RecyclerView>(R.id.carsRecycleView)
+
+
         val name : TextView = view.findViewById(R.id.me_label)
         val rating: TextView = view.findViewById(R.id.me_rating)
         val method_p : TextView = view.findViewById(R.id.me_method)
         val button_logout : Button = view.findViewById(R.id.logOutButton)
+
+        val pfptyep : Switch =view.findViewById(R.id.profile_type)
 
 
         val titles = listOf("Nueva Servicio", "En dirección a ","En dirección a ")
@@ -55,9 +63,16 @@ class ProfilePassengerFragment : Fragment() {
         val my_rating = "4,5"
         val my_method = "Cash"
         val adapter = CustomAdapterCard(titles, directions)
+        val eje1: Transport  = Transport("Vehicle 1", "Automobile", "ABC123", "Chebrolete")
+        val my_transports = listOf<Transport>(eje1)
+        val adapter_vehicle = CustomVehicleCard(my_transports)
+
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
+
+        recylceViewCars.layoutManager = LinearLayoutManager(requireContext())
+        recylceViewCars.adapter = adapter_vehicle
 
 
         name.setText(my_name)
@@ -67,6 +82,20 @@ class ProfilePassengerFragment : Fragment() {
         button_logout.setOnClickListener {
             val intent = Intent(requireContext(), StartActivity::class.java)
             startActivity(intent)
+        }
+
+        pfptyep.setOnCheckedChangeListener { buttonView, isChecked ->
+
+
+            if(isChecked){
+                recylceViewCars.visibility = View.GONE
+
+            }
+            else{
+                recylceViewCars.visibility = View.VISIBLE
+
+
+            }
         }
 
 
