@@ -39,7 +39,7 @@
             android:layout_weight="2"
             android:background="@android:color/transparent"
 
-            android:contentDescription="Close Sing UP"
+            android:contentDescription="@string/close_sing_up"
 
             app:srcCompat="@drawable/baseline_clear_24" />
 
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
-            android:text="Sign Up"
+            android:text="@string/sign_up"
             android:textSize="35sp"
 
             android:elegantTextHeight="true"
@@ -57,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            android:text="Login"
+            android:text="@string/login"
             android:textSize="20sp"
             android:textColor="@color/md_theme_light_primary" />
 
@@ -75,13 +75,13 @@
         android:ems="10"
         android:inputType="text"
         android:layout_marginVertical="15dp"
-        android:hint="Full Name"
+        android:hint="@string/full_name"
         android:autofillHints="name"
         android:textSize="20sp"
         android:textColor="@color/common_google_signin_btn_text_light"
         android:background="@drawable/edit_text_border"
         android:textColorHint="@color/common_google_signin_btn_text_light"
-
+        android:maxLength="15"
 
         />
 
@@ -110,7 +110,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textColor="@color/design_default_color_error"
-                    android:text="Avoid using special characters in your name"
+                    android:text="@string/avoid_using_special_characters_in_your_name"
                     android:textSize="15sp">
                 </TextView>
 
@@ -125,13 +125,14 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textEmailAddress"
-        android:hint="Email"
+        android:hint="@string/email"
         android:layout_marginVertical="15sp"
         android:textSize="20sp"
         android:textColor="@color/common_google_signin_btn_text_light"
         android:autofillHints="emailAddress"
         android:background="@drawable/edit_text_border"
         android:textColorHint="@color/common_google_signin_btn_text_light"
+        android:maxLength="15"
 
         />
         <LinearLayout
@@ -158,14 +159,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textColor="@color/design_default_color_error"
-                    android:text="- Your email may not have the structure of a email.\n - User your institutional email."
+                    android:text="@string/your_email_may_not_have_the_structure_of_a_email_n_user_your_institutional_email"
                     android:textSize="15sp">
                 </TextView>
 
             </LinearLayout>
 
         </LinearLayout>
-    <EditText
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/passwordTextbar"
 
         android:layout_width="match_parent"
@@ -175,10 +176,12 @@
         android:layout_marginVertical="15sp"
         android:textSize="20sp"
         android:textColor="@color/common_google_signin_btn_text_light"
-        android:hint="Password"
-        android:autofillHints="password"
+        android:hint="@string/password"
         android:background="@drawable/edit_text_border"
         android:textColorHint="@color/common_google_signin_btn_text_light"
+        android:maxLength="15"
+
+
         />
 
         <LinearLayout
@@ -204,8 +207,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textColor="@color/design_default_color_error"
-                    android:text="Your password is not secure enough. \n Check for: \n - At least 8 characters
-                    \n - At least 1 special character \n - At least 1 number character"
+                    android:text="@string/your_password_is_not_secure_enough_n_check_for_n_at_least_8_characters_n_at_least_1_special_character_n_at_least_1_number_character"
                     android:textSize="15sp">
                 </TextView>
 
@@ -220,21 +222,21 @@
             android:id="@+id/driver"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I am a driver (Optional)"
+            android:text="@string/i_am_a_driver_optional"
             android:textColor="@color/common_google_signin_btn_text_light"/>
 
         <CheckBox
             android:id="@+id/id_not"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I would like to receive your newsletter and other promotional information."
+            android:text="@string/i_would_like_to_receive_your_newsletter_and_other_promotional_information"
             android:textColor="@color/common_google_signin_btn_text_light"/>
 
         <Button
             style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sign Up"
+            android:text="@string/sign_up"
             android:textAlignment="center"
             android:textColor="@color/md_theme_light_onPrimary"
             android:textSize="20sp"

@@ -17,6 +17,9 @@ import androidx.core.widget.addTextChangedListener
 import com.example.shareride.MainActivityDriver
 import com.example.shareride.R
 import com.example.shareride.StartActivity
+import com.google.firebase.analytics.analytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import java.util.regex.Pattern
 
 
@@ -45,6 +48,7 @@ class SingUpActivity : AppCompatActivity() {
 
             val intent = Intent(this, StartActivity::class.java)
             startActivity(intent)
+            Firebase.analytics.logEvent("Close_sign_up", null)
         }
 
         singUpbutton.setOnClickListener {
