@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".ProfilePassengerFragment"
     android:background="@color/md_theme_light_onPrimary"
 
+
+
     >
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical">
 
     <!-- TODO: Update blank fragment layout -->
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_margin="20dp"
-        android:scrollbarThumbVertical="@color/md_theme_light_primary"
-        android:fadeScrollbars="false"
-        android:scrollbars="vertical"
-        android:nestedScrollingEnabled="false"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="20dp"
 
         >
 
@@ -62,7 +65,7 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_marginHorizontal="20dp"
 
         >
 
@@ -183,7 +186,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_margin="20dp">
+                android:layout_marginHorizontal="20dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                   >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_column="0"
+                        android:text="Transportation:"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:id="@+id/transportation_title"/>
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/carsRecycleView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:nestedScrollingEnabled="false"
+                    android:orientation="vertical"
+                    android:fadeScrollbars="false"
+                    android:scrollbars="vertical"
+                    />
 
 
             <LinearLayout
@@ -213,33 +245,11 @@
                     android:scrollbars="vertical"
                     />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_column="0"
-                        android:text="Transportation:"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/carsRecycleView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:nestedScrollingEnabled="false"
-                    android:orientation="vertical"
-                    android:fadeScrollbars="false"
-                    android:scrollbars="vertical"
-                    />
 
             </LinearLayout>
+
+
 
         <Button
             style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
@@ -256,10 +266,7 @@
             />
 
 
-
-
     </LinearLayout>
 
-
-
-</ScrollView>
+    </ScrollView>
+</FrameLayout>

@@ -12,9 +12,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
-import com.example.shareride.MainActivityDriver
+import com.example.shareride.MainActivityPassenger
 import com.example.shareride.R
 import com.example.shareride.StartActivity
 import java.util.regex.Pattern
@@ -50,7 +48,7 @@ class SingUpActivity : AppCompatActivity() {
         singUpbutton.setOnClickListener {
 
             if (warningName.visibility == View.GONE && warningEmail.visibility== View.GONE && warningPassword.visibility == View.GONE && !box_driver.isChecked){
-                val intent = Intent(this, MainActivityDriver::class.java)
+                val intent = Intent(this, MainActivityPassenger::class.java)
                 startActivity(intent)
                 //TODO:"Pasarlo a base de datos"
             }

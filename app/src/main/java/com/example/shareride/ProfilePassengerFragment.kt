@@ -54,6 +54,8 @@ class ProfilePassengerFragment : Fragment() {
         val method_p : TextView = view.findViewById(R.id.me_method)
         val button_logout : Button = view.findViewById(R.id.logOutButton)
 
+        val title_transport: TextView = view.findViewById(R.id.transportation_title)
+
         val pfptyep : Switch =view.findViewById(R.id.profile_type)
 
 
@@ -89,6 +91,7 @@ class ProfilePassengerFragment : Fragment() {
 
             if(isChecked){
                 recylceViewCars.visibility = View.GONE
+                title_transport.visibility = View.GONE
 
             }
             else{
