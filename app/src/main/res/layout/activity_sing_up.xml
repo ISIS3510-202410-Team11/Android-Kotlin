@@ -132,7 +132,7 @@
         android:autofillHints="emailAddress"
         android:background="@drawable/edit_text_border"
         android:textColorHint="@color/common_google_signin_btn_text_light"
-        android:maxLength="15"
+        android:maxLength="100"
 
         />
         <LinearLayout
