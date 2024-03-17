@@ -5,10 +5,14 @@
     android:layout_height="match_parent"
     tools:context=".ProfilePassengerFragment"
     android:background="@color/md_theme_light_onPrimary"
-    android:scrollbars="vertical"
-    android:fadeScrollbars="false"
+
+
 
     >
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -17,7 +21,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_margin="20dp">
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="20dp"
+
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,6 +34,13 @@
             android:orientation="horizontal">
 
 
+            <Switch
+                android:id="@+id/profile_type"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp"
+                android:minWidth="48dp"
+                android:thumbTint="@color/md_theme_light_primary" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -36,6 +50,12 @@
                 android:textSize="38sp"
                 />
 
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp"
+                android:thumbTint="#5DB075"
+                android:visibility="invisible"/>
 
 
         </LinearLayout>
@@ -45,7 +65,7 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_marginHorizontal="20dp"
 
         >
 
@@ -154,24 +174,64 @@
 
 
     </TableLayout>
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp">
 
-            <TableRow
+
+
+
+
+
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginHorizontal="20dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                   >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_column="0"
+                        android:text="Transportation:"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:id="@+id/transportation_title"/>
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/carsRecycleView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:nestedScrollingEnabled="false"
+                    android:orientation="vertical"
+                    android:fadeScrollbars="false"
+                    android:scrollbars="vertical"
+                    />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_column="0"
-                    android:text="Notifications "
+                    android:text="Notifications:"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-            </TableRow>
+            </LinearLayout>
 
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -186,7 +246,10 @@
                     />
 
 
-        </TableLayout>
+
+            </LinearLayout>
+
+
 
         <Button
             style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
@@ -197,17 +260,13 @@
             android:textColor="@color/md_theme_light_onPrimary"
             android:textSize="20sp"
             android:backgroundTint="@color/design_default_color_error"
-            android:layout_marginVertical="10dp"
             android:id="@+id/logOutButton"
 
 
             />
 
 
-
-
     </LinearLayout>
 
-
-
-        </FrameLayout>
+    </ScrollView>
+</FrameLayout>
