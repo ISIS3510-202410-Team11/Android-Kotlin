@@ -12,11 +12,13 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
-import com.example.shareride.MainActivityDriver
+import com.example.shareride.MainActivityPassenger
 import com.example.shareride.R
 import com.example.shareride.StartActivity
+import com.google.firebase.analytics.analytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 import java.util.regex.Pattern
 
 
@@ -36,23 +38,48 @@ class SingUpActivity : AppCompatActivity() {
         val  textbar_password: EditText = findViewById(R.id.passwordTextbar)
 
 
+        var inputpassword: String= ""
+        var inputEmail: String = ""
+        var inputText: String= ""
+
+
         val warningName: LinearLayout = findViewById(R.id.warning_name)
         val warningEmail: LinearLayout = findViewById(R.id.warning_email)
         val warningPassword: LinearLayout = findViewById(R.id.warning_password)
+
+
+        val fireBaseAuth =FirebaseAuth.getInstance()
 
         val box_driver : CheckBox = findViewById(R.id.driver)
         closeButton.setOnClickListener {
 
             val intent = Intent(this, StartActivity::class.java)
             startActivity(intent)
+            Firebase.analytics.logEvent("Close_sign_up", null)
         }
 
         singUpbutton.setOnClickListener {
 
             if (warningName.visibility == View.GONE && warningEmail.visibility== View.GONE && warningPassword.visibility == View.GONE && !box_driver.isChecked){
-                val intent = Intent(this, MainActivityDriver::class.java)
-                startActivity(intent)
-                //TODO:"Pasarlo a base de datos"
+
+
+
+
+                fireBaseAuth.createUserWithEmailAndPassword(inputEmail,inputpassword).addOnCompleteListener {
+                 if(it.isSuccessful){
+
+                     val intent = Intent(this, MainActivityPassenger::class.java)
+                     startActivity(intent)
+
+                 }
+                 else{
+
+                     // si el email está repetido manda un error
+                     Toast.makeText(this, "Check if your information is correct", Toast.LENGTH_SHORT).show()
+
+
+                 }
+                }
             }
             else if(warningName.visibility == View.GONE && warningEmail.visibility== View.GONE && warningPassword.visibility == View.GONE && box_driver.isChecked){
                 //TODO:"Redirects to vehicle form"
@@ -71,7 +98,7 @@ class SingUpActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val inputpassword = s.toString()
+                 inputpassword = s.toString()
                 val regexPattern = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
                 val pattern = Pattern.compile(regexPattern)
                 val matcher = pattern.matcher(inputpassword)
@@ -97,7 +124,7 @@ class SingUpActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val inputEmail = s.toString()
+                 inputEmail = s.toString()
                 val regexPattern = "^[\\w.-]+@(uniandes\\.)+(edu\\.co)\$"
                 val pattern = Pattern.compile(regexPattern)
                 val matcher = pattern.matcher(inputEmail)
@@ -125,7 +152,7 @@ class SingUpActivity : AppCompatActivity() {
 
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val inputText = s.toString()
+                 inputText = s.toString()
 
                 val regexPattern = "^[A-Za-z]{2,16}( [A-Za-z]{2,16})?$"
 
