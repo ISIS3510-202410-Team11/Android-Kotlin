@@ -12,10 +12,10 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
-import com.example.shareride.MainActivityPassenger
+import androidx.lifecycle.ViewModelProvider
+import com.example.shareride.activities.mainActivity.MainActivityPassenger
 import com.example.shareride.R
 import com.example.shareride.StartActivity
-import com.google.firebase.analytics.analytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
@@ -35,12 +35,15 @@ class SingUpActivity : AppCompatActivity() {
 
         val textBar_name: EditText = findViewById(R.id.nametextbar)
         val textbar_email: EditText = findViewById(R.id.emailTextBar)
-        val  textbar_password: EditText = findViewById(R.id.passwordTextbar)
+        val textbar_password: EditText = findViewById(R.id.passwordTextbar)
 
 
-        var inputpassword: String= ""
-        var inputEmail: String = ""
-        var inputText: String= ""
+        val viewModel = ViewModelProvider(this).get(viewModelSignUp::class.java)
+
+
+        var inputpassword: String= viewModel.inputpassword
+        var inputEmail: String = viewModel.inputEmail
+        var inputText: String= viewModel.inputText
 
 
         val warningName: LinearLayout = findViewById(R.id.warning_name)
@@ -65,7 +68,7 @@ class SingUpActivity : AppCompatActivity() {
 
 
 
-                fireBaseAuth.createUserWithEmailAndPassword(inputEmail,inputpassword).addOnCompleteListener {
+                fireBaseAuth.createUserWithEmailAndPassword(viewModel.inputEmail,viewModel.inputpassword).addOnCompleteListener {
                  if(it.isSuccessful){
 
                      val intent = Intent(this, MainActivityPassenger::class.java)
@@ -102,6 +105,7 @@ class SingUpActivity : AppCompatActivity() {
                 val regexPattern = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
                 val pattern = Pattern.compile(regexPattern)
                 val matcher = pattern.matcher(inputpassword)
+                viewModel.change_password(inputpassword)
                 if (!matcher.matches()) {
                     warningPassword.visibility= View.VISIBLE
                 }
@@ -128,6 +132,8 @@ class SingUpActivity : AppCompatActivity() {
                 val regexPattern = "^[\\w.-]+@(uniandes\\.)+(edu\\.co)\$"
                 val pattern = Pattern.compile(regexPattern)
                 val matcher = pattern.matcher(inputEmail)
+                viewModel.change_email(inputEmail)
+
                 if (!matcher.matches()) {
                     warningEmail.visibility= View.VISIBLE
                 }
@@ -157,6 +163,7 @@ class SingUpActivity : AppCompatActivity() {
                 val regexPattern = "^[A-Za-z]{2,16}( [A-Za-z]{2,16})?$"
 
                 val pattern = Pattern.compile(regexPattern)
+                viewModel.change_name(inputText)
 
                 val matcher = pattern.matcher(inputText)
                 if (!matcher.matches()) {
