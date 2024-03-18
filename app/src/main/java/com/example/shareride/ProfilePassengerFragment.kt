@@ -47,6 +47,7 @@ class ProfilePassengerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         val recylceViewCars = view.findViewById<RecyclerView>(R.id.carsRecycleView)
+        val add_car_button = view.findViewById<Button>(R.id.add_transportation)
 
 
         val name : TextView = view.findViewById(R.id.me_label)
@@ -92,6 +93,7 @@ class ProfilePassengerFragment : Fragment() {
             if(isChecked){
                 recylceViewCars.visibility = View.GONE
                 title_transport.visibility = View.GONE
+                add_car_button.visibility = View.GONE
 
             }
             else{
