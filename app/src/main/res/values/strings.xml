@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">shareRide</string>
+<<<<<<< HEAD
     <string name="log_in_title">Log In</string>
     <string name="close_log_in">Close Log In</string>
     <string name="email_hint">Email</string>
@@ -7,3 +8,23 @@
     <string name="log_in_button">Log In</string>
     <string name="forgot_password_text">Forgot your password?</string>
 </resources>
+=======
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="full_name">Full Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="i_am_a_driver_optional">I am a driver (Optional)</string>
+    <string name="i_would_like_to_receive_your_newsletter_and_other_promotional_information">I would like to receive your newsletter and other promotional information.</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
+    <string name="close_sing_up">Close Sing UP</string>
+    <string name="avoid_using_special_characters_in_your_name">Avoid using special characters in your name</string>
+    <string name="your_password_is_not_secure_enough_n_check_for_n_at_least_8_characters_n_at_least_1_special_character_n_at_least_1_number_character">Your password is not secure enough. \n Check for: \n - At least 8 characters \n - At least 1 special character \n - At least 1 number character</string>
+    <string name="your_email_may_not_have_the_structure_of_a_email_n_user_your_institutional_email">- Your email may not have the structure of a email.\n - User your institutional email.</string>
+    <string name="where_to">Where to?</string>
+    <string name="where_are_you_heading_today">Where are you heading today?</string>
+    <string name="search">Search</string>
+    <string name="why_don_t_giving_a_try_to_a_bike_commute">Why don’t giving a try to a bike commute?</string>
+</resources>
+>>>>>>> 821c9b64a48aff25c0b0a1be937601e37f5f1ead
