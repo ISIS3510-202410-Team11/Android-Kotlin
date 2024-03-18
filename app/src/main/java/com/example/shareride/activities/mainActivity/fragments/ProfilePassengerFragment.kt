@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shareride.R
 import com.example.shareride.StartActivity
-import com.example.shareride.activities.card_history.CustomAdapterCard
-import com.example.shareride.activities.card_history.CustomVehicleCard
+import com.example.shareride.activities.custom_cards.CustomAdapterCard
+import com.example.shareride.activities.custom_cards.CustomVehicleCard
 import com.example.shareride.clases.Transport
 
 

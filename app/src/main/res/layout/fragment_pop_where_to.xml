@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.mainActivity.popUps.popWhereToFragment">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="20dp"
+
+        >
+    <!-- TODO: Update blank fragment layout -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <ImageButton
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/baseline_arrow_upward_24"
+                android:contentDescription="@string/from_icon_upwards_arrow"
+                android:background="@android:color/transparent"
+
+                />
+
+
+
+            <EditText
+                android:id="@+id/fromTxT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text"
+                android:layout_marginVertical="15dp"
+                android:hint="@string/from"
+                android:autofillHints="name"
+                android:textSize="20sp"
+                android:textColor="@color/common_google_signin_btn_text_light"
+                android:background="@drawable/searchbarborder"
+                android:textColorHint="@color/common_google_signin_btn_text_light"
+                android:maxLength="15"
+
+                />
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <ImageButton
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/baseline_arrow_downward_24"
+                android:contentDescription="@string/to_downwards_icon"
+                android:background="@android:color/transparent"
+                />
+
+
+
+            <EditText
+                android:id="@+id/ToTxT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text"
+                android:layout_marginVertical="15dp"
+                android:hint="@string/where_to"
+                android:autofillHints="name"
+                android:textSize="20sp"
+                android:textColor="@color/common_google_signin_btn_text_light"
+                android:background="@drawable/searchbarborder"
+                android:textColorHint="@color/common_google_signin_btn_text_light"
+                android:maxLength="15"
+
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:orientation="vertical"
+            android:fillViewport="true"
+            >
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_marginHorizontal="30dp"
+                android:nestedScrollingEnabled="false"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:fadeScrollbars="false"
+                android:scrollbars="vertical"
+            >
+
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="450dp"
+            android:orientation="vertical"
+            android:layout_marginVertical="10dp"
+            android:visibility="gone"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_a_new_location"
+                android:textSize="20sp"
+                android:layout_marginVertical="10dp"
+                android:textAppearance="bold"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/name"
+                android:textSize="18sp"
+                android:layout_margin="1dp"
+                android:textAppearance="bold"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/ubication_name"
+                android:background="@drawable/boder_notification"
+                android:textSize="15dp"
+                android:layout_margin="12dp"
+
+                >
+
+            </EditText>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="*Ubication"
+                android:textSize="18sp"
+                android:layout_margin="1dp"
+                android:textAppearance="bold"/>
+
+            <com.google.android.gms.maps.MapView
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                >
+
+
+            </com.google.android.gms.maps.MapView>
+
+            <Button
+                style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:backgroundTint="@color/md_theme_light_primary"
+                android:text="@string/send"
+                android:textAlignment="textStart"
+                android:textColor="@color/common_google_signin_btn_text_dark">
+
+
+            </Button>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginVertical="10dp"
+            android:id="@+id/add_new_loc"
+
+
+            >
+
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/baseline_add_circle_24"
+                android:background="@android:color/transparent"
+                ></ImageButton>
+
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_new_location"
+                style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
+                android:backgroundTint="#DADADA"
+                android:textAlignment="textStart"
+                android:textColor="@color/common_google_signin_btn_text_light"
+
+
+                >
+
+            </Button>
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+
+
+    </ScrollView>
+</FrameLayout>

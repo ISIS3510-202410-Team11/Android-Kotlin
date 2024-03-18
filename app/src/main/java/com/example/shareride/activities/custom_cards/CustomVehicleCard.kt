@@ -1,4 +1,4 @@
-package com.example.shareride.activities.card_history
+package com.example.shareride.activities.custom_cards
 
 import android.view.LayoutInflater
 import android.view.View

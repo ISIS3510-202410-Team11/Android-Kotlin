@@ -52,6 +52,7 @@
                 android:hint="@string/where_to"
                 android:autofillHints="postalAddress"
                 android:layout_marginTop="15dp"
+                android:id="@+id/where_to"
 
 
                 />

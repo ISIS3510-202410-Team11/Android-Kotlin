@@ -18,4 +18,12 @@
     <string name="search">Search</string>
     <string name="why_don_t_giving_a_try_to_a_bike_commute">Why don’t giving a try to a bike commute?</string>
     <string name="add_new_transport">add new Transport</string>
+    <string name="from">From</string>
+    <string name="from_icon_upwards_arrow">From icon upwards arrow</string>
+    <string name="to_downwards_icon">to downwards icon</string>
+    <string name="add_new_location">Add new location</string>
+    <string name="ubication_name">* Ubication name</string>
+    <string name="send">Send</string>
+    <string name="add_a_new_location">Add a new location</string>
+    <string name="name">*Name</string>
 </resources>
