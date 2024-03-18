@@ -3,46 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomePassengerFragment"
+    tools:context=".activities.mainActivity.fragments.HomePassengerFragment"
     android:background="@color/md_theme_light_onPrimary"
 
     >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_margin="20dp">
+        android:layout_marginHorizontal="20dp"
+
+        >
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:orientation="horizontal">
-
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="5dp"
-            android:thumbTint="#5DB075"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="10dp"
-            android:text="Car Pooling"
-            android:textSize="38sp"
-          />
-
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="10dp"
-            android:thumbTint="#5DB075"
-            android:visibility="invisible"/>
-    </LinearLayout>
+        android:orientation="horizontal"/>
 
 
         <LinearLayout
@@ -54,7 +41,7 @@
             <TextView
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
-                android:text="Where are you heading today?"
+                android:text="@string/where_are_you_heading_today"
                 android:textSize="22sp"
                 android:layout_margin="10dp"
                 />
@@ -62,7 +49,7 @@
             <com.google.android.material.search.SearchBar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Where to?"
+                android:hint="@string/where_to"
                 android:autofillHints="postalAddress"
                 android:layout_marginTop="15dp"
 
@@ -108,7 +95,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Why don’t giving a try to a bike commute?"
+                android:text="@string/why_don_t_giving_a_try_to_a_bike_commute"
                 android:textSize="18sp"
                 android:layout_margin="25dp"
 
@@ -120,7 +107,7 @@
                 style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Search"
+                android:text="@string/search"
                 android:textAlignment="textStart"
                 android:textColor="@color/md_theme_light_onPrimary"
                 android:textSize="20sp"
@@ -137,5 +124,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
+    </ScrollView>
 </FrameLayout>
