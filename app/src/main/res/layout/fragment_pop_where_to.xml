@@ -3,13 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.mainActivity.popUps.popWhereToFragment">
+    tools:context=".activities.mainActivity.popUps.popWhereToFragment"
+
+    android:background="@drawable/edit_text_border">
 
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
+        android:background="@drawable/edit_text_border"
         >
 
     <LinearLayout
@@ -95,6 +98,7 @@
             android:layout_height="300dp"
             android:orientation="vertical"
             android:fillViewport="true"
+            android:id="@+id/historical_whereto"
             >
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
@@ -120,6 +124,7 @@
             android:orientation="vertical"
             android:layout_marginVertical="10dp"
             android:visibility="gone"
+            android:id="@+id/add_loc_linear"
             >
 
             <TextView
@@ -128,7 +133,7 @@
                 android:text="@string/add_a_new_location"
                 android:textSize="20sp"
                 android:layout_marginVertical="10dp"
-                android:textAppearance="bold"/>
+                android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -136,14 +141,15 @@
                 android:text="@string/name"
                 android:textSize="18sp"
                 android:layout_margin="1dp"
-                android:textAppearance="bold"/>
+                android:textStyle="bold"/>
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/ubication_name"
                 android:background="@drawable/boder_notification"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:layout_margin="12dp"
+                android:id="@+id/new_loc_text"
 
                 >
 
@@ -152,10 +158,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="*Ubication"
+                android:text="@string/ubication"
                 android:textSize="18sp"
                 android:layout_margin="1dp"
-                android:textAppearance="bold"/>
+                android:textStyle="bold"/>
 
             <com.google.android.gms.maps.MapView
                 android:layout_width="match_parent"
@@ -173,7 +179,8 @@
                 android:backgroundTint="@color/md_theme_light_primary"
                 android:text="@string/send"
                 android:textAlignment="textStart"
-                android:textColor="@color/common_google_signin_btn_text_dark">
+                android:textColor="@color/common_google_signin_btn_text_dark"
+                android:id="@+id/send_button">
 
 
             </Button>
@@ -185,7 +192,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginVertical="10dp"
-            android:id="@+id/add_new_loc"
 
 
             >
@@ -206,7 +212,7 @@
                 android:backgroundTint="#DADADA"
                 android:textAlignment="textStart"
                 android:textColor="@color/common_google_signin_btn_text_light"
-
+                android:id="@+id/add_new_loc"
 
                 >
 
