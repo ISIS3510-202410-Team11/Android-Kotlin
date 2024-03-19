@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.mainActivity.popUps.popWhereToFragment"
@@ -163,13 +165,17 @@
                 android:layout_margin="1dp"
                 android:textStyle="bold"/>
 
-            <com.google.android.gms.maps.MapView
-                android:layout_width="match_parent"
+            <com.mapbox.maps.MapView 
                 android:layout_height="180dp"
-                >
+                android:layout_width="match_parent"
+                app:mapbox_cameraTargetLat="37.7794"
+                app:mapbox_cameraTargetLng="-122.4194"
+                app:mapbox_styleURL= "mapbox://styles/mapbox/streets-v12"
+                app:mapbox_cameraZoom = "12"
 
 
-            </com.google.android.gms.maps.MapView>
+                />
+                
 
             <Button
                 style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"

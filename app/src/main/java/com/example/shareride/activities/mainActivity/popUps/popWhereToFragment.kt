@@ -2,6 +2,7 @@ package com.example.shareride.activities.mainActivity.popUps
 
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,14 +13,11 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.shareride.R
-import com.example.shareride.activities.mainActivity.fragments.viewModelMainActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import org.checkerframework.common.subtyping.qual.Bottom
-import java.util.regex.Pattern
-
+import com.mapbox.maps.MapView
+import com.mapbox.maps.plugin.Plugin
 
 class popWhereToFragment : DialogFragment() {
     // TODO: Rename and change types of parameters
@@ -30,6 +28,8 @@ class popWhereToFragment : DialogFragment() {
 
     var my_location: String = ""
     var name_new_location: String = ""
+
+    private  lateinit var mapview:MapView
     //private var viewModel: viewModelMainActivity = ViewModelProvider(requireActivity()).get(viewModelMainActivity::class.java)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +37,8 @@ class popWhereToFragment : DialogFragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_pop_where_to, container, false)
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,8 +77,17 @@ class popWhereToFragment : DialogFragment() {
         botton_newLoc.setOnClickListener {
             add_loc.visibility = View.VISIBLE
             hist_layour.visibility = View.GONE
+            snd_button_.visibility = View.GONE
+
+
+
+
 
         }
+
+
+
+
 
         snd_button_.setOnClickListener {
 
@@ -85,22 +96,24 @@ class popWhereToFragment : DialogFragment() {
 
                 // guardar en base de datos
             }
+            else{
+                txt_bar.setText("")
+
+                Toast.makeText(requireContext(), "Check your information", Toast.LENGTH_SHORT).show()
+
+            }
 
 
 
         }
-        txt_bar.addTextChangedListener {
 
-
-            name_new_location = it.toString()
-        }
 
 
 
 
     }
 
-    private fun getLocation (){
+    fun getLocation (){
         if(ActivityCompat.checkSelfPermission(requireContext(),android.Manifest.permission.ACCESS_COARSE_LOCATION)!=
             PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)

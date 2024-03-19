@@ -94,7 +94,7 @@ class ProfilePassengerFragment : Fragment() {
 
 
         viewModel.isSwitchChecked.observe(viewLifecycleOwner) { isChecked ->
-            if(isChecked){
+            if(!isChecked){
                 recylceViewCars.visibility = View.GONE
                 title_transport.visibility = View.GONE
                 add_car_button.visibility = View.GONE
