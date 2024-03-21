@@ -15,12 +15,6 @@
     <string name="your_email_may_not_have_the_structure_of_a_email_n_user_your_institutional_email">- Your email may not have the structure of a email.\n - User your institutional email.</string>
     <string name="where_to">Where to?</string>
     <string name="where_are_you_heading_today">Where are you heading today?</string>
-    <string name="Active_rides">Active Rides</string>
     <string name="search">Search</string>
-    <string name="create_new_ride">Create new ride</string>
-    <string name="create_ride">Create ride</string>
-    <string name="Active_rides_2">You do not have active rides at the moment</string>
-    <string name="select_vehicle">Select vehicle</string>
-    <string name="number_of_passengers">Number of passengers</string>
     <string name="why_don_t_giving_a_try_to_a_bike_commute">Why don’t giving a try to a bike commute?</string>
 </resources>
