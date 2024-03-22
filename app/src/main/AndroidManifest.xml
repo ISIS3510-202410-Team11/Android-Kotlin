@@ -27,8 +27,10 @@
         </activity>
         <activity
             android:name=".activities.singUp.SingUpActivity"
-            android:theme="@style/Theme.ShareRide"></activity>
-        <activity android:name=".activities.logIn.logInActivity" />
+            android:theme="@style/Theme.ShareRide">
+        </activity>
+        <activity android:name=".activities.logIn.LogInActivity" />
+        <activity android:name=".activities.forgotPasswordActivity.ForgotPasswordActivity" />
     </application>
 
 </manifest>
