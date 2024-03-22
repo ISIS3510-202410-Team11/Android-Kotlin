@@ -52,7 +52,6 @@
             </LinearLayout>
 
             <MultiAutoCompleteTextView
-                android:id="@+id/select_ve"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/select_vehicle" />
@@ -65,7 +64,6 @@
             </LinearLayout>
 
             <MultiAutoCompleteTextView
-                android:id="@+id/passenger_num"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/number_of_passengers" />
@@ -85,7 +83,8 @@
                 android:hint="@string/today"
                 android:padding="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+              />
 
             <LinearLayout
                 android:layout_width="match_parent"
