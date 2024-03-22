@@ -55,7 +55,6 @@
             </LinearLayout>
 
             <MultiAutoCompleteTextView
-                android:id="@+id/multiAutoCompleteTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/select_vehicle" />
@@ -68,7 +67,6 @@
             </LinearLayout>
 
             <MultiAutoCompleteTextView
-                android:id="@+id/multiAutoCompleteTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/number_of_passengers" />
@@ -84,13 +82,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/edit_text_border"
-                android:drawableEnd="@drawable/ic_calendar"
+
                 android:focusable="false"
                 android:hint="Today"
                 android:padding="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spinnerSelectVehicle" />
+              />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -105,7 +103,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/edit_text_border"
-                android:drawableEnd="@drawable/ic_clock"
                 android:focusable="false"
                 android:hint="00:00 pm"
                 android:padding="12dp"
