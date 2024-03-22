@@ -20,6 +20,7 @@ class MainActivityPassenger : AppCompatActivity() {
 
 
 
+
     private lateinit var switch_role: SwitchCompat
     private lateinit var page_name: TextView
     var isSwitchOn: Boolean = true

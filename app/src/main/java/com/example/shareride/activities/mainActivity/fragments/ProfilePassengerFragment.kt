@@ -89,6 +89,7 @@ class ProfilePassengerFragment : Fragment() {
         button_logout.setOnClickListener {
             val intent = Intent(requireContext(), StartActivity::class.java)
             startActivity(intent)
+
         }
 
 

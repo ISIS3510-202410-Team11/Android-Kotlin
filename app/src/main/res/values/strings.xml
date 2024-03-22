@@ -1,6 +1,9 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">shareRide</string>
     <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="mapbox_access_token" >pk.eyJ1IjoicGNhbXBpbm9ycnIiLCJhIjoiY2x0eW8zY2Y0MGo3dzJocGFrNGxwZG0xNiJ9._UAVbyNYayAoA5RSiwOrfg</string>
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="full_name">Full Name</string>
     <string name="email">Email</string>
@@ -33,5 +36,6 @@
     <string name="add_a_new_location">Add a new location</string>
     <string name="name">*Name</string>
     <string name="ubication">*Ubication</string>
+    <string name="today">today</string>
 
 </resources>

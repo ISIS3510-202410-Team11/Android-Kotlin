@@ -68,18 +68,19 @@ class SingUpActivity : AppCompatActivity() {
 
 
 
+
                 fireBaseAuth.createUserWithEmailAndPassword(viewModel.inputEmail,viewModel.inputpassword).addOnCompleteListener {
-                 if(it.isSuccessful){
+
+
+                    if(it.isSuccessful){
 
                      val intent = Intent(this, MainActivityPassenger::class.java)
                      startActivity(intent)
 
                  }
                  else{
-
                      // si el email está repetido manda un error
-                     Toast.makeText(this, "Check if your information is correct", Toast.LENGTH_SHORT).show()
-
+                     Toast.makeText(this, it.exception.toString(), Toast.LENGTH_LONG).show()
 
                  }
                 }
