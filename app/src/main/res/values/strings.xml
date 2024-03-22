@@ -1,14 +1,12 @@
 <resources>
     <string name="app_name">shareRide</string>
-<<<<<<< HEAD
     <string name="log_in_title">Log In</string>
     <string name="close_log_in">Close Log In</string>
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="log_in_button">Log In</string>
     <string name="forgot_password_text">Forgot your password?</string>
-</resources>
-=======
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="full_name">Full Name</string>
@@ -33,4 +31,4 @@
     <string name="number_of_passengers">Number of passengers</string>
     <string name="why_don_t_giving_a_try_to_a_bike_commute">Why don’t giving a try to a bike commute?</string>
 </resources>
->>>>>>> 821c9b64a48aff25c0b0a1be937601e37f5f1ead
+
