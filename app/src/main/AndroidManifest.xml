@@ -13,6 +13,9 @@
         android:theme="@style/Theme.ShareRide"
         tools:targetApi="31">
         <activity
+            android:name=".activities.mainActivity.MainActivityPassenger"
+            android:exported="false" />
+        <activity
             android:name=".StartActivity"
             android:exported="true"
             android:theme="@style/Theme.ShareRide">
@@ -22,12 +25,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".activities.singUp.SingUpActivity"
+        <activity
+            android:name=".activities.singUp.SingUpActivity"
             android:theme="@style/Theme.ShareRide">
-            </activity>
-        <activity android:name=".activities.logIn.logInActivity" />
-
+        </activity>
+        <activity android:name=".activities.logIn.LogInActivity" />
+        <activity android:name=".activities.forgotPasswordActivity.ForgotPasswordActivity" />
     </application>
 
 </manifest>
