@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">shareRide</string>
+    <string name="vehicleFormCancelButton_Description">Cancel Vehicle Registration</string>
+    <string name="vehicleFormTitle">Vehicle Form</string>
+    <string name="vehicleFormType_Hint">Type of vehicle</string>
+    <string name="vehicleFormPlate_Hint">Vehicle Plate</string>
+    <string name="vehicleFormReference_Hint">Vehicle Reference</string>
+    <string name="vehicleFormColor_Hint">Vehicle color</string>
+    <string name="vehicleFormButton">Register new Vehicle</string>
 </resources>
