@@ -170,7 +170,6 @@
                 android:layout_width="match_parent"
                 app:mapbox_cameraTargetLat="37.7794"
                 app:mapbox_cameraTargetLng="-122.4194"
-                app:mapbox_styleURL= "mapbox://styles/mapbox/streets-v12"
                 app:mapbox_cameraZoom = "12"
 
 

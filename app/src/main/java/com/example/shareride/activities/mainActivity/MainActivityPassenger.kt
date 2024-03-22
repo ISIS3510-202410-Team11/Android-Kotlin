@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.shareride.activities.mainActivity.fragments.HomePassengerFragment
 import com.example.shareride.activities.mainActivity.fragments.ProfilePassengerFragment
 import com.example.shareride.R
+import com.example.shareride.activities.mainActivity.fragments.HomeDriverFragment
 import com.example.shareride.activities.mainActivity.fragments.viewModelMainActivity
 import com.example.shareride.databinding.ActivityMainBinding
 
@@ -93,7 +94,7 @@ class MainActivityPassenger : AppCompatActivity() {
         }
         else{
             //TODO HomeDriverFragment()
-            HomePassengerFragment()
+            HomeDriverFragment()
         }
     }
 
@@ -106,7 +107,7 @@ class MainActivityPassenger : AppCompatActivity() {
         else{
             //TODO HomeDriverFragment()
 
-            HomePassengerFragment()
+            HomeDriverFragment()
         }
     }
 
