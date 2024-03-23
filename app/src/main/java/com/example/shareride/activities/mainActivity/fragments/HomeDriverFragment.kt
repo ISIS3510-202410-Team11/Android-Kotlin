@@ -6,11 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentManager
 import com.example.shareride.R
 import com.example.shareride.activities.mainActivity.MainActivityPassenger
 import com.google.android.material.search.SearchBar
+import org.checkerframework.common.subtyping.qual.Bottom
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,7 +48,7 @@ class HomeDriverFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val create_ride_btn = view.findViewById<SearchBar>(R.id.create_ride)
+        val create_ride_btn = view.findViewById<Button>(R.id.create_ride)
 
         create_ride_btn.setOnClickListener {
             //TODO:sacar el create ride fragment

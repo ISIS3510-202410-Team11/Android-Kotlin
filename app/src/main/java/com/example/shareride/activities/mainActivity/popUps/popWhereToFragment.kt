@@ -69,6 +69,7 @@ class popWhereToFragment : DialogFragment() {
         myViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
 
         MapboxOptions.accessToken = "pk.eyJ1IjoicGNhbXBpbm9ycnIiLCJhIjoiY2x0eW8zY2Y0MGo3dzJocGFrNGxwZG0xNiJ9._UAVbyNYayAoA5RSiwOrfg"
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_pop_where_to, container, false)
@@ -114,7 +115,6 @@ class popWhereToFragment : DialogFragment() {
 
         val map_view = view.findViewById<MapView>(R.id.mapView)
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         from_txt_bar.setOnClickListener {
 
@@ -123,7 +123,7 @@ class popWhereToFragment : DialogFragment() {
             getLocation()
 
             from_txt_bar.textSize = 15F
-            from_txt_bar.setText("Latitud"+myViewModel.livelatitud.value+" Longitud:"+myViewModel.livelaongitud.value)
+            from_txt_bar.setText("Latitud: "+myViewModel.livelatitud.value+" Longitud:"+myViewModel.livelaongitud.value)
 
 
 
@@ -198,16 +198,28 @@ class popWhereToFragment : DialogFragment() {
         myViewModel.livelaongitud.value = newValue
     }
 
-    fun getLocation (){
-        if(ActivityCompat.checkSelfPermission(requireContext(),android.Manifest.permission.ACCESS_COARSE_LOCATION)!=
-            PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(),android.Manifest.permission.INTERNET)!=
-            PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION,
+    private fun getLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
+                requireContext(),
                 android.Manifest.permission.INTERNET
-                ),100)
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                    android.Manifest.permission.INTERNET
+                ),
+                100
+            )
             return
         }
 
