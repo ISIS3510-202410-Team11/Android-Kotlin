@@ -1,12 +1,18 @@
 <resources>
     <string name="app_name">shareRide</string>
+    <string name="vehicleFormCancelButton_Description">Cancel Vehicle Registration</string>
+    <string name="vehicleFormTitle">Vehicle Form</string>
+    <string name="vehicleFormType_Hint">Type of vehicle</string>
+    <string name="vehicleFormPlate_Hint">Vehicle Plate</string>
+    <string name="vehicleFormReference_Hint">Vehicle Reference</string>
+    <string name="vehicleFormColor_Hint">Vehicle color</string>
+    <string name="vehicleFormButton">Register new Vehicle</string>
     <string name="log_in_title">Log In</string>
     <string name="close_log_in">Close Log In</string>
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="log_in_button">Log In</string>
     <string name="forgot_password_text">Forgot your password?</string>
-
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="full_name">Full Name</string>
@@ -30,5 +36,5 @@
     <string name="select_vehicle">Select vehicle</string>
     <string name="number_of_passengers">Number of passengers</string>
     <string name="why_don_t_giving_a_try_to_a_bike_commute">Why don’t giving a try to a bike commute?</string>
-</resources>
 
+</resources>
