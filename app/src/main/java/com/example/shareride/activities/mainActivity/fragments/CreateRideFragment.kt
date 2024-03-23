@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.shareride.databinding.CreateRideBinding
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.firestore.FirebaseFirestore
 
 class CreateRideFragment : Fragment() {
 
@@ -36,15 +35,14 @@ class CreateRideFragment : Fragment() {
                 val date = binding.editTextDate.text.toString().trim()
                 val time = binding.editTextTime.text.toString().trim()
 
-                val trip = Trip(departureLocation, destinationLocation, price, date, time)
-                val databaseReference = FirebaseDatabase.getInstance("https://rideshare-46417-default-rtdb.firebaseio.com/").getReference("trips")
-                val tripId = databaseReference.push().key
-                val db = FirebaseFirestore.getInstance()
-                db.collection("trips").add(trip)
+                val ride = Ride(departureLocation, destinationLocation, price, date, time)
 
 
-                tripId?.let {
-                    databaseReference.child(it).setValue(trip).addOnCompleteListener { task ->
+                val databaseReference = FirebaseDatabase.getInstance().getReference("rides")
+                val rideId = databaseReference.push().key
+                
+                rideId?.let {
+                    databaseReference.child(it).setValue(ride).addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             Toast.makeText(context, "Ride created successfully", Toast.LENGTH_SHORT).show()
                         } else {
@@ -56,7 +54,7 @@ class CreateRideFragment : Fragment() {
         }
 
 
-        data class Trip(
+        data class Ride(
             val departureLocation: String,
             val destinationLocation: String,
             val price: String,
