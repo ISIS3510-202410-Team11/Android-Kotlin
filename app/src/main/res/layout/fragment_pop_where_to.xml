@@ -54,7 +54,6 @@
                 android:textColor="@color/common_google_signin_btn_text_light"
                 android:background="@drawable/searchbarborder"
                 android:textColorHint="@color/common_google_signin_btn_text_light"
-                android:maxLength="15"
                 android:inputType="none"
                 android:focusable="false"
                 android:longClickable="false"
@@ -93,7 +92,6 @@
                 android:textColor="@color/common_google_signin_btn_text_light"
                 android:background="@drawable/searchbarborder"
                 android:textColorHint="@color/common_google_signin_btn_text_light"
-                android:maxLength="15"
 
                 />
         </LinearLayout>
@@ -169,7 +167,7 @@
                 android:textStyle="bold"/>
 
             <com.mapbox.maps.MapView
-                android:layout_height="180dp"
+                android:layout_height="200dp"
                 android:layout_width="match_parent"
                 android:id="@+id/mapView"
 

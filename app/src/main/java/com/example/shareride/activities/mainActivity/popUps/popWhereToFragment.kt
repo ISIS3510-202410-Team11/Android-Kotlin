@@ -14,18 +14,41 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.shareride.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.LatLng
 import com.mapbox.common.MapboxOptions
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
+import com.mapbox.maps.plugin.gestures.addOnMapClickListener
 
+
+
+class MyViewModel : ViewModel() {
+    val livelatitud: MutableLiveData<Double> by lazy {
+        MutableLiveData<Double>()
+    }
+
+    val livelaongitud: MutableLiveData<Double> by lazy {
+        MutableLiveData<Double>()
+    }
+
+    val name_place: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+}
 class popWhereToFragment : DialogFragment() {
     // TODO: Rename and change types of parameters
 
     private  lateinit var mapview:MapView
+
+    private lateinit var myViewModel: MyViewModel
+
 
 
 
@@ -33,6 +56,8 @@ class popWhereToFragment : DialogFragment() {
 
     var my_location: String = ""
     var name_new_location: String = ""
+    var my_latitud: Double =0.0
+    var my_longitud:Double =0.0
 
 
     //private var viewModel: viewModelMainActivity = ViewModelProvider(requireActivity()).get(viewModelMainActivity::class.java)
@@ -40,6 +65,9 @@ class popWhereToFragment : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        myViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
+
         MapboxOptions.accessToken = "pk.eyJ1IjoicGNhbXBpbm9ycnIiLCJhIjoiY2x0eW8zY2Y0MGo3dzJocGFrNGxwZG0xNiJ9._UAVbyNYayAoA5RSiwOrfg"
 
         // Inflate the layout for this fragment
@@ -56,7 +84,7 @@ class popWhereToFragment : DialogFragment() {
 
 
         mapview.mapboxMap.setCamera(CameraOptions.Builder()
-            .center(com.mapbox.geojson.Point.fromLngLat(-98.0, 39.5)).pitch(0.0).zoom(2.0)
+            .center(com.mapbox.geojson.Point.fromLngLat(my_longitud, my_latitud)).pitch(0.0).zoom(1.0)
             .bearing(0.0)
             .build()
         )
@@ -74,6 +102,7 @@ class popWhereToFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val from_txt_bar = view.findViewById<EditText>(R.id.fromTxT)
+        val to_txt_bar = view.findViewById<EditText>(R.id.ToTxT)
         val botton_newLoc = view.findViewById<Button>(R.id.add_new_loc)
 
         val add_loc = view.findViewById<LinearLayout>(R.id.add_loc_linear)
@@ -94,7 +123,7 @@ class popWhereToFragment : DialogFragment() {
             getLocation()
 
             from_txt_bar.textSize = 15F
-            from_txt_bar.setText(my_location)
+            from_txt_bar.setText("Latitud"+myViewModel.livelatitud.value+" Longitud:"+myViewModel.livelaongitud.value)
 
 
 
@@ -105,7 +134,7 @@ class popWhereToFragment : DialogFragment() {
         botton_newLoc.setOnClickListener {
             add_loc.visibility = View.VISIBLE
             hist_layour.visibility = View.GONE
-            snd_button_.visibility = View.GONE
+            snd_button_.visibility = View.VISIBLE
 
 
 
@@ -117,13 +146,32 @@ class popWhereToFragment : DialogFragment() {
 
 
 
+        map_view.getMapboxMap().addOnMapClickListener { point ->
+            val latitude = point.latitude()
+            val longitude = point.longitude()
+            val coordenadas = LatLng(latitude, longitude)
+
+            val destination_unk = "Latitud: $latitude, Longitud: $longitude"
+            to_txt_bar.hint = destination_unk
+            to_txt_bar.setText(destination_unk)
+            to_txt_bar.textSize = 12.0F
+            true
+        }
+
+
+
+
 
         snd_button_.setOnClickListener {
 
-            if (name_new_location != null || name_new_location.isEmpty()) {
+            if (myViewModel.name_place.value != null || myViewModel.name_place.value!="" ) {
 
 
-                // guardar en base de datos
+                // TODO:(Enviar nuevo lugar)
+                add_loc.visibility = View.GONE
+                hist_layour.visibility = View.VISIBLE
+
+
             }
             else{
                 txt_bar.setText("")
@@ -142,6 +190,14 @@ class popWhereToFragment : DialogFragment() {
 
     }
 
+    fun updateLatitud(newValue: Double) {
+        myViewModel.livelatitud.value = newValue
+    }
+
+    fun uupdatelongitud(newValue: Double) {
+        myViewModel.livelaongitud.value = newValue
+    }
+
     fun getLocation (){
         if(ActivityCompat.checkSelfPermission(requireContext(),android.Manifest.permission.ACCESS_COARSE_LOCATION)!=
             PackageManager.PERMISSION_GRANTED &&
@@ -158,10 +214,16 @@ class popWhereToFragment : DialogFragment() {
         val location = fusedLocationProviderClient.lastLocation
         location.addOnSuccessListener {
 
-
             if(it!= null){
                 Toast.makeText(requireContext(), "Succesfully adquiered location", Toast.LENGTH_SHORT).show()
                 my_location = "Latitude "+it.latitude.toString()+" Longitude "+it.longitude
+
+
+
+                updateLatitud(it.latitude)
+                uupdatelongitud(it.longitude)
+
+
             }
             else{
                 Toast.makeText(requireContext(), "Unsucesfull adquiered location", Toast.LENGTH_SHORT).show()
@@ -170,6 +232,9 @@ class popWhereToFragment : DialogFragment() {
 
 
         }
+
+
+
 
 
 
