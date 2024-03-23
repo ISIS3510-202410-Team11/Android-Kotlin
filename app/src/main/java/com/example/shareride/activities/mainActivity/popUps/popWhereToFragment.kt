@@ -28,6 +28,7 @@ class popWhereToFragment : DialogFragment() {
     private  lateinit var mapview:MapView
 
 
+
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     var my_location: String = ""
@@ -162,6 +163,10 @@ class popWhereToFragment : DialogFragment() {
                 Toast.makeText(requireContext(), "Succesfully adquiered location", Toast.LENGTH_SHORT).show()
                 my_location = "Latitude "+it.latitude.toString()+" Longitude "+it.longitude
             }
+            else{
+                Toast.makeText(requireContext(), "Unsucesfull adquiered location", Toast.LENGTH_SHORT).show()
+
+            }
 
 
         }
@@ -170,16 +175,6 @@ class popWhereToFragment : DialogFragment() {
 
     }
 
-
-   /** private fun set_my_location():String{
-        return if (viewModel.longitud_me_i == null || viewModel.latitud_me_i == null){
-             "Click in here to calculate your location"
-
-        }
-        else{
-            "Location: Latitude: "+viewModel.latitud_me_i.toString()+" , Longitude: "+viewModel.longitud_me_i.toString()
-        }
-    }*/
 
 
 }

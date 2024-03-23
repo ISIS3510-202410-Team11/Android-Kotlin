@@ -6,9 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.fragment.app.FragmentManager
 import com.example.shareride.R
 import com.example.shareride.activities.mainActivity.MainActivityPassenger
-import com.example.shareride.activities.vehicleForm.VehicleFormActivity
 import com.google.android.material.search.SearchBar
 
 // TODO: Rename parameter arguments, choose names that match
@@ -48,6 +49,7 @@ class HomeDriverFragment : Fragment() {
         val create_ride_btn = view.findViewById<SearchBar>(R.id.create_ride)
 
         create_ride_btn.setOnClickListener {
+            //TODO:sacar el create ride fragment
 
         }
 
