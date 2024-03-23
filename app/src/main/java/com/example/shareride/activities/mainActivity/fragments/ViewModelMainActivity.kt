@@ -4,7 +4,6 @@ import android.view.MenuItem
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.android.gms.location.FusedLocationProviderClient
 
 class viewModelMainActivity  : ViewModel()    {
 
