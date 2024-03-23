@@ -9,6 +9,11 @@ class viewModelMainActivity  : ViewModel()    {
 
     var page_name: String = "Home"
 
+
+    var latitud_me_i:Double = 0.0
+    var longitud_me_i:Double =0.0
+
+
     private val _isSwitchChecked = MutableLiveData<Boolean>()
     val isSwitchChecked: LiveData<Boolean>
         get() = _isSwitchChecked
@@ -27,6 +32,13 @@ class viewModelMainActivity  : ViewModel()    {
 
     fun isswitchcheked(): MutableLiveData<Boolean> {
         return _isSwitchChecked
+    }
+
+
+
+    fun set_my_location(latitud:Double, logitud:Double){
+        latitud_me_i = latitud
+        longitud_me_i = logitud
     }
 
 

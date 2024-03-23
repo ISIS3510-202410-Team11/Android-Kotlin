@@ -227,7 +227,21 @@
 
             </LinearLayout>
 
+        <Button
+            style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_new_transport"
+            android:textAlignment="center"
+            android:textColor="@color/md_theme_light_onPrimary"
+            android:textSize="20sp"
+            android:backgroundTint="@color/common_google_signin_btn_text_light"
+            android:id="@+id/add_transportation"
+            android:layout_marginVertical="20dp"
 
+
+
+            />
 
         <Button
             style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"

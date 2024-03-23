@@ -77,6 +77,8 @@ dependencies {
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+
     implementation("androidx.compose.material3:material3-android:1.2.1")
     implementation("androidx.compose.foundation:foundation-android:1.6.2")
     implementation("androidx.core:core:1.12.0")
@@ -94,5 +96,9 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
     implementation("com.google.firebase:firebase-analytics")
+
+    //mapbox
+    implementation("com.mapbox.maps:android:11.2.1")
+
     implementation("com.google.firebase:firebase-database:20.3.1")
 }

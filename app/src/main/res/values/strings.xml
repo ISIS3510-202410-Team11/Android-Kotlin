@@ -1,18 +1,15 @@
 <resources>
     <string name="app_name">shareRide</string>
-    <string name="vehicleFormCancelButton_Description">Cancel Vehicle Registration</string>
-    <string name="vehicleFormTitle">Vehicle Form</string>
-    <string name="vehicleFormType_Hint">Type of vehicle</string>
-    <string name="vehicleFormPlate_Hint">Vehicle Plate</string>
-    <string name="vehicleFormReference_Hint">Vehicle Reference</string>
-    <string name="vehicleFormColor_Hint">Vehicle color</string>
-    <string name="vehicleFormButton">Register new Vehicle</string>
     <string name="log_in_title">Log In</string>
     <string name="close_log_in">Close Log In</string>
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="log_in_button">Log In</string>
     <string name="forgot_password_text">Forgot your password?</string>
+
+
+    <string name="mapbox_access_token" >pk.eyJ1IjoicGNhbXBpbm9ycnIiLCJhIjoiY2x0eW8zY2Y0MGo3dzJocGFrNGxwZG0xNiJ9._UAVbyNYayAoA5RSiwOrfg</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="full_name">Full Name</string>
@@ -36,5 +33,21 @@
     <string name="select_vehicle">Select vehicle</string>
     <string name="number_of_passengers">Number of passengers</string>
     <string name="why_don_t_giving_a_try_to_a_bike_commute">Why don’t giving a try to a bike commute?</string>
+    <string name="add_new_transport">add new Transport</string>
+    <string name="from">From</string>
+    <string name="from_icon_upwards_arrow">From icon upwards arrow</string>
+    <string name="to_downwards_icon">to downwards icon</string>
+    <string name="add_new_location">Add new location</string>
+    <string name="ubication_name">* Ubication name</string>
+    <string name="send">Send</string>
+    <string name="add_a_new_location">Add a new location</string>
+    <string name="name">*Name</string>
+    <string name="ubication">*Ubication</string>
+    <string name="today">today</string>
 
+    <string name="destination_location">Destination location</string>
+    <string name="departure_location">Departure location</string>
+    <string name="_00_00_pm">00:00 pm</string>
+    <string name="price">Price</string>
 </resources>
+

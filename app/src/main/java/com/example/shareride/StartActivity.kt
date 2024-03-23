@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.widget.Button
 import com.example.shareride.activities.singUp.SingUpActivity
 import com.example.shareride.activities.logIn.LogInActivity
+import com.example.shareride.activities.mainActivity.MainActivityPassenger
+
 class StartActivity : AppCompatActivity() {
 
 

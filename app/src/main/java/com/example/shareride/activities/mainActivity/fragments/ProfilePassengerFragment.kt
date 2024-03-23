@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shareride.R
 import com.example.shareride.StartActivity
-import com.example.shareride.activities.card_history.CustomAdapterCard
-import com.example.shareride.activities.card_history.CustomVehicleCard
+import com.example.shareride.activities.custom_cards.CustomAdapterCard
+import com.example.shareride.activities.custom_cards.CustomVehicleCard
 import com.example.shareride.clases.Transport
 
 
@@ -45,6 +45,7 @@ class ProfilePassengerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         val recylceViewCars = view.findViewById<RecyclerView>(R.id.carsRecycleView)
+        val add_car_button = view.findViewById<Button>(R.id.add_transportation)
 
         val viewModel: viewModelMainActivity =
             ViewModelProvider(requireActivity()).get(viewModelMainActivity::class.java)
@@ -88,14 +89,16 @@ class ProfilePassengerFragment : Fragment() {
         button_logout.setOnClickListener {
             val intent = Intent(requireContext(), StartActivity::class.java)
             startActivity(intent)
+
         }
 
 
 
         viewModel.isSwitchChecked.observe(viewLifecycleOwner) { isChecked ->
-            if(isChecked){
+            if(!isChecked){
                 recylceViewCars.visibility = View.GONE
                 title_transport.visibility = View.GONE
+                add_car_button.visibility = View.GONE
 
             }
             else{
@@ -117,8 +120,7 @@ class ProfilePassengerFragment : Fragment() {
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
+
          * @return A new instance of fragment profilePassengerFragment.
          */
         // TODO: Rename and change types and number of parameters
