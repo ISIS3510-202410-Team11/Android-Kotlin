@@ -40,7 +40,6 @@
         </activity>
         <activity android:name=".activities.logIn.LogInActivity" />
         <activity android:name=".activities.forgotPasswordActivity.ForgotPasswordActivity" />
-        <activity android:name=".activities.vehicleForm.VehicleFormActivity" />
     </application>
 
 </manifest>
