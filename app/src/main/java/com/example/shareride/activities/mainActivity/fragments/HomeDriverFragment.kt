@@ -1,11 +1,15 @@
 package com.example.shareride.activities.mainActivity.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.shareride.R
+import com.example.shareride.activities.mainActivity.MainActivityPassenger
+import com.example.shareride.activities.vehicleForm.VehicleFormActivity
+import com.google.android.material.search.SearchBar
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,6 +40,17 @@ class HomeDriverFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home_driver, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val create_ride_btn = view.findViewById<SearchBar>(R.id.create_ride)
+
+        create_ride_btn.setOnClickListener {
+
+        }
+
     }
 
     companion object {

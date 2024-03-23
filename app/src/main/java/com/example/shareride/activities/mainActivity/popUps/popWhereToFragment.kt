@@ -67,6 +67,9 @@ class popWhereToFragment : DialogFragment() {
 
 
 
+
+
+
         super.onViewCreated(view, savedInstanceState)
 
         val from_txt_bar = view.findViewById<EditText>(R.id.fromTxT)
@@ -77,6 +80,9 @@ class popWhereToFragment : DialogFragment() {
 
         val snd_button_ = view.findViewById<Button>(R.id.send_button)
         val txt_bar = view.findViewById<EditText>(R.id.new_loc_text)
+
+
+        val map_view = view.findViewById<MapView>(R.id.mapView)
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
