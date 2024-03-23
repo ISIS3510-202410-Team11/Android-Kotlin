@@ -1,4 +1,4 @@
-<<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">shareRide</string>
     <string name="vehicleFormCancelButton_Description">Cancel Vehicle Registration</string>
     <string name="vehicleFormTitle">Vehicle Form</string>

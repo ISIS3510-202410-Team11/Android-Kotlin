@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.widget.Button
 import com.example.shareride.activities.singUp.SingUpActivity
 import com.example.shareride.activities.logIn.LogInActivity
+import com.example.shareride.activities.mainActivity.MainActivityPassenger
+
 class StartActivity : AppCompatActivity() {
 
 
@@ -23,7 +25,7 @@ class StartActivity : AppCompatActivity() {
         }
 
         loginInButton.setOnClickListener {
-            val intentLogIN = Intent(this, LogInActivity::class.java)
+            val intentLogIN = Intent(this, MainActivityPassenger::class.java)
             startActivity(intentLogIN)
         }
 
