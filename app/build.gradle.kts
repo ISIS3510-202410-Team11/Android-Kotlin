@@ -100,4 +100,5 @@ dependencies {
     //mapbox
     implementation("com.mapbox.maps:android:11.2.1")
 
+    implementation("com.google.firebase:firebase-database:20.3.1")
 }
