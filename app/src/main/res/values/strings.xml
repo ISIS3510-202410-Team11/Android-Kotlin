@@ -49,5 +49,17 @@
     <string name="departure_location">Departure location</string>
     <string name="_00_00_pm">00:00 pm</string>
     <string name="price">Price</string>
+    <string name="vehicleformtitle">vehicleFormTitle</string>
+    <string name="vehicleformcancelbutton_description">vehicleFormCancelButton_Description</string>
+    <string name="vehicleformtype_hint">vehicleFormType_Hint</string>
+    <string name="vehicleformplate_hint">vehicleFormPlate_Hint</string>
+    <string name="vehicleformreference_hint">vehicleFormReference_Hint</string>
+    <string name="vehicleformcolor_hint">vehicleFormColor_Hint</string>
+    <string name="vehicleformbutton">vehicleFormButton</string>
+    <string name="vehicle_color">Vehicle Color</string>
+    <string name="vehicle_reference">Vehicle Reference</string>
+    <string name="vehicle_plate">Vehicle Plate</string>
+    <string name="vehicle_type">Vehicle Type</string>
+    <string name="vehicle_form">Vehicle Form</string>
 </resources>
 
