@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.singUp.SingUpActivity"
+    android:scrollbars="vertical"
+    android:background="@color/md_theme_light_onPrimary"
+
+    >
+
+    <LinearLayout
+
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/md_theme_light_onPrimary"
+        android:orientation="vertical"
+        android:padding="25dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:textAlignment="center"
+
+            android:background="@color/md_theme_light_onPrimary"
+
+            >
+
+            <ImageButton
+                android:id="@+id/cancel_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/vehicleformcancelbutton_description"
+                app:srcCompat="@drawable/baseline_clear_24" />
+
+            <TextView
+                android:layout_width="254dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30dp"
+                android:elegantTextHeight="true"
+                android:text="@string/vehicle_form"
+
+                android:textSize="40sp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <EditText
+            android:id="@+id/typeInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:layout_marginVertical="15dp"
+            android:hint="@string/vehicle_type"
+            android:autofillHints="name"
+            android:textSize="20sp"
+            android:textColor="@color/common_google_signin_btn_text_light"
+            android:background="@drawable/edit_text_border"
+            android:textColorHint="@color/common_google_signin_btn_text_light"
+
+
+            />
+
+
+
+        <EditText
+            android:id="@+id/plateInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:hint="@string/vehicle_plate"
+            android:layout_marginVertical="15sp"
+            android:textSize="20sp"
+            android:maxLines="1"
+            android:maxLength="8"
+            android:textColor="@color/common_google_signin_btn_text_light"
+            android:background="@drawable/edit_text_border"
+            android:textColorHint="@color/common_google_signin_btn_text_light"
+            android:importantForAutofill="no" />
+
+        <EditText
+            android:id="@+id/referenceInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:layout_marginVertical="15sp"
+            android:textSize="20sp"
+            android:textColor="@color/common_google_signin_btn_text_light"
+            android:hint="@string/vehicle_reference"
+            android:background="@drawable/edit_text_border"
+            android:textColorHint="@color/common_google_signin_btn_text_light"
+            android:importantForAutofill="no" />
+
+        <EditText
+            android:id="@+id/colorInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:layout_marginVertical="15sp"
+            android:textSize="20sp"
+            android:textColor="@color/common_google_signin_btn_text_light"
+            android:hint="@string/vehicle_color"
+            android:background="@drawable/edit_text_border"
+            android:textColorHint="@color/common_google_signin_btn_text_light"
+            android:importantForAutofill="no" />
+
+
+        <Button
+            android:id="@+id/registerVehicle"
+            style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="80dp"
+            android:text="@string/vehicleformbutton"
+            android:textAlignment="center"
+            android:textColor="@color/md_theme_light_onPrimary"
+            android:textSize="20sp"
+            app:backgroundTint="@color/md_theme_light_primary"
+            app:cornerRadius="100dp"
+
+            />
+    </LinearLayout>
+
+
+
+</LinearLayout>
+
+
+
+
+

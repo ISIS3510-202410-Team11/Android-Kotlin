@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.shareride.activities.mainActivity.MainActivityPassenger
 import com.example.shareride.R
 import com.example.shareride.StartActivity
+import com.example.shareride.activities.vehicleForm.VehicleFormActivity
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
@@ -86,8 +87,8 @@ class SingUpActivity : AppCompatActivity() {
                 }
             }
             else if(warningName.visibility == View.GONE && warningEmail.visibility== View.GONE && warningPassword.visibility == View.GONE && box_driver.isChecked){
-                //TODO:"Redirects to vehicle form"
-
+                val intent = Intent(this, VehicleFormActivity::class.java)
+                startActivity(intent)
 
             }
             else{
