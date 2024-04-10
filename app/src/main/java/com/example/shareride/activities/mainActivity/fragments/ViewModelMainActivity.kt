@@ -7,6 +7,7 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.shareride.clases.Event
 import com.example.shareride.persistence.AnaliticsPersistence
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
@@ -82,8 +83,8 @@ class ViewModelMainActivity  : ViewModel()    {
 
             analytics = Firebase.analytics
             analytics.logEvent("First_time_create_ride"){ param("Clicks",clicks_bf_create.toDouble())}
-
-            anPersistence.persist_clicks_bf_createride(clicks_bf_create.toInt(),"First_time_create_ride")
+            val newEvent : Event=Event("First_time_create_ride", clicks_bf_create.toInt())
+            anPersistence.persist_clicks_bf_createride(newEvent)
 
 
 

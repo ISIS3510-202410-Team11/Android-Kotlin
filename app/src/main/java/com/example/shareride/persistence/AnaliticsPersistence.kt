@@ -13,24 +13,20 @@ class AnaliticsPersistence {
     private lateinit var database: DatabaseReference
 
 
-    fun persist_clicks_bf_createride(clicks:Int, event:String){
+    fun persist_clicks_bf_createride(newEvent: Event){
 
-        database = FirebaseDatabase.getInstance().reference.child("analitica").child("clicks")
+        database = FirebaseDatabase.getInstance().getReference("/analitica/clicks")
+
         val newEventRef = database.push()
-
-        val eventId = newEventRef.key
-        logD("ViewMode,","1success")
+        println(newEvent.clicks)
 
 
-        val new_event=Event(eventId,event,clicks)
-
-        newEventRef.setValue(new_event).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                logD("ViewMode,","success")
+        newEventRef.setValue(newEvent)
+            .addOnSuccessListener {
 
 
             }
-            }
+
     }
 
 
