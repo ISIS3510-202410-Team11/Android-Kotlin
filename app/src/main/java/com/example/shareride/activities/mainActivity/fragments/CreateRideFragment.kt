@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.shareride.databinding.CreateRideBinding
 import com.google.firebase.database.FirebaseDatabase
 
@@ -13,6 +15,9 @@ class CreateRideFragment : Fragment() {
 
     private var _binding: CreateRideBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: ViewModelMainActivity by activityViewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

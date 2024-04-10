@@ -21,11 +21,13 @@
 
 
         >
+
         <androidx.appcompat.widget.SwitchCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/md_theme_light_primary"
-            android:id="@+id/switch_profileType">
+            android:visibility="invisible"
+            >
+
         </androidx.appcompat.widget.SwitchCompat>
 
         <TextView
