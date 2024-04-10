@@ -11,11 +11,13 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.shareride.activities.mainActivity.MainActivityPassenger
 import com.example.shareride.R
 import com.example.shareride.StartActivity
+import com.example.shareride.activities.logIn.LogInActivity
 import com.example.shareride.activities.vehicleForm.VehicleFormActivity
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseAuth
@@ -33,6 +35,7 @@ class SingUpActivity : AppCompatActivity() {
         setContentView(R.layout.activity_sing_up)
         val closeButton: ImageButton = findViewById(R.id.cancel_button)
         val singUpbutton: Button = findViewById(R.id.singUpbutton)
+        val logInButton: TextView = findViewById(R.id.logInButton)
 
         val textBar_name: EditText = findViewById(R.id.nametextbar)
         val textbar_email: EditText = findViewById(R.id.emailTextBar)
@@ -62,6 +65,12 @@ class SingUpActivity : AppCompatActivity() {
             Firebase.analytics.logEvent("Close_sign_up", null)
         }
 
+        logInButton.setOnClickListener {
+
+            val logInAcc = Intent(this, LogInActivity::class.java)
+            startActivity(logInAcc)
+        }
+
         singUpbutton.setOnClickListener {
 
             if (warningName.visibility == View.GONE && warningEmail.visibility== View.GONE && warningPassword.visibility == View.GONE && !box_driver.isChecked){
@@ -87,10 +96,17 @@ class SingUpActivity : AppCompatActivity() {
                 }
             }
             else if(warningName.visibility == View.GONE && warningEmail.visibility== View.GONE && warningPassword.visibility == View.GONE && box_driver.isChecked){
-                val intent = Intent(this, VehicleFormActivity::class.java)
-                startActivity(intent)
 
-            }
+
+
+                        val intent = Intent(this, VehicleFormActivity::class.java)
+                        startActivity(intent)}
+
+
+
+
+
+
             else{
                 Toast.makeText(this, "Check that everything is correct", Toast.LENGTH_SHORT).show()
 

@@ -6,8 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Switch
 import android.widget.TextView
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,10 +19,13 @@ import com.example.shareride.StartActivity
 import com.example.shareride.activities.custom_cards.CustomAdapterCard
 import com.example.shareride.activities.custom_cards.CustomVehicleCard
 import com.example.shareride.clases.Transport
+import com.example.shareride.databinding.ActivityMainBinding
+import com.google.firebase.auth.FirebaseAuth
 
 
 class ProfilePassengerFragment : Fragment() {
 
+    private  val viewModel: ViewModelMainActivity by activityViewModels()
 
 
     // TODO: Rename and change types of parameters
@@ -46,9 +52,11 @@ class ProfilePassengerFragment : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         val recylceViewCars = view.findViewById<RecyclerView>(R.id.carsRecycleView)
         val add_car_button = view.findViewById<Button>(R.id.add_transportation)
+        val switch = view.findViewById<SwitchCompat>(R.id.switchProfileType)
 
-        val viewModel: viewModelMainActivity =
-            ViewModelProvider(requireActivity()).get(viewModelMainActivity::class.java)
+
+
+
 
 
 
@@ -87,8 +95,17 @@ class ProfilePassengerFragment : Fragment() {
         method_p.setText(my_method)
 
         button_logout.setOnClickListener {
+            viewModel.singOut()
             val intent = Intent(requireContext(), StartActivity::class.java)
             startActivity(intent)
+
+        }
+
+
+        switch.setOnCheckedChangeListener{_, isChecked ->
+
+            viewModel.setSwitchChecked(isChecked)
+
 
         }
 
