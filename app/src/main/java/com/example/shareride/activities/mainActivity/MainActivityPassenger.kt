@@ -11,7 +11,7 @@ import com.example.shareride.activities.mainActivity.fragments.HomePassengerFrag
 import com.example.shareride.activities.mainActivity.fragments.ProfilePassengerFragment
 import com.example.shareride.R
 import com.example.shareride.activities.mainActivity.fragments.HomeDriverFragment
-import com.example.shareride.activities.mainActivity.fragments.viewModelMainActivity
+import com.example.shareride.activities.mainActivity.fragments.ViewModelMainActivity
 import com.example.shareride.databinding.ActivityMainBinding
 
 class MainActivityPassenger : AppCompatActivity() {
@@ -27,9 +27,9 @@ class MainActivityPassenger : AppCompatActivity() {
     private var profileFragment: ProfilePassengerFragment? = null
 
 
-    val viewModel: viewModelMainActivity by lazy {
+    val viewModel: ViewModelMainActivity by lazy {
 
-        ViewModelProvider(this).get(viewModelMainActivity::class.java)
+        ViewModelProvider(this).get(ViewModelMainActivity::class.java)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -38,42 +38,31 @@ class MainActivityPassenger : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        viewModel.setSwitchChecked(false)
+
         replaceFragment(getInitialFragment())
 
 
 
-        switch_role = binding.switchProfileType
         page_name = binding.pageName
         page_name.text = viewModel.page_name
 
 
-        switch_role.setOnCheckedChangeListener{_, isChecked ->
 
-            viewModel.setSwitchChecked(isChecked)
-            isSwitchOn = isChecked
-
-            when(viewModel.page_name){
-
-                "Home"-> replaceFragment(getHomeFragment())
-                "Profile"->replaceFragment(getProfileFragment())
-
-            }
-
-
-        }
 
         binding.bottomNavView.setOnItemSelectedListener {
 
 
             when(it.itemId ){
                 R.id.home_it -> {replaceFragment(getHomeFragment())
-                    viewModel.change_pg_name("Home")
                     page_name.text = viewModel.page_name
+                    viewModel.clicks_bf_createride("Home")
 
                 }
                 R.id.account_it -> {replaceFragment(getProfileFragment())
-                    viewModel.change_pg_name("Profile")
                     page_name.text = viewModel.page_name
+                    viewModel.clicks_bf_createride("Profile")
+
                 }
 
                 else->{
@@ -89,12 +78,17 @@ class MainActivityPassenger : AppCompatActivity() {
 
 
     private fun getInitialFragment(): Fragment {
-        return if(isSwitchOn){
+        return if(viewModel._isSwitchChecked.value == true){
+            viewModel.change_pg_name("Home")
+
             HomePassengerFragment()
+
 
         }
         else{
             //TODO HomeDriverFragment()
+            viewModel.change_pg_name("Home")
+
             HomeDriverFragment()
         }
     }
@@ -102,11 +96,15 @@ class MainActivityPassenger : AppCompatActivity() {
 
     private fun getHomeFragment():Fragment{
 
-        return if(isSwitchOn){
+
+        return if(viewModel._isSwitchChecked.value == true){
+            viewModel.change_pg_name("Home")
+
             HomePassengerFragment()
         }
         else{
             //TODO HomeDriverFragment()
+            viewModel.change_pg_name("Home")
 
             HomeDriverFragment()
         }
@@ -114,6 +112,7 @@ class MainActivityPassenger : AppCompatActivity() {
 
     private fun getProfileFragment(): Fragment{
         if (profileFragment == null) {
+
             profileFragment = ProfilePassengerFragment.newInstance()
         }
         return profileFragment!!
@@ -129,6 +128,9 @@ class MainActivityPassenger : AppCompatActivity() {
             fragmentTransaction.replace(R.id.frame_layout, fragment)
             fragmentTransaction.commitNow()
         }
+    }
+    fun getSharedViewModel(): ViewModelMainActivity  {
+        return viewModel
     }
 
 

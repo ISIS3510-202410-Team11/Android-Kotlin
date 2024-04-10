@@ -10,6 +10,10 @@
     android:background="@color/md_theme_light_onPrimary"
 
     >
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
 
     <LinearLayout
 
@@ -138,7 +142,7 @@
             />
     </LinearLayout>
 
-
+    </ScrollView>
 
 </LinearLayout>
 

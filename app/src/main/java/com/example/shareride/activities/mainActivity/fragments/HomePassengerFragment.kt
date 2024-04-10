@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shareride.R
@@ -21,6 +22,7 @@ import com.google.android.material.search.SearchBar
  */
 class HomePassengerFragment : Fragment() {
 
+    private  val viewModel: ViewModelMainActivity by activityViewModels()
 
     override fun onCreate(  savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +62,7 @@ class HomePassengerFragment : Fragment() {
 
 
         sch_bar.setOnClickListener {
+            viewModel.clicks_bf_createride("Search")
 
             val showpopup = popWhereToFragment()
             showpopup.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")

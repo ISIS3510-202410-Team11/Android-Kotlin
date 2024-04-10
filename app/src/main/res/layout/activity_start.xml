@@ -7,8 +7,17 @@
     android:background="@color/md_theme_light_onPrimary"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="20dp"
     tools:context=".StartActivity">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
 
         <ImageView
@@ -39,9 +48,7 @@
             />
 
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="50dp" />
+
 
         <Button
 
@@ -58,6 +65,8 @@
             app:cornerRadius="100dp"
             android:id="@+id/logInButton"/>
 
+                </LinearLayout>
+</ScrollView>
 
 </LinearLayout>
 
