@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <s
+
 
     <EditText
         android:id="@+id/editTextDepartureLocation"
