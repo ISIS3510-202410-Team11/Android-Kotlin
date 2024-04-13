@@ -13,7 +13,8 @@ class Trip(
     val date: String,
     val time: String,
     val price: Double,
-    val closed: Boolean
+    val closed: Boolean,
+    val subscribed: Array<String>
 ) {
 
 

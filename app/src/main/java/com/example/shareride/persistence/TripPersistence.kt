@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.shareride.cache.TripCache
 import com.example.shareride.clases.Trip
 import com.example.shareride.repository.TripRepository
+import java.text.SimpleDateFormat
 import java.util.Date
 
 class TripPersistence {
@@ -14,8 +15,8 @@ class TripPersistence {
     val tripById: LiveData<Trip?> = _tripByIdLvdata
 
 
-    fun getTrip(tripid:Int, currentDate: Date){
-
+    fun getTrip(tripid:Int){
+        val currentDate:Date = getCurrentDateTime()
         val cachedTrip = TripCache.tripMap[tripid]
         val lst_update = TripCache.tripMap_update[tripid]
         if (cachedTrip!= null && lst_update != null) {
@@ -34,6 +35,40 @@ class TripPersistence {
 
         response?.let {
             TripCache.tripMap[tripid] = it
-            TripCache.tripMap_update[tripid] = currentDate
+            TripCache.tripMap_update[tripid] = getCurrentDateTime()
         }}
+
+
+    fun getTrips(count: Int, destination: String, origin:String,callback: (List<Trip>?) -> Unit) {
+        repository.getTrips(count, destination, origin){ trips ->
+
+            if(trips != null) {
+
+                for (trip in trips) {
+
+
+                    if (TripCache.tripMap[trip.id] == null) {
+
+                        TripCache.tripMap[trip.id] = trip
+                        TripCache.tripMap_update[trip.id] = getCurrentDateTime()
+
+
+                    }
+                }
+            }
+            callback(trips)
+
+        }
+    }
+
+
+    fun getCurrentDateTime(): Date {
+        return Date()
+    }
+
+    fun getCurrentDateTimeString(): String {
+        val currentDateTime = getCurrentDateTime()
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        return formatter.format(currentDateTime)
+    }
 }

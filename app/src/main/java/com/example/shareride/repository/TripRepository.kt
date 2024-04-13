@@ -3,8 +3,10 @@ package com.example.shareride.repository
 import com.example.shareride.clases.Trip
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 import com.google.firebase.ktx.Firebase
 
@@ -29,12 +31,31 @@ class TripRepository {
     }
 
 
+    fun getTrips(count: Int, destination: String, origin:String ,callback: (List<Trip>?) -> Unit) {
+        val database = FirebaseDatabase.getInstance()
+        val reference = database.getReference("/trips")
 
-    fun getTrips(count:Int){
-        database = FirebaseDatabase.getInstance().getReference("/trips/")
-        database.orderByKey().limitToLast(count)
+        reference.orderByChild("destination").equalTo(destination).limitToLast(count)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val tripsList = mutableListOf<Trip>()
 
+                    for (tripSnapshot in dataSnapshot.children) {
+                        val trip = tripSnapshot.getValue(Trip::class.java)
+                        if (trip != null && trip.departureLoc == origin) {
+                            tripsList.add(trip)
+                        }
+                    }
+                    callback(tripsList)
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    callback(null)
+                }
+            })
     }
+
+
 
 
 }

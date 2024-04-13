@@ -7,30 +7,57 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.shareride.clases.Event
+import com.example.shareride.clases.Trip
 import com.example.shareride.persistence.AnaliticsPersistence
+import com.example.shareride.persistence.TripPersistence
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
 
 
 class ViewModelMainActivity  : ViewModel()    {
 
     var page_name: String = "Home"
     var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+
+
+
     private lateinit var analytics: FirebaseAnalytics
     var latitud_me_i:Double = 0.0
     var longitud_me_i:Double =0.0
     var clicks_bf_create=0
     var is_click_create = false
 
+    var destination = "CIUDAD B"
+    var origin = "CIUDAD A"
+
+    // Persistence
+
 
      var anPersistence:AnaliticsPersistence = AnaliticsPersistence()
+    var tripsPersistence: TripPersistence =  TripPersistence()
+
+
+     val _tripsLvdata = MutableLiveData<List<Trip?>?>()
+    val trips: MutableLiveData<List<Trip?>?> = _tripsLvdata
 
 
 
+    fun fetchTrips(){
+        viewModelScope.launch {
+            val trips = tripsPersistence.getTrips(5, destination, origin) { trips ->
+                if(trips!= null){
+                    _tripsLvdata.value = trips
+
+                }
+            }
+        }
+    }
 
 
 
@@ -99,6 +126,9 @@ class ViewModelMainActivity  : ViewModel()    {
 
 
     }
+
+
+
 
 
 
