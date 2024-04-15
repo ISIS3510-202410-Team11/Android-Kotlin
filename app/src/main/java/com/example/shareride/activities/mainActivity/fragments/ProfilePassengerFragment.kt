@@ -74,7 +74,9 @@ class ProfilePassengerFragment : Fragment() {
         val my_name = "Sandra"
         val my_rating = "4,5"
         val my_method = "Cash"
-        val adapter = CustomAdapterCard(titles, directions)
+        val adapter = CustomAdapterCard(titles, directions){
+
+        }
         val eje1: Transport = Transport("Vehicle 1", "Automobile", "ABC123", "Chebrolete")
         val my_transports = listOf<Transport>(eje1)
         val adapter_vehicle = CustomVehicleCard(my_transports)

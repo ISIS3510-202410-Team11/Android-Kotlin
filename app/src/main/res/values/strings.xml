@@ -63,5 +63,7 @@
     <string name="vehicle_form">Vehicle Form</string>
     <string name="title_activity_trip">tripActivity</string>
     <string name="pick_your_ride">Pick your ride</string>
+    <string name="add_new_destination_location">add new destination location</string>
+    <string name="add_your_locationa_as_origin">add your locationa as origin</string>
 </resources>
 

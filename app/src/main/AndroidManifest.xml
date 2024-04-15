@@ -17,7 +17,7 @@
         android:theme="@style/Theme.ShareRide"
         tools:targetApi="31">
         <activity
-            android:name=".activities.trips.tripActivity"
+            android:name=".activities.trips.TripActivity"
             android:exported="false" />
         <activity android:name=".activities.vehicleForm.VehicleFormActivity" />
 

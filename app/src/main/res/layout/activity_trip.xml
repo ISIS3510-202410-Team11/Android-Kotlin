@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/md_theme_light_onPrimary"
     android:orientation="vertical"
-    tools:context=".activities.trips.tripActivity">
+    tools:context=".activities.trips.TripActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -24,6 +24,7 @@
                 android:layout_marginHorizontal="30dp"
                 android:text="@string/pick_your_ride"
                 android:textSize="35sp"
+                android:id="@+id/pickYourRideTO"
 
                 android:elegantTextHeight="true"
                 />

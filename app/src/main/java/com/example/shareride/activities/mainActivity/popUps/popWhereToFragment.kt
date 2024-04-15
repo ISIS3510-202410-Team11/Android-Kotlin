@@ -1,5 +1,6 @@
 package com.example.shareride.activities.mainActivity.popUps
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Point
 import android.os.Bundle
@@ -14,10 +15,15 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.shareride.MapBoxAPI.IQLocationAPI
 import com.example.shareride.R
+import com.example.shareride.activities.mainActivity.fragments.ViewModelMainActivity
+import com.example.shareride.activities.singUp.SingUpActivity
+import com.example.shareride.activities.trips.TripActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
@@ -41,6 +47,8 @@ class MyViewModel : ViewModel() {
     val name_place: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
+
+
 }
 class popWhereToFragment : DialogFragment() {
     // TODO: Rename and change types of parameters
@@ -59,6 +67,7 @@ class popWhereToFragment : DialogFragment() {
     var my_latitud: Double =0.0
     var my_longitud:Double =0.0
 
+    private  val viewModel: ViewModelMainActivity by activityViewModels()
 
     //private var viewModel: viewModelMainActivity = ViewModelProvider(requireActivity()).get(viewModelMainActivity::class.java)
     override fun onCreateView(
@@ -67,6 +76,7 @@ class popWhereToFragment : DialogFragment() {
     ): View? {
 
         myViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
+
 
         MapboxOptions.accessToken = "pk.eyJ1IjoicGNhbXBpbm9ycnIiLCJhIjoiY2x0eW8zY2Y0MGo3dzJocGFrNGxwZG0xNiJ9._UAVbyNYayAoA5RSiwOrfg"
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
@@ -85,7 +95,14 @@ class popWhereToFragment : DialogFragment() {
 
 
         mapview.mapboxMap.setCamera(CameraOptions.Builder()
-            .center(com.mapbox.geojson.Point.fromLngLat(my_longitud, my_latitud)).pitch(0.0).zoom(1.0)
+            .center(myViewModel.livelaongitud.value?.let {
+                myViewModel.livelatitud.value?.let { it1 ->
+                    com.mapbox.geojson.Point.fromLngLat(
+                        it1,
+                        it
+                    )
+                }
+            }).pitch(0.0).zoom(1.0)
             .bearing(0.0)
             .build()
         )
@@ -113,17 +130,32 @@ class popWhereToFragment : DialogFragment() {
         val txt_bar = view.findViewById<EditText>(R.id.new_loc_text)
 
 
+        val getlocation = view.findViewById<Button>(R.id.Act_sensor)
+
+
         val map_view = view.findViewById<MapView>(R.id.mapView)
 
+        val search_button = view.findViewById<Button>(R.id.ssearchbutton)
 
-        from_txt_bar.setOnClickListener {
+
+        to_txt_bar.setText(viewModel.destination.value.toString())
+        from_txt_bar.setText(viewModel.origin.value.toString())
+
+
+        getlocation.setOnClickListener {
 
 
 
             getLocation()
 
             from_txt_bar.textSize = 15F
-            from_txt_bar.setText("Latitud: "+myViewModel.livelatitud.value+" Longitud:"+myViewModel.livelaongitud.value)
+            myViewModel.livelatitud.value?.let { it1 -> myViewModel.livelaongitud.value?.let { it2 ->
+                viewModel.decodelocation(it1,
+                    it2
+                )
+            } }
+
+
 
 
 
@@ -132,9 +164,17 @@ class popWhereToFragment : DialogFragment() {
         }
 
         botton_newLoc.setOnClickListener {
+            if(add_loc.visibility!= View.VISIBLE){
             add_loc.visibility = View.VISIBLE
             hist_layour.visibility = View.GONE
-            snd_button_.visibility = View.VISIBLE
+            snd_button_.visibility = View.VISIBLE}
+            else{
+
+                add_loc.visibility = View.VISIBLE
+                hist_layour.visibility = View.VISIBLE
+                snd_button_.visibility = View.GONE
+
+            }
 
 
 
@@ -157,6 +197,15 @@ class popWhereToFragment : DialogFragment() {
             to_txt_bar.textSize = 12.0F
             true
         }
+
+        search_button.setOnClickListener {
+            val intent = Intent(requireContext(), TripActivity::class.java)
+            startActivity(intent)
+
+        }
+
+
+
 
 
 
@@ -234,6 +283,7 @@ class popWhereToFragment : DialogFragment() {
 
                 updateLatitud(it.latitude)
                 uupdatelongitud(it.longitude)
+                viewModel.updateOrigin(my_location)
 
 
             }

@@ -1,5 +1,6 @@
 package com.example.shareride.activities.mainActivity.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.shareride.R
 import com.example.shareride.activities.custom_cards.CustomAdapterCard
 import com.example.shareride.activities.mainActivity.popUps.popWhereToFragment
+import com.example.shareride.activities.trips.TripActivity
 import com.google.android.material.search.SearchBar
 
 /**
@@ -48,12 +50,17 @@ class HomePassengerFragment : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         val sch_bar = view.findViewById<SearchBar>(R.id.where_to)
 
+        val showpopup = popWhereToFragment()
 
 
 
         val titles = listOf("Universidad de los andes", "Lugar2","Lugar2")
         val directions = listOf("calle 123, #44 -98", "calle2 ","calle 123, #44 -98")
-        val adapter = CustomAdapterCard(titles, directions)
+        val adapter = CustomAdapterCard(titles, directions){ title ->
+            viewModel.updateDestination(title)
+            showpopup.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
+
+        }
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -64,7 +71,6 @@ class HomePassengerFragment : Fragment() {
         sch_bar.setOnClickListener {
             viewModel.clicks_bf_createride("Search")
 
-            val showpopup = popWhereToFragment()
             showpopup.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
 
         }
@@ -72,6 +78,12 @@ class HomePassengerFragment : Fragment() {
 
 
 
+    }
+
+
+    private fun openDetailActivity() {
+        val intent = Intent(requireContext(), TripActivity::class.java)
+        startActivity(intent)
     }
 
     companion object {

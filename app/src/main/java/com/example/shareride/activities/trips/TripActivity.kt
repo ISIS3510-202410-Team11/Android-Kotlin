@@ -1,6 +1,7 @@
 package com.example.shareride.activities.trips
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -10,7 +11,7 @@ import com.example.shareride.R
 import com.example.shareride.activities.custom_cards.CustomTripCard
 import com.example.shareride.activities.mainActivity.fragments.ViewModelMainActivity
 
-class tripActivity : ComponentActivity() {
+class TripActivity : ComponentActivity() {
 
     private lateinit var tripAdapter: CustomTripCard
 
@@ -25,10 +26,14 @@ class tripActivity : ComponentActivity() {
         setContentView(R.layout.activity_trip)
 
         val trip_cards = findViewById<RecyclerView>(R.id.automobileTrips)
+        val title = findViewById<TextView>(R.id.pickYourRideTO)
+
+
+        title.text = "Pick your ride to: "+viewModel.destination.toString()
         trip_cards.layoutManager = LinearLayoutManager(this)
 
 
-        tripAdapter = CustomTripCard(emptyList(), "Car") // Inicializa el adaptador con una lista vacía
+        tripAdapter = CustomTripCard(emptyList(), "Car")
         trip_cards.adapter = tripAdapter
 
         viewModel._tripsLvdata.observe(this, Observer {

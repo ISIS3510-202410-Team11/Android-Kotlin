@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shareride.MapBoxAPI.IQLocationAPI
 import com.example.shareride.clases.Event
 import com.example.shareride.clases.Trip
 import com.example.shareride.persistence.AnaliticsPersistence
@@ -33,8 +34,20 @@ class ViewModelMainActivity  : ViewModel()    {
     var clicks_bf_create=0
     var is_click_create = false
 
-    var destination = "CIUDAD B"
-    var origin = "CIUDAD A"
+
+    val api_location: IQLocationAPI = IQLocationAPI()
+
+
+
+    val origin: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+
+    val destination: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+
+
 
     // Persistence
 
@@ -47,10 +60,22 @@ class ViewModelMainActivity  : ViewModel()    {
     val trips: MutableLiveData<List<Trip?>?> = _tripsLvdata
 
 
+    fun decodelocation(latitud:Double, longitud:Double){
+        val location=api_location.reverse_geocode(longitud,latitud)
+        println(location)
+        origin.value = location
 
+    }
+    fun updateOrigin(newValue: String) {
+        origin.value = newValue
+    }
+
+    fun updateDestination(newValue: String) {
+       destination.value = newValue
+    }
     fun fetchTrips(){
         viewModelScope.launch {
-            val trips = tripsPersistence.getTrips(5, destination, origin) { trips ->
+            val trips = tripsPersistence.getTrips(5, destination.value.toString(), origin.value.toString()) { trips ->
                 if(trips!= null){
                     _tripsLvdata.value = trips
 

@@ -32,9 +32,9 @@ class CustomTripCard(private var trips: List<Trip>, private val type:String) :Re
     }
 
     inner class  viewHolderTrip(itemView: View): RecyclerView.ViewHolder(itemView){
-        var item_vehicle: TextView = itemView.findViewById(R.id.item_vehicle)
-        var itemTime: TextView = itemView.findViewById(R.id.item_tiem)
-        var itemicon: ImageButton = itemView.findViewById(R.id.button_icon)
+        var item_vehicle: TextView = itemView.findViewById(R.id.item_name)
+        var itemTime: TextView = itemView.findViewById(R.id.item_time)
+        var itemicon: ImageButton = itemView.findViewById(R.id.icon_item)
         var itemcost: TextView = itemView.findViewById(R.id.cost_item)
 
 
