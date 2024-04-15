@@ -10,15 +10,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shareride.MapBoxAPI.IQLocationAPI
 import com.example.shareride.clases.Event
+import com.example.shareride.clases.LocationIQResponse
 import com.example.shareride.clases.Trip
 import com.example.shareride.persistence.AnaliticsPersistence
 import com.example.shareride.persistence.TripPersistence
+import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.result.Result
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class ViewModelMainActivity  : ViewModel()    {
@@ -26,6 +32,7 @@ class ViewModelMainActivity  : ViewModel()    {
     var page_name: String = "Home"
     var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
+    private var isRequestPending = false
 
 
     private lateinit var analytics: FirebaseAnalytics
@@ -60,10 +67,59 @@ class ViewModelMainActivity  : ViewModel()    {
     val trips: MutableLiveData<List<Trip?>?> = _tripsLvdata
 
 
-    fun decodelocation(latitud:Double, longitud:Double){
-        val location=api_location.reverse_geocode(longitud,latitud)
-        println(location)
-        origin.value = location
+    fun reverse_geocode(longitud: Double, latitud:Double): String? {
+        var locationIQResponse: String? = null
+
+        if (!isRequestPending) {
+            isRequestPending = true
+
+
+            val apiKey = "pk.0c90a8ce84e34aafc741efec3190ab55"
+            val url = "https://us1.locationiq.com/v1/reverse"
+            val queryParams = listOf(
+                "key" to apiKey,
+                "lat" to latitud.toString(),
+                "lon" to longitud.toString(),
+                "format" to "json"
+            )
+
+
+
+
+
+            url.httpGet(queryParams).responseString { _, response, result ->
+                isRequestPending = false
+
+                when (result) {
+
+                    is Result.Success -> {
+                        val responseBody = result.get()
+                        val gson = Gson()
+                        locationIQResponse = gson.fromJson(
+                            responseBody,
+                            LocationIQResponse::class.java
+                        ).display_name.toString()
+
+                        val parts = locationIQResponse?.split(",")
+                        if (parts != null) {
+                            origin.postValue(parts.take(2).joinToString(","))
+                        }
+                        println(locationIQResponse)
+                        println(origin.value)
+
+
+                    }
+
+                    is Result.Failure -> {
+                        println("Error al realizar la solicitud ${response.statusCode}  ${response.responseMessage}")
+
+                    }
+                }
+            }
+        }
+
+            return locationIQResponse
+
 
     }
     fun updateOrigin(newValue: String) {

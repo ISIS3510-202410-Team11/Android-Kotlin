@@ -1,5 +1,6 @@
 package com.example.shareride.repository
 
+import android.widget.Toast
 import com.example.shareride.clases.Trip
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DataSnapshot
@@ -13,6 +14,32 @@ import com.google.firebase.ktx.Firebase
 class TripRepository {
 
     private lateinit var database: DatabaseReference
+
+
+
+    fun postTrip(newTrip:Trip): Trip? {
+
+
+
+        var createdTrip: Trip? = null
+        database = FirebaseDatabase.getInstance().getReference("/trips/")
+        val rideId = database.push().key
+
+        rideId?.let {
+            database.child(it).setValue(newTrip).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    createdTrip =newTrip
+                }
+                else {
+                    println("no se ha creado")
+
+
+                }
+                }
+            }
+        return createdTrip
+    }
+
 
 
     fun getTrip(id:Int): Trip? {

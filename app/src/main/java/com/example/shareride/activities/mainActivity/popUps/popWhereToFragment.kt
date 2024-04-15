@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Point
 import android.os.Bundle
+import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -12,13 +13,16 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.shareride.MapBoxAPI.IQLocationAPI
 import com.example.shareride.R
 import com.example.shareride.activities.mainActivity.fragments.ViewModelMainActivity
@@ -27,12 +31,20 @@ import com.example.shareride.activities.trips.TripActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
+import com.mapbox.android.gestures.MoveGestureDetector
 import com.mapbox.common.MapboxOptions
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
+import com.mapbox.maps.extension.style.style
+import com.mapbox.maps.plugin.LocationPuck2D
+import com.mapbox.maps.plugin.animation.camera
+import com.mapbox.maps.plugin.gestures.OnMoveListener
 import com.mapbox.maps.plugin.gestures.addOnMapClickListener
-
+import com.mapbox.maps.plugin.gestures.gestures
+import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
+import com.mapbox.maps.plugin.locationcomponent.location
+import kotlinx.coroutines.launch
 
 
 class MyViewModel : ViewModel() {
@@ -57,6 +69,8 @@ class popWhereToFragment : DialogFragment() {
 
     private lateinit var myViewModel: MyViewModel
 
+    var locationComponetn = mapview.location
+
 
 
 
@@ -66,6 +80,8 @@ class popWhereToFragment : DialogFragment() {
     var name_new_location: String = ""
     var my_latitud: Double =0.0
     var my_longitud:Double =0.0
+
+
 
     private  val viewModel: ViewModelMainActivity by activityViewModels()
 
@@ -93,21 +109,41 @@ class popWhereToFragment : DialogFragment() {
 
         mapview = MapView(this.requireContext())
 
+        val positionList=OnIndicatorPositionChangedListener{
 
-        mapview.mapboxMap.setCamera(CameraOptions.Builder()
-            .center(myViewModel.livelaongitud.value?.let {
-                myViewModel.livelatitud.value?.let { it1 ->
-                    com.mapbox.geojson.Point.fromLngLat(
-                        it1,
-                        it
-                    )
-                }
-            }).pitch(0.0).zoom(1.0)
-            .bearing(0.0)
-            .build()
-        )
+            mapview.mapboxMap.setCamera(CameraOptions.Builder().center(it).build())
+
+            mapview.gestures.focalPoint= mapview.getMapboxMap().pixelForCoordinate(it)
+
+        }
+
+
+         val onMoveListener = object:OnMoveListener{
+             override fun onMove(detector: MoveGestureDetector): Boolean {
+                 TODO("Not yet implemented")
+             }
+
+             override fun onMoveBegin(detector: MoveGestureDetector) {
+                 TODO("Not yet implemented")
+             }
+
+             override fun onMoveEnd(detector: MoveGestureDetector) {
+                 TODO("Not yet implemented")
+             }
+
+         }
+
+
+
         mapview.mapboxMap.loadStyle(Style.MAPBOX_STREETS)
 
+        mapview.getMapboxMap().setCamera(CameraOptions.Builder().zoom(14.0).build())
+        locationComponetn.updateSettings {
+            this.enabled=true
+
+
+            locationComponetn.addOnIndicatorPositionChangedListener(positionList)
+        }
 
 
 
@@ -130,7 +166,6 @@ class popWhereToFragment : DialogFragment() {
         val txt_bar = view.findViewById<EditText>(R.id.new_loc_text)
 
 
-        val getlocation = view.findViewById<Button>(R.id.Act_sensor)
 
 
         val map_view = view.findViewById<MapView>(R.id.mapView)
@@ -138,30 +173,85 @@ class popWhereToFragment : DialogFragment() {
         val search_button = view.findViewById<Button>(R.id.ssearchbutton)
 
 
-        to_txt_bar.setText(viewModel.destination.value.toString())
-        from_txt_bar.setText(viewModel.origin.value.toString())
+
+        map_view.mapboxMap.loadStyle(Style.MAPBOX_STREETS)
 
 
-        getlocation.setOnClickListener {
+
+
+        map_view.getMapboxMap().addOnMapClickListener { point ->
+            val latitude = point.latitude()
+            val longitude = point.longitude()
+            val coordenadas = LatLng(latitude, longitude)
+
+            val destination_unk = "Latitud: $latitude, Longitud: $longitude"
+            to_txt_bar.hint = destination_unk
+            to_txt_bar.setText(destination_unk)
+            to_txt_bar.textSize = 12.0F
+            true
+        }
+
+
+        viewModel.destination.observe(viewLifecycleOwner, Observer { newDestination ->
+            to_txt_bar.setText(newDestination)
+            to_txt_bar.setHint(newDestination)
+
+        })
+
+
+
+        viewModel.origin.observe(viewLifecycleOwner, Observer { newOrigin ->
+            from_txt_bar.setText(newOrigin)
+            from_txt_bar.setHint(newOrigin)
+
+        })
+
+        from_txt_bar.addTextChangedListener { object :TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.origin.value = s.toString()
+
+            }
+        } }
+
+        to_txt_bar.addTextChangedListener { object :TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.destination.value = s.toString()
+
+            }} }
+
+
+        from_txt_bar.setOnClickListener {
 
 
 
             getLocation()
 
             from_txt_bar.textSize = 15F
-            myViewModel.livelatitud.value?.let { it1 -> myViewModel.livelaongitud.value?.let { it2 ->
-                viewModel.decodelocation(it1,
-                    it2
-                )
-            } }
+
+            myViewModel.livelatitud.observe(this, Observer { latitude ->
+                myViewModel.livelaongitud.value?.let { longitude ->
+                        viewModel.reverse_geocode(longitude,latitude )
 
 
+                }
+            })}
 
-
-
-
-
-        }
 
         botton_newLoc.setOnClickListener {
             if(add_loc.visibility!= View.VISIBLE){
@@ -186,17 +276,7 @@ class popWhereToFragment : DialogFragment() {
 
 
 
-        map_view.getMapboxMap().addOnMapClickListener { point ->
-            val latitude = point.latitude()
-            val longitude = point.longitude()
-            val coordenadas = LatLng(latitude, longitude)
 
-            val destination_unk = "Latitud: $latitude, Longitud: $longitude"
-            to_txt_bar.hint = destination_unk
-            to_txt_bar.setText(destination_unk)
-            to_txt_bar.textSize = 12.0F
-            true
-        }
 
         search_button.setOnClickListener {
             val intent = Intent(requireContext(), TripActivity::class.java)
@@ -283,8 +363,6 @@ class popWhereToFragment : DialogFragment() {
 
                 updateLatitud(it.latitude)
                 uupdatelongitud(it.longitude)
-                viewModel.updateOrigin(my_location)
-
 
             }
             else{

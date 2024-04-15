@@ -14,6 +14,13 @@ class TripPersistence {
     private val _tripByIdLvdata = MutableLiveData<Trip?>()
     val tripById: LiveData<Trip?> = _tripByIdLvdata
 
+    fun postTrip (){
+
+
+
+
+    }
+
 
     fun getTrip(tripid:Int){
         val currentDate:Date = getCurrentDateTime()

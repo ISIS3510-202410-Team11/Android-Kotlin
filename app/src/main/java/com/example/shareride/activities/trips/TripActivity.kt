@@ -29,7 +29,7 @@ class TripActivity : ComponentActivity() {
         val title = findViewById<TextView>(R.id.pickYourRideTO)
 
 
-        title.text = "Pick your ride to: "+viewModel.destination.toString()
+        title.setText("Pick your ride to: "+viewModel.destination.value.toString())
         trip_cards.layoutManager = LinearLayoutManager(this)
 
 

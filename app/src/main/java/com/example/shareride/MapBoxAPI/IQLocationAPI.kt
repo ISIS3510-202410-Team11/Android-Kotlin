@@ -1,5 +1,7 @@
 package com.example.shareride.MapBoxAPI
 
+import androidx.lifecycle.ViewModelProvider
+import com.example.shareride.activities.mainActivity.popUps.MyViewModel
 import com.example.shareride.clases.LocationIQResponse
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
@@ -7,6 +9,8 @@ import com.google.gson.Gson
 
 
 class IQLocationAPI {
+
+
 
     fun reverse_geocode(longitud: Double, latitud:Double): String? {
         val apiKey = "pk.0c90a8ce84e34aafc741efec3190ab55"
@@ -21,6 +25,8 @@ class IQLocationAPI {
 
 
 
+
+
         url.httpGet(queryParams).responseString { _, response, result ->
 
             when (result) {
@@ -28,14 +34,12 @@ class IQLocationAPI {
                 is Result.Success ->{
                     val responseBody = result.get()
                     val gson = Gson()
-                    println(gson)
                      locationIQResponse = gson.fromJson(responseBody, LocationIQResponse::class.java).display_name.toString()
-                    println(locationIQResponse)
 
 
                 }
                 is Result.Failure ->{
-                    println("Error al realizar la solicitud")
+                    println("Error al realizar la solicitud ${response.statusCode}  ${response.responseMessage}")
 
                 }
             }
