@@ -22,6 +22,9 @@ import com.google.firebase.analytics.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
+import com.mapbox.maps.OfflineManager
+import com.mapbox.maps.Style
+import com.mapbox.maps.TilesetDescriptorOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -42,6 +45,9 @@ class ViewModelMainActivity  : ViewModel()    {
     var longitud_me_i:Double =0.0
     var clicks_bf_create=0
     var is_click_create = false
+
+    val offlineManager: OfflineManager = OfflineManager()
+
 
 
     val api_location: IQLocationAPI = IQLocationAPI()
@@ -69,6 +75,19 @@ class ViewModelMainActivity  : ViewModel()    {
     val trips: MutableLiveData<List<Trip?>?> = _tripsLvdata
 
 
+
+
+
+
+    fun downloadmap(){
+        val region = offlineManager.createTilesetDescriptor(
+            TilesetDescriptorOptions.Builder()
+                .styleURI(Style.MAPBOX_STREETS)
+                .minZoom(0)
+                .maxZoom(14)
+                .build()
+        )
+    }
 
 
     fun reverse_geocode_destination(longitud: Double, latitud:Double): Boolean {
