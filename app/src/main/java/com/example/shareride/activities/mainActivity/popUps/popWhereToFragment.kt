@@ -1,8 +1,10 @@
 package com.example.shareride.activities.mainActivity.popUps
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Point
 import android.os.Bundle
+import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -11,22 +13,38 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.example.shareride.MapBoxAPI.IQLocationAPI
 import com.example.shareride.R
+import com.example.shareride.activities.mainActivity.fragments.ViewModelMainActivity
+import com.example.shareride.activities.singUp.SingUpActivity
+import com.example.shareride.activities.trips.TripActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
+import com.mapbox.android.gestures.MoveGestureDetector
 import com.mapbox.common.MapboxOptions
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
+import com.mapbox.maps.extension.style.style
+import com.mapbox.maps.plugin.LocationPuck2D
+import com.mapbox.maps.plugin.animation.camera
+import com.mapbox.maps.plugin.gestures.OnMoveListener
 import com.mapbox.maps.plugin.gestures.addOnMapClickListener
-
+import com.mapbox.maps.plugin.gestures.gestures
+import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
+import com.mapbox.maps.plugin.locationcomponent.location
+import kotlinx.coroutines.launch
 
 
 class MyViewModel : ViewModel() {
@@ -41,6 +59,16 @@ class MyViewModel : ViewModel() {
     val name_place: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
+
+    val livelatitudDestination: MutableLiveData<Double> by lazy {
+        MutableLiveData<Double>()
+    }
+
+    val livelaongitudDestination: MutableLiveData<Double> by lazy {
+        MutableLiveData<Double>()
+    }
+
+
 }
 class popWhereToFragment : DialogFragment() {
     // TODO: Rename and change types of parameters
@@ -48,6 +76,7 @@ class popWhereToFragment : DialogFragment() {
     private  lateinit var mapview:MapView
 
     private lateinit var myViewModel: MyViewModel
+
 
 
 
@@ -60,6 +89,9 @@ class popWhereToFragment : DialogFragment() {
     var my_longitud:Double =0.0
 
 
+
+    private  val viewModel: ViewModelMainActivity by activityViewModels()
+
     //private var viewModel: viewModelMainActivity = ViewModelProvider(requireActivity()).get(viewModelMainActivity::class.java)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,12 +100,13 @@ class popWhereToFragment : DialogFragment() {
 
         myViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
 
+
         MapboxOptions.accessToken = "pk.eyJ1IjoicGNhbXBpbm9ycnIiLCJhIjoiY2x0eW8zY2Y0MGo3dzJocGFrNGxwZG0xNiJ9._UAVbyNYayAoA5RSiwOrfg"
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_pop_where_to, container, false)
-
+        saveLocation()
 
     }
 
@@ -81,15 +114,52 @@ class popWhereToFragment : DialogFragment() {
 
 
 
-        mapview = MapView(this.requireContext())
+        mapview = view.findViewById<MapView>(R.id.mapView)
+        var locationComponetn = mapview.location
 
 
-        mapview.mapboxMap.setCamera(CameraOptions.Builder()
-            .center(com.mapbox.geojson.Point.fromLngLat(my_longitud, my_latitud)).pitch(0.0).zoom(1.0)
-            .bearing(0.0)
-            .build()
-        )
         mapview.mapboxMap.loadStyle(Style.MAPBOX_STREETS)
+
+        mapview.getMapboxMap().setCamera(CameraOptions.Builder().zoom(14.0).build())
+
+
+
+                val positionList=OnIndicatorPositionChangedListener{
+
+                    mapview.mapboxMap.setCamera(CameraOptions.Builder().center(it).build())
+
+                    mapview.gestures.focalPoint= mapview.getMapboxMap().pixelForCoordinate(it)
+
+                }
+
+                locationComponetn.updateSettings {
+                    this.enabled=true
+
+
+                    locationComponetn.addOnIndicatorPositionChangedListener(positionList)
+                }
+
+
+
+
+
+         val onMoveListener = object:OnMoveListener{
+             override fun onMove(detector: MoveGestureDetector): Boolean {
+                 TODO("Not yet implemented")
+             }
+
+             override fun onMoveBegin(detector: MoveGestureDetector) {
+                 TODO("Not yet implemented")
+             }
+
+             override fun onMoveEnd(detector: MoveGestureDetector) {
+                 TODO("Not yet implemented")
+             }
+
+         }
+
+
+
 
 
 
@@ -113,28 +183,111 @@ class popWhereToFragment : DialogFragment() {
         val txt_bar = view.findViewById<EditText>(R.id.new_loc_text)
 
 
-        val map_view = view.findViewById<MapView>(R.id.mapView)
+
+
+
+        val search_button = view.findViewById<Button>(R.id.ssearchbutton)
+
+
+
+
+
+
+
+        mapview.getMapboxMap().addOnMapClickListener { point ->
+
+
+            val latitude = point.latitude()
+            val longitude = point.longitude()
+            val coordenadas = LatLng(latitude, longitude)
+            val destination_unk = "Latitud: $latitude, Longitud: $longitude"
+            to_txt_bar.hint = destination_unk
+            to_txt_bar.setText(destination_unk)
+            to_txt_bar.textSize = 12.0F
+            myViewModel.livelaongitudDestination.postValue(longitude)
+            myViewModel.livelatitud.postValue(latitude)
+
+            viewModel.reverse_geocode_destination(longitude, latitude)
+        }
+
+
+        viewModel.destination.observe(viewLifecycleOwner, Observer { newDestination ->
+            to_txt_bar.setText(newDestination)
+            to_txt_bar.setHint(newDestination)
+
+        })
+
+
+
+        viewModel.origin.observe(viewLifecycleOwner, Observer { newOrigin ->
+            from_txt_bar.setText(newOrigin)
+            from_txt_bar.setHint(newOrigin)
+
+        })
+
+        from_txt_bar.addTextChangedListener { object :TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.origin.value = s.toString()
+
+            }
+        } }
+
+        to_txt_bar.addTextChangedListener { object :TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.destination.value = s.toString()
+
+            }} }
 
 
         from_txt_bar.setOnClickListener {
 
 
 
-            getLocation()
+            saveLocation()
 
             from_txt_bar.textSize = 15F
-            from_txt_bar.setText("Latitud: "+myViewModel.livelatitud.value+" Longitud:"+myViewModel.livelaongitud.value)
+
+            myViewModel.livelatitud.observe(this, Observer { latitude ->
+                myViewModel.livelaongitud.value?.let { longitude ->
+                        viewModel.reverse_geocode(longitude,latitude )
 
 
+                }
+            })}
 
-
-
-        }
 
         botton_newLoc.setOnClickListener {
-            add_loc.visibility = View.VISIBLE
-            hist_layour.visibility = View.GONE
-            snd_button_.visibility = View.VISIBLE
+
+            if(!viewModel.isaddingloc){
+
+                viewModel.isaddingloc = false
+                hist_layour.visibility = View.GONE
+                snd_button_.visibility = View.VISIBLE
+                add_loc.visibility = View.VISIBLE}
+            else{
+                viewModel.isaddingloc = true
+
+                hist_layour.visibility = View.VISIBLE
+                snd_button_.visibility = View.GONE
+                add_loc.visibility = View.GONE
+
+            }
 
 
 
@@ -146,17 +299,18 @@ class popWhereToFragment : DialogFragment() {
 
 
 
-        map_view.getMapboxMap().addOnMapClickListener { point ->
-            val latitude = point.latitude()
-            val longitude = point.longitude()
-            val coordenadas = LatLng(latitude, longitude)
 
-            val destination_unk = "Latitud: $latitude, Longitud: $longitude"
-            to_txt_bar.hint = destination_unk
-            to_txt_bar.setText(destination_unk)
-            to_txt_bar.textSize = 12.0F
-            true
+
+        search_button.setOnClickListener {
+
+
+            val intent = Intent(requireContext(), TripActivity::class.java)
+            startActivity(intent)
+
         }
+
+
+
 
 
 
@@ -188,6 +342,13 @@ class popWhereToFragment : DialogFragment() {
 
 
 
+
+
+
+
+
+
+
     }
 
     fun updateLatitud(newValue: Double) {
@@ -198,7 +359,8 @@ class popWhereToFragment : DialogFragment() {
         myViewModel.livelaongitud.value = newValue
     }
 
-    private fun getLocation() {
+
+    fun saveLocation() {
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 android.Manifest.permission.ACCESS_COARSE_LOCATION
@@ -235,7 +397,6 @@ class popWhereToFragment : DialogFragment() {
                 updateLatitud(it.latitude)
                 uupdatelongitud(it.longitude)
 
-
             }
             else{
                 Toast.makeText(requireContext(), "Unsucesfull adquiered location", Toast.LENGTH_SHORT).show()
@@ -253,5 +414,9 @@ class popWhereToFragment : DialogFragment() {
     }
 
 
-
 }
+
+
+
+
+

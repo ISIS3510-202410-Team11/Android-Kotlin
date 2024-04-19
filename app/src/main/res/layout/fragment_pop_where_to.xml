@@ -54,10 +54,6 @@
                 android:textColor="@color/common_google_signin_btn_text_light"
                 android:background="@drawable/searchbarborder"
                 android:textColorHint="@color/common_google_signin_btn_text_light"
-                android:inputType="none"
-                android:focusable="false"
-                android:longClickable="false"
-                android:clickable="true"
 
                 />
         </LinearLayout>
@@ -94,6 +90,41 @@
                 android:textColorHint="@color/common_google_signin_btn_text_light"
 
                 />
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginVertical="10dp"
+
+
+            >
+
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/baseline_add_circle_24"
+                android:background="@android:color/transparent"
+                ></ImageButton>
+
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_new_destination_location"
+                style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
+                android:backgroundTint="#DADADA"
+                android:textAlignment="textStart"
+                android:textColor="@color/common_google_signin_btn_text_light"
+                android:id="@+id/add_new_loc"
+
+                >
+
+            </Button>
+
         </LinearLayout>
 
         <LinearLayout
@@ -174,7 +205,7 @@
 
 
                 />
-                
+
 
             <Button
                 style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
@@ -192,38 +223,27 @@
 
         </LinearLayout>
 
-        <LinearLayout
+
+
+
+
+
+        <Button
+            android:id="@+id/ssearchbutton"
+            style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginVertical="10dp"
+            android:layout_marginVertical="20dp"
+            android:text="@string/search"
+            android:textAlignment="center"
+            android:textColor="@color/md_theme_light_onPrimary"
+            android:textSize="20sp"
+            app:backgroundTint="@color/md_theme_light_primary"
+            app:cornerRadius="100dp"
 
 
-            >
+            />
 
-            <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/baseline_add_circle_24"
-                android:background="@android:color/transparent"
-                ></ImageButton>
-
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/add_new_location"
-                style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
-                android:backgroundTint="#DADADA"
-                android:textAlignment="textStart"
-                android:textColor="@color/common_google_signin_btn_text_light"
-                android:id="@+id/add_new_loc"
-
-                >
-
-            </Button>
-
-        </LinearLayout>
 
 
 

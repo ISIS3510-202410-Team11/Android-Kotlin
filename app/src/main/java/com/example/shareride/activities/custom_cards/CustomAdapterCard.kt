@@ -7,7 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shareride.R
 
-class CustomAdapterCard(private val titles: List<String>, private val directions: List<String>) :
+class CustomAdapterCard(private val titles: List<String>, private val directions: List<String>,
+                        private val onItemClick: (String) -> Unit ) :
     RecyclerView.Adapter<CustomAdapterCard.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -23,6 +24,10 @@ class CustomAdapterCard(private val titles: List<String>, private val directions
         val title = titles[i]
         val direction = directions[i]
         holder.bind(title, direction)
+        holder.itemView.setOnClickListener {
+            onItemClick(title)
+
+        }
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
