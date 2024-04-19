@@ -28,8 +28,17 @@ class TripActivity : ComponentActivity() {
         val trip_cards = findViewById<RecyclerView>(R.id.automobileTrips)
         val title = findViewById<TextView>(R.id.pickYourRideTO)
 
+        val destination = viewModel.destination.value
 
-        title.setText("Pick your ride to: "+viewModel.destination.value.toString())
+        if (destination != null) {
+                title.text = "Pick your ride to: $destination"
+
+        } else {
+                title.text = "There are no rides available"
+
+        }
+
+
         trip_cards.layoutManager = LinearLayoutManager(this)
 
 
