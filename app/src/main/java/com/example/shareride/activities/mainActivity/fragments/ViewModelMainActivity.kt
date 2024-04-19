@@ -34,6 +34,8 @@ class ViewModelMainActivity  : ViewModel()    {
 
     private var isRequestPending = false
 
+    var isaddingloc =false
+
 
     private lateinit var analytics: FirebaseAnalytics
     var latitud_me_i:Double = 0.0
@@ -67,6 +69,61 @@ class ViewModelMainActivity  : ViewModel()    {
     val trips: MutableLiveData<List<Trip?>?> = _tripsLvdata
 
 
+
+
+    fun reverse_geocode_destination(longitud: Double, latitud:Double): Boolean {
+        var locationIQResponse: String? = null
+
+        if (!isRequestPending) {
+            isRequestPending = true
+
+
+            val apiKey = "pk.0c90a8ce84e34aafc741efec3190ab55"
+            val url = "https://us1.locationiq.com/v1/reverse"
+            val queryParams = listOf(
+                "key" to apiKey,
+                "lat" to latitud.toString(),
+                "lon" to longitud.toString(),
+                "format" to "json"
+            )
+
+
+
+
+
+            url.httpGet(queryParams).responseString { _, response, result ->
+                isRequestPending = false
+
+                when (result) {
+
+                    is Result.Success -> {
+                        val responseBody = result.get()
+                        val gson = Gson()
+                        locationIQResponse = gson.fromJson(
+                            responseBody,
+                            LocationIQResponse::class.java
+                        ).display_name.toString()
+
+                        val parts = locationIQResponse?.split(",")
+                        if (parts != null) {
+                            destination.postValue(parts.take(2).joinToString(","))
+                        }
+
+
+                    }
+
+                    is Result.Failure -> {
+                        println("Error al realizar la solicitud ${response.statusCode}  ${response.responseMessage}")
+
+                    }
+                }
+            }
+        }
+
+        return true
+
+
+    }
     fun reverse_geocode(longitud: Double, latitud:Double): String? {
         var locationIQResponse: String? = null
 

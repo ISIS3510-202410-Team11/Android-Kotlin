@@ -60,6 +60,14 @@ class MyViewModel : ViewModel() {
         MutableLiveData<String>()
     }
 
+    val livelatitudDestination: MutableLiveData<Double> by lazy {
+        MutableLiveData<Double>()
+    }
+
+    val livelaongitudDestination: MutableLiveData<Double> by lazy {
+        MutableLiveData<Double>()
+    }
+
 
 }
 class popWhereToFragment : DialogFragment() {
@@ -69,7 +77,6 @@ class popWhereToFragment : DialogFragment() {
 
     private lateinit var myViewModel: MyViewModel
 
-    var locationComponetn = mapview.location
 
 
 
@@ -99,7 +106,7 @@ class popWhereToFragment : DialogFragment() {
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_pop_where_to, container, false)
-
+        saveLocation()
 
     }
 
@@ -107,15 +114,33 @@ class popWhereToFragment : DialogFragment() {
 
 
 
-        mapview = MapView(this.requireContext())
+        mapview = view.findViewById<MapView>(R.id.mapView)
+        var locationComponetn = mapview.location
 
-        val positionList=OnIndicatorPositionChangedListener{
 
-            mapview.mapboxMap.setCamera(CameraOptions.Builder().center(it).build())
+        mapview.mapboxMap.loadStyle(Style.MAPBOX_STREETS)
 
-            mapview.gestures.focalPoint= mapview.getMapboxMap().pixelForCoordinate(it)
+        mapview.getMapboxMap().setCamera(CameraOptions.Builder().zoom(14.0).build())
 
-        }
+
+
+                val positionList=OnIndicatorPositionChangedListener{
+
+                    mapview.mapboxMap.setCamera(CameraOptions.Builder().center(it).build())
+
+                    mapview.gestures.focalPoint= mapview.getMapboxMap().pixelForCoordinate(it)
+
+                }
+
+                locationComponetn.updateSettings {
+                    this.enabled=true
+
+
+                    locationComponetn.addOnIndicatorPositionChangedListener(positionList)
+                }
+
+
+
 
 
          val onMoveListener = object:OnMoveListener{
@@ -135,15 +160,7 @@ class popWhereToFragment : DialogFragment() {
 
 
 
-        mapview.mapboxMap.loadStyle(Style.MAPBOX_STREETS)
 
-        mapview.getMapboxMap().setCamera(CameraOptions.Builder().zoom(14.0).build())
-        locationComponetn.updateSettings {
-            this.enabled=true
-
-
-            locationComponetn.addOnIndicatorPositionChangedListener(positionList)
-        }
 
 
 
@@ -168,27 +185,29 @@ class popWhereToFragment : DialogFragment() {
 
 
 
-        val map_view = view.findViewById<MapView>(R.id.mapView)
 
         val search_button = view.findViewById<Button>(R.id.ssearchbutton)
 
 
 
-        map_view.mapboxMap.loadStyle(Style.MAPBOX_STREETS)
 
 
 
 
-        map_view.getMapboxMap().addOnMapClickListener { point ->
+        mapview.getMapboxMap().addOnMapClickListener { point ->
+
+
             val latitude = point.latitude()
             val longitude = point.longitude()
             val coordenadas = LatLng(latitude, longitude)
-
             val destination_unk = "Latitud: $latitude, Longitud: $longitude"
             to_txt_bar.hint = destination_unk
             to_txt_bar.setText(destination_unk)
             to_txt_bar.textSize = 12.0F
-            true
+            myViewModel.livelaongitudDestination.postValue(longitude)
+            myViewModel.livelatitud.postValue(latitude)
+
+            viewModel.reverse_geocode_destination(longitude, latitude)
         }
 
 
@@ -240,7 +259,7 @@ class popWhereToFragment : DialogFragment() {
 
 
 
-            getLocation()
+            saveLocation()
 
             from_txt_bar.textSize = 15F
 
@@ -254,15 +273,19 @@ class popWhereToFragment : DialogFragment() {
 
 
         botton_newLoc.setOnClickListener {
-            if(add_loc.visibility!= View.VISIBLE){
-            add_loc.visibility = View.VISIBLE
-            hist_layour.visibility = View.GONE
-            snd_button_.visibility = View.VISIBLE}
-            else{
 
-                add_loc.visibility = View.VISIBLE
+            if(!viewModel.isaddingloc){
+
+                viewModel.isaddingloc = false
+                hist_layour.visibility = View.GONE
+                snd_button_.visibility = View.VISIBLE
+                add_loc.visibility = View.VISIBLE}
+            else{
+                viewModel.isaddingloc = true
+
                 hist_layour.visibility = View.VISIBLE
                 snd_button_.visibility = View.GONE
+                add_loc.visibility = View.GONE
 
             }
 
@@ -279,6 +302,8 @@ class popWhereToFragment : DialogFragment() {
 
 
         search_button.setOnClickListener {
+
+
             val intent = Intent(requireContext(), TripActivity::class.java)
             startActivity(intent)
 
@@ -317,6 +342,13 @@ class popWhereToFragment : DialogFragment() {
 
 
 
+
+
+
+
+
+
+
     }
 
     fun updateLatitud(newValue: Double) {
@@ -327,7 +359,8 @@ class popWhereToFragment : DialogFragment() {
         myViewModel.livelaongitud.value = newValue
     }
 
-    private fun getLocation() {
+
+    fun saveLocation() {
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 android.Manifest.permission.ACCESS_COARSE_LOCATION
@@ -381,5 +414,9 @@ class popWhereToFragment : DialogFragment() {
     }
 
 
-
 }
+
+
+
+
+
