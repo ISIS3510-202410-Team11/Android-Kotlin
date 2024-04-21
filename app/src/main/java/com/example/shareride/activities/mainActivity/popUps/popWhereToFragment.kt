@@ -191,6 +191,16 @@ class popWhereToFragment : DialogFragment() {
 
 
 
+        viewModel._isRequestPending.observe(this, Observer { isRequestPending ->
+            if (isRequestPending) {
+                // Mostrar animación de carga (por ejemplo, ProgressBar)
+
+            } else {
+                // Ocultar animación de carga
+
+            }
+        })
+
 
 
 

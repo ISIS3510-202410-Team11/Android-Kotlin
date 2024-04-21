@@ -37,6 +37,7 @@
                 android:src="@drawable/baseline_arrow_upward_24"
                 android:contentDescription="@string/from_icon_upwards_arrow"
                 android:background="@android:color/transparent"
+                android:id="@+id/mylocationicon"
 
                 />
 

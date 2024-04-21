@@ -35,7 +35,26 @@ class ViewModelMainActivity  : ViewModel()    {
     var page_name: String = "Home"
     var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    private var isRequestPending = false
+
+
+    val _isRequestPending = MutableLiveData<Boolean>()
+    val isRequestPending: LiveData<Boolean>
+        get() = _isRequestPending
+
+    init {
+        _isRequestPending.value = false
+    }
+
+
+
+    private val _isRequestDestinationPending = MutableLiveData<Boolean>()
+    val isRequestDestinationPending: LiveData<Boolean>
+        get() = _isRequestDestinationPending
+
+    init {
+        _isRequestDestinationPending.value = false
+    }
+
 
     var isaddingloc =false
 
@@ -93,8 +112,8 @@ class ViewModelMainActivity  : ViewModel()    {
     fun reverse_geocode_destination(longitud: Double, latitud:Double): Boolean {
         var locationIQResponse: String? = null
 
-        if (!isRequestPending) {
-            isRequestPending = true
+        if (!_isRequestDestinationPending.value!!) {
+            _isRequestDestinationPending.value = true
 
 
             val apiKey = "pk.0c90a8ce84e34aafc741efec3190ab55"
@@ -109,36 +128,37 @@ class ViewModelMainActivity  : ViewModel()    {
 
 
 
+            viewModelScope.launch(Dispatchers.IO) {
+                url.httpGet(queryParams).responseString { _, response, result ->
+                    _isRequestDestinationPending.value = false
 
-            url.httpGet(queryParams).responseString { _, response, result ->
-                isRequestPending = false
+                    when (result) {
 
-                when (result) {
+                        is Result.Success -> {
+                            val responseBody = result.get()
+                            val gson = Gson()
+                            locationIQResponse = gson.fromJson(
+                                responseBody,
+                                LocationIQResponse::class.java
+                            ).display_name.toString()
 
-                    is Result.Success -> {
-                        val responseBody = result.get()
-                        val gson = Gson()
-                        locationIQResponse = gson.fromJson(
-                            responseBody,
-                            LocationIQResponse::class.java
-                        ).display_name.toString()
+                            val parts = locationIQResponse?.split(",")
+                            if (parts != null) {
+                                destination.postValue(parts.take(2).joinToString(","))
+                            }
 
-                        val parts = locationIQResponse?.split(",")
-                        if (parts != null) {
-                            destination.postValue(parts.take(2).joinToString(","))
+
                         }
 
+                        is Result.Failure -> {
+                            println("Error al realizar la solicitud ${response.statusCode}  ${response.responseMessage}")
 
-                    }
-
-                    is Result.Failure -> {
-                        println("Error al realizar la solicitud ${response.statusCode}  ${response.responseMessage}")
-
+                        }
                     }
                 }
             }
-        }
 
+        }
         return true
 
 
@@ -146,8 +166,8 @@ class ViewModelMainActivity  : ViewModel()    {
     fun reverse_geocode(longitud: Double, latitud:Double): String? {
         var locationIQResponse: String? = null
 
-        if (!isRequestPending) {
-            isRequestPending = true
+        if (!_isRequestPending.value!!) {
+            _isRequestPending.value = true
 
 
             val apiKey = "pk.0c90a8ce84e34aafc741efec3190ab55"
@@ -162,9 +182,10 @@ class ViewModelMainActivity  : ViewModel()    {
 
 
 
+            viewModelScope.launch(Dispatchers.IO) {
 
             url.httpGet(queryParams).responseString { _, response, result ->
-                isRequestPending = false
+                _isRequestPending.value = false
 
                 when (result) {
 
@@ -192,6 +213,7 @@ class ViewModelMainActivity  : ViewModel()    {
                     }
                 }
             }
+        }
         }
 
             return locationIQResponse
