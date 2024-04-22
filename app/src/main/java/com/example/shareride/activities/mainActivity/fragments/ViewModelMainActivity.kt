@@ -112,7 +112,7 @@ class ViewModelMainActivity  : ViewModel()    {
     fun reverse_geocode_destination(longitud: Double, latitud:Double): Boolean {
         var locationIQResponse: String? = null
 
-        if (_isRequestPending.value== true && _isRequestDestinationPending.value == true) {
+        if ( _isRequestDestinationPending.value == true) {
             return false
 
         }
@@ -164,7 +164,7 @@ class ViewModelMainActivity  : ViewModel()    {
     fun reverse_geocode(longitud: Double, latitud:Double): String? {
         var locationIQResponse: String? = null
 
-        if (_isRequestPending.value== true && _isRequestDestinationPending.value == true) {
+        if (_isRequestPending.value== true ) {
             return ""
         }
 
