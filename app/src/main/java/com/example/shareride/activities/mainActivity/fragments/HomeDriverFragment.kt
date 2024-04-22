@@ -2,20 +2,16 @@ package com.example.shareride.activities.mainActivity.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.FrameLayout
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.shareride.R
-import com.example.shareride.activities.mainActivity.MainActivityPassenger
-import com.google.android.material.search.SearchBar
-import org.checkerframework.common.subtyping.qual.Bottom
+import com.example.shareride.activities.logIn.LogInActivity
+import com.example.shareride.activities.mainActivity.CreateRideActivity
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -51,7 +47,7 @@ class HomeDriverFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val create_ride_btn = view.findViewById<Button>(R.id.create_ride)
+        var create_ride_btn: Button  = view.findViewById<Button>(R.id.create_ride)
 
 
 
@@ -65,27 +61,22 @@ class HomeDriverFragment : Fragment() {
 
             viewModel.clicks_bf_createride("create")
 
+            var createRide: Intent = Intent(requireContext(), CreateRideActivity::class.java)
+            startActivity(createRide)
+
+
+
+
+
+
+
+
+
+
+
         }
 
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeDriverFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeDriverFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
+
 }

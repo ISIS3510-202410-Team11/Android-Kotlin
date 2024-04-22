@@ -242,7 +242,7 @@ class popWhereToFragment : DialogFragment() {
             to_txt_bar.textSize = 12.0F
             myViewModel.livelaongitudDestination.postValue(longitude)
             myViewModel.livelatitudDestination.postValue(latitude)
-
+            viewModel.clicks_bf_createride("map")
             viewModel.reverse_geocode_destination(longitude, latitude)
         }
 
@@ -293,6 +293,7 @@ class popWhereToFragment : DialogFragment() {
 
         from_txt_bar.setOnClickListener {
 
+            viewModel.clicks_bf_createride("from bar")
 
 
             saveLocation()
@@ -309,6 +310,8 @@ class popWhereToFragment : DialogFragment() {
 
 
         botton_newLoc.setOnClickListener {
+            viewModel.clicks_bf_createride("new loc")
+
 
             if(!viewModel.isaddingloc){
 
@@ -339,6 +342,9 @@ class popWhereToFragment : DialogFragment() {
 
         search_button.setOnClickListener {
 
+            viewModel.clicks_bf_createride("search")
+
+
 
             val intent = Intent(requireContext(), TripActivity::class.java)
             startActivity(intent)
@@ -353,6 +359,9 @@ class popWhereToFragment : DialogFragment() {
 
 
         snd_button_.setOnClickListener {
+
+            viewModel.clicks_bf_createride("send button")
+
 
             if (myViewModel.name_place.value != null || myViewModel.name_place.value!="" ) {
 
