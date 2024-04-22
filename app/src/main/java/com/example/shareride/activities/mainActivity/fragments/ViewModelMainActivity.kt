@@ -47,7 +47,7 @@ class ViewModelMainActivity  : ViewModel()    {
 
 
 
-    private val _isRequestDestinationPending = MutableLiveData<Boolean>()
+    val _isRequestDestinationPending = MutableLiveData<Boolean>()
     val isRequestDestinationPending: LiveData<Boolean>
         get() = _isRequestDestinationPending
 
@@ -112,7 +112,12 @@ class ViewModelMainActivity  : ViewModel()    {
     fun reverse_geocode_destination(longitud: Double, latitud:Double): Boolean {
         var locationIQResponse: String? = null
 
-        if (!_isRequestDestinationPending.value!!) {
+        if (_isRequestPending.value== true && _isRequestDestinationPending.value == true) {
+            return false
+
+        }
+
+
             _isRequestDestinationPending.value = true
 
 
@@ -129,44 +134,40 @@ class ViewModelMainActivity  : ViewModel()    {
 
 
             viewModelScope.launch(Dispatchers.IO) {
-                url.httpGet(queryParams).responseString { _, response, result ->
-                    _isRequestDestinationPending.value = false
+                try {
+                    val (_, _, result) = url.httpGet(queryParams).responseString()
 
                     when (result) {
-
                         is Result.Success -> {
                             val responseBody = result.get()
                             val gson = Gson()
-                            locationIQResponse = gson.fromJson(
+                            val locationIQResponse = gson.fromJson(
                                 responseBody,
                                 LocationIQResponse::class.java
                             ).display_name.toString()
 
-                            val parts = locationIQResponse?.split(",")
-                            if (parts != null) {
-                                destination.postValue(parts.take(2).joinToString(","))
-                            }
-
-
+                            val parts = locationIQResponse.split(",")
+                            val formattedAddress = parts.take(2).joinToString(",")
+                            destination.postValue(formattedAddress)
                         }
-
                         is Result.Failure -> {
-                            println("Error al realizar la solicitud ${response.statusCode}  ${response.responseMessage}")
-
+                            println("Error al realizar la solicitud ${result.error}")
                         }
                     }
+                } finally {
+                    _isRequestDestinationPending.postValue(false)  // Detener animación de carga
                 }
             }
-
+        return false
         }
-        return true
 
-
-    }
     fun reverse_geocode(longitud: Double, latitud:Double): String? {
         var locationIQResponse: String? = null
 
-        if (!_isRequestPending.value!!) {
+        if (_isRequestPending.value== true && _isRequestDestinationPending.value == true) {
+            return ""
+        }
+
             _isRequestPending.value = true
 
 
@@ -181,45 +182,39 @@ class ViewModelMainActivity  : ViewModel()    {
 
 
 
-
-            viewModelScope.launch(Dispatchers.IO) {
-
-            url.httpGet(queryParams).responseString { _, response, result ->
-                _isRequestPending.value = false
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val (_, response, result) = url.httpGet(queryParams).responseString()
 
                 when (result) {
-
                     is Result.Success -> {
                         val responseBody = result.get()
                         val gson = Gson()
-                        locationIQResponse = gson.fromJson(
+                        val locationIQResponse = gson.fromJson(
                             responseBody,
                             LocationIQResponse::class.java
                         ).display_name.toString()
-
                         val parts = locationIQResponse?.split(",")
+
                         if (parts != null) {
                             origin.postValue(parts.take(2).joinToString(","))
                         }
-                        println(locationIQResponse)
-                        println(origin.value)
-
-
                     }
-
                     is Result.Failure -> {
-                        println("Error al realizar la solicitud ${response.statusCode}  ${response.responseMessage}")
-
+                        println("Error al realizar la solicitud ${response.statusCode} ${response.responseMessage}")
                     }
                 }
+            } finally {
+                _isRequestPending.postValue(false) // Marcar que la solicitud ha terminado
             }
         }
-        }
-
-            return locationIQResponse
-
+        return locationIQResponse
 
     }
+
+
+
+
     fun updateOrigin(newValue: String) {
         origin.value = newValue
     }
