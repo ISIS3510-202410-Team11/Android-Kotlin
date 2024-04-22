@@ -37,6 +37,19 @@
                 android:src="@drawable/baseline_arrow_upward_24"
                 android:contentDescription="@string/from_icon_upwards_arrow"
                 android:background="@android:color/transparent"
+                android:id="@+id/mylocationicon"
+                android:visibility="gone"
+
+                />
+            
+            
+            
+            <ProgressBar
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:progress="0"
+                android:id="@+id/mylocationloading"
+                android:visibility="gone"
 
                 />
 
@@ -71,6 +84,18 @@
                 android:src="@drawable/baseline_arrow_downward_24"
                 android:contentDescription="@string/to_downwards_icon"
                 android:background="@android:color/transparent"
+                android:visibility="gone"
+                android:id="@+id/iddestiantionicon"
+                />
+
+
+            <ProgressBar
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:progress="0"
+                android:id="@+id/mydestinationloading"
+                android:visibility="gone"
+
                 />
 
 

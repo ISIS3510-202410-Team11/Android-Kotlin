@@ -11,7 +11,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
@@ -77,6 +79,10 @@ class popWhereToFragment : DialogFragment() {
 
     private lateinit var myViewModel: MyViewModel
 
+    private  lateinit var progreess: ProgressBar
+    private  lateinit var mlocIcon: ImageButton
+    private  lateinit var progressDestination: ProgressBar
+    private  lateinit var destinationIcon: ImageButton
 
 
 
@@ -188,9 +194,39 @@ class popWhereToFragment : DialogFragment() {
 
         val search_button = view.findViewById<Button>(R.id.ssearchbutton)
 
+        progreess = view.findViewById(R.id.mylocationloading)
+        mlocIcon= view.findViewById(R.id.mylocationicon)
+
+        progressDestination = view.findViewById(R.id.mydestinationloading)
+        destinationIcon = view.findViewById(R.id.iddestiantionicon)
 
 
 
+
+        viewModel.isRequestPending.observe(this, Observer { isRequestPending ->
+            if (isRequestPending) {
+                progreess.visibility = View.VISIBLE
+                mlocIcon.visibility = View.GONE
+
+            } else {
+                progreess.visibility = View.GONE
+                mlocIcon.visibility =  View.VISIBLE
+            }
+        })
+
+
+
+
+        viewModel.isRequestDestinationPending.observe(this, Observer { isRequestDestinationPending ->
+            if (isRequestDestinationPending) {
+                progressDestination.visibility = View.VISIBLE
+                destinationIcon.visibility = View.GONE
+
+            } else {
+                progressDestination.visibility = View.GONE
+                destinationIcon.visibility =  View.VISIBLE
+            }
+        })
 
 
 
@@ -205,7 +241,7 @@ class popWhereToFragment : DialogFragment() {
             to_txt_bar.setText(destination_unk)
             to_txt_bar.textSize = 12.0F
             myViewModel.livelaongitudDestination.postValue(longitude)
-            myViewModel.livelatitud.postValue(latitude)
+            myViewModel.livelatitudDestination.postValue(latitude)
 
             viewModel.reverse_geocode_destination(longitude, latitude)
         }
