@@ -70,6 +70,7 @@
             android:textColor="@color/common_google_signin_btn_text_light"
             android:textColorHint="@color/common_google_signin_btn_text_light"
             android:textSize="20sp"
+            android:maxLength="100"
 
             />
 
@@ -85,7 +86,9 @@
             android:inputType="textPassword"
             android:textColor="@color/common_google_signin_btn_text_light"
             android:textColorHint="@color/common_google_signin_btn_text_light"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:maxLength="15"
+            />
 
 
         <Button

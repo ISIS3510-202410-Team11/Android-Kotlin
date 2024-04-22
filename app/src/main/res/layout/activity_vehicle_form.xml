@@ -75,7 +75,7 @@
             android:textColor="@color/common_google_signin_btn_text_light"
             android:background="@drawable/edit_text_border"
             android:textColorHint="@color/common_google_signin_btn_text_light"
-
+            android:maxLength="20"
 
             />
 
@@ -91,11 +91,12 @@
             android:layout_marginVertical="15sp"
             android:textSize="20sp"
             android:maxLines="1"
-            android:maxLength="8"
+            android:maxLength="6"
             android:textColor="@color/common_google_signin_btn_text_light"
             android:background="@drawable/edit_text_border"
             android:textColorHint="@color/common_google_signin_btn_text_light"
-            android:importantForAutofill="no" />
+            android:importantForAutofill="no"
+            />
 
         <EditText
             android:id="@+id/referenceInput"
@@ -109,7 +110,9 @@
             android:hint="@string/vehicle_reference"
             android:background="@drawable/edit_text_border"
             android:textColorHint="@color/common_google_signin_btn_text_light"
-            android:importantForAutofill="no" />
+            android:importantForAutofill="no"
+            android:maxLength="20"
+            />
 
         <EditText
             android:id="@+id/colorInput"
