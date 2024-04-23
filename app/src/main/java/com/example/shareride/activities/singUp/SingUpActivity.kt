@@ -13,12 +13,15 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.shareride.activities.mainActivity.MainActivityPassenger
 import com.example.shareride.R
 import com.example.shareride.StartActivity
 import com.example.shareride.activities.logIn.LogInActivity
 import com.example.shareride.activities.vehicleForm.VehicleFormActivity
+import com.example.shareride.connectivity.ConnectivityObserver
+import com.example.shareride.connectivity.NetworkConnectivityObserver
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
@@ -28,21 +31,40 @@ import java.util.regex.Pattern
 class SingUpActivity : AppCompatActivity() {
 
 
+    lateinit var closeButton: ImageButton
+    lateinit var singUpbutton: Button
+    lateinit var logInButton: TextView
+
+    lateinit var textBar_name: EditText
+    lateinit var textbar_email: EditText
+    lateinit var textbar_password: EditText
+
+
+    lateinit var offlinewarning: LinearLayout
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
 
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sing_up)
-        val closeButton: ImageButton = findViewById(R.id.cancel_button)
-        val singUpbutton: Button = findViewById(R.id.singUpbutton)
-        val logInButton: TextView = findViewById(R.id.logInButton)
+        closeButton = findViewById(R.id.cancel_button)
+        singUpbutton = findViewById(R.id.singUpbutton)
+        logInButton = findViewById(R.id.logInButton)
 
-        val textBar_name: EditText = findViewById(R.id.nametextbar)
-        val textbar_email: EditText = findViewById(R.id.emailTextBar)
-        val textbar_password: EditText = findViewById(R.id.passwordTextbar)
+        textBar_name= findViewById(R.id.nametextbar)
+        textbar_email = findViewById(R.id.emailTextBar)
+        textbar_password = findViewById(R.id.passwordTextbar)
+
+        offlinewarning = findViewById(R.id.offlineSign)
 
 
-        val viewModel = ViewModelProvider(this).get(viewModelSignUp::class.java)
+        val networkConnectivityObserver = NetworkConnectivityObserver(applicationContext)
+        val viewModelFactory = ViewModelFactory(networkConnectivityObserver)
+        val viewModel = ViewModelProvider(this, viewModelFactory).get(viewModelSignUp::class.java)
+
 
 
         var inputpassword: String= viewModel.inputpassword
@@ -73,42 +95,56 @@ class SingUpActivity : AppCompatActivity() {
 
         singUpbutton.setOnClickListener {
 
+
+
+
             if (warningName.visibility == View.GONE && warningEmail.visibility== View.GONE && warningPassword.visibility == View.GONE && !box_driver.isChecked){
 
 
+                println("vew value")
+                println(viewModel.connectivityStatus.value.toString() )
+
+                if (viewModel.connectivityStatus.value.toString() =="Lost" || viewModel.connectivityStatus.value.toString() =="Unavailable" ){
 
 
+                    if (viewModel.pending_singup){
+                        Toast.makeText(this, "Your user will be created after your recover connectivity", Toast.LENGTH_LONG).show()
 
-                fireBaseAuth.createUserWithEmailAndPassword(viewModel.inputEmail,viewModel.inputpassword).addOnCompleteListener {
+                    }else{
+                        viewModel.pending_singup = true
+                        displayInva(avalability = false)
+                        Toast.makeText(this, "We will notify the creation of your user once you recover connectivity", Toast.LENGTH_LONG).show()
+
+                    }
 
 
-                    if(it.isSuccessful){
-
-                     val intent = Intent(this, MainActivityPassenger::class.java)
-                     startActivity(intent)
-
-                 }
-                 else{
-                     // si el email está repetido manda un error
-                     Toast.makeText(this, it.exception.toString(), Toast.LENGTH_LONG).show()
-
-                 }
                 }
+                else{
+                    fireBaseAuth.createUserWithEmailAndPassword(viewModel.inputEmail,viewModel.inputpassword).addOnCompleteListener {
+                        if(it.isSuccessful){
+
+                            val intent = Intent(this, MainActivityPassenger::class.java)
+                            startActivity(intent)
+
+                        }
+                        else{
+                            // si el email está repetido manda un error
+                            Toast.makeText(this, it.exception.toString(), Toast.LENGTH_LONG).show()
+
+                        }
+
+                    }
+                }
+
             }
             else if(warningName.visibility == View.GONE && warningEmail.visibility== View.GONE && warningPassword.visibility == View.GONE && box_driver.isChecked){
-
-
 
                         val intent = Intent(this, VehicleFormActivity::class.java)
                         startActivity(intent)}
 
 
-
-
-
-
             else{
-                Toast.makeText(this, "Check that everything is correct", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Check that your data is correct", Toast.LENGTH_SHORT).show()
 
             }
 
@@ -169,6 +205,74 @@ class SingUpActivity : AppCompatActivity() {
 
         })
 
+        viewModel.connectivityStatus.observe(this@SingUpActivity) { status ->
+            when (status) {
+
+
+                ConnectivityObserver.Status.Lost -> {
+                offlinewarning.visibility = View.VISIBLE
+
+            }
+
+                ConnectivityObserver.Status.Unavailable -> {
+                    offlinewarning.visibility = View.VISIBLE
+
+                }
+                ConnectivityObserver.Status.Avalilable ->{
+                offlinewarning.visibility = View.GONE
+                if (viewModel.pending_singup){
+                    displayInva(avalability = false)
+
+
+                    fireBaseAuth.createUserWithEmailAndPassword(viewModel.inputEmail,viewModel.inputpassword).addOnCompleteListener {
+
+
+                        if(it.isSuccessful){
+
+                            val intent = Intent(this, MainActivityPassenger::class.java)
+                            startActivity(intent)
+
+                        }
+                        else{
+                            Toast.makeText(this, it.exception.toString(), Toast.LENGTH_LONG).show()
+                            displayInva(avalability = true)
+
+                        }
+                    }
+
+                }
+
+            }
+
+                ConnectivityObserver.Status.Losing ->{
+                    offlinewarning.visibility = View.GONE
+                    if (viewModel.pending_singup){
+                        displayInva(avalability = false)
+
+                        fireBaseAuth.createUserWithEmailAndPassword(viewModel.inputEmail,viewModel.inputpassword).addOnCompleteListener {
+
+
+                            if(it.isSuccessful){
+
+                                val intent = Intent(this, MainActivityPassenger::class.java)
+                                startActivity(intent)
+
+                            }
+                            else{
+                                Toast.makeText(this, it.exception.toString(), Toast.LENGTH_LONG).show()
+                                displayInva(avalability = true)
+
+                            }
+                        }
+
+                    }
+
+                }
+
+                else -> {}
+            }
+        }
+
         textBar_name.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
@@ -201,4 +305,16 @@ class SingUpActivity : AppCompatActivity() {
 
 
 }
+
+    fun displayInva( avalability: Boolean){
+
+        textbar_password.isEnabled = avalability
+        textbar_email.isEnabled = avalability
+        textBar_name.isEnabled= avalability
+        singUpbutton.isEnabled = avalability
+        singUpbutton.isClickable = avalability
+
+
+
+    }
 }
