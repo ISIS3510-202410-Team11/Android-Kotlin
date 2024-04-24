@@ -12,10 +12,15 @@
 
     >
 
+
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
+
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,10 +31,39 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/md_theme_light_onPrimary"
+        android:background="@android:color/transparent"
         android:orientation="vertical"
         android:padding="25dp"
+
         >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:visibility="gone"
+            android:id="@+id/offlineSign"
+            >
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp"
+                android:src="@drawable/baseline_cloud_off_24"
+                android:background="@android:color/transparent"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="You are offline"
+                android:textSize="26dp"
+                />
+
+
+
+
+        </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,7 +72,7 @@
         android:orientation="horizontal"
         android:textAlignment="center"
         android:layout_gravity="center"
-        android:background="@color/md_theme_light_onPrimary"
+        android:background="@android:color/transparent"
 
         >
 
@@ -75,9 +109,6 @@
 
     </LinearLayout>
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="20dp" />
 
     <EditText
         android:id="@+id/nametextbar"
@@ -116,7 +147,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@android:color/transparent"
+
+                >
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -165,7 +199,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@android:color/transparent"
+
+                >
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -203,6 +240,8 @@
             android:gravity="center"
             android:layout_marginHorizontal="5dp"
             android:id="@+id/warning_password"
+            android:background="@android:color/transparent"
+
 
             >
             <ImageView
