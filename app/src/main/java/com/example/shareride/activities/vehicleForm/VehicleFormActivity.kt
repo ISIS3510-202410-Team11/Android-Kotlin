@@ -1,46 +1,76 @@
 package com.example.shareride.activities.vehicleForm
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.shareride.R
 import com.example.shareride.activities.mainActivity.MainActivityPassenger
 import com.example.shareride.databinding.ActivityVehicleFormBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import android.widget.Toast
 import com.example.shareride.StartActivity
-
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class VehicleFormActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityVehicleFormBinding
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var databaseReference: DatabaseReference
+    private lateinit var database: DatabaseReference
+    private lateinit var colorList: ArrayList<String>
+    private lateinit var markList: ArrayList<String>
+    private lateinit var markAdapter: ArrayAdapter<String>
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityVehicleFormBinding.inflate(layoutInflater)
+        colorList = ArrayList()
+        markList = ArrayList()
+
+        fetchDataFromFirebase()
+
+        markAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, markList)
+        binding.autoCompleteTextView.threshold = 0 // Show all suggestions when touched
+        binding.autoCompleteTextView.setAdapter(markAdapter)
+
+        binding.autoCompleteTextView.setOnTouchListener { v, event ->
+            binding.autoCompleteTextView.showDropDown()
+            false
+        }
+
         setContentView(binding.root)
+    }
 
-        firebaseAuth = FirebaseAuth.getInstance()
-        databaseReference = FirebaseDatabase.getInstance().reference
+    private fun fetchDataFromFirebase() {
+        database = FirebaseDatabase.getInstance().getReference("/acceptedVehiclesForm/")
+        database.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val jsonObject = dataSnapshot.value as? Map<*, *>?
 
-        val cancelButton: ImageButton = findViewById(R.id.cancel_button)
-        cancelButton.setOnClickListener {
-            // Navigate back to the profile view
-            startActivity(Intent(this, StartActivity::class.java))
-            finish()
-        }
+                if (jsonObject != null && jsonObject.containsKey("Color") && jsonObject.containsKey("Mark")) {
+                    colorList = (jsonObject["Color"] as? ArrayList<String>)!!
+                    markList = (jsonObject["Mark"] as? ArrayList<String>)!!
+                    markAdapter.clear()
+                    markAdapter.addAll(markList)
+                    markAdapter.notifyDataSetChanged()
 
-        binding.registerVehicle.setOnClickListener {
-            // Register the vehicle and save it in the Firebase database
-            registerVehicle()
-            startActivity(Intent(this, MainActivityPassenger::class.java))
-            finish()
-        }
+                } else {
+                    println("JSON object is null or does not contain 'Color' key.")
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle error
+            }
+        })
     }
 
     private fun registerVehicle() {
@@ -55,10 +85,8 @@ class VehicleFormActivity : AppCompatActivity() {
             return
         }
 
-        // Create a new vehicle object
         val vehicle = Vehicle(type, plate, reference, color)
 
-        // Save the vehicle to the Firebase database under the user's ID
         userId?.let {
             databaseReference.child("users").child(it).child("vehicles").push().setValue(vehicle)
                 .addOnCompleteListener { task ->
