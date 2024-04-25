@@ -78,7 +78,7 @@ class MainActivityPassenger : AppCompatActivity() {
 
 
     private fun getInitialFragment(): Fragment {
-        return if(viewModel._isSwitchChecked.value == true){
+        return if(viewModel._isSwitchChecked.value == false){
             viewModel.change_pg_name("Home")
 
             HomePassengerFragment()
@@ -97,7 +97,7 @@ class MainActivityPassenger : AppCompatActivity() {
     private fun getHomeFragment():Fragment{
 
 
-        return if(viewModel._isSwitchChecked.value == true){
+        return if(viewModel._isSwitchChecked.value == false){
             viewModel.change_pg_name("Home")
 
             HomePassengerFragment()

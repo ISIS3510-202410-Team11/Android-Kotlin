@@ -122,9 +122,20 @@ class SingUpActivity : AppCompatActivity() {
                 else{
                     fireBaseAuth.createUserWithEmailAndPassword(viewModel.inputEmail,viewModel.inputpassword).addOnCompleteListener {
                         if(it.isSuccessful){
+                            if(box_driver.isChecked){
 
-                            val intent = Intent(this, MainActivityPassenger::class.java)
-                            startActivity(intent)
+                                val intent = Intent(this, VehicleFormActivity::class.java)
+                                startActivity(intent)}
+
+
+
+                            else{
+                                val intent = Intent(this, MainActivityPassenger::class.java)
+                                startActivity(intent)
+                            }
+
+
+
 
                         }
                         else{
@@ -137,11 +148,6 @@ class SingUpActivity : AppCompatActivity() {
                 }
 
             }
-            else if(warningName.visibility == View.GONE && warningEmail.visibility== View.GONE && warningPassword.visibility == View.GONE && box_driver.isChecked){
-
-                        val intent = Intent(this, VehicleFormActivity::class.java)
-                        startActivity(intent)}
-
 
             else{
                 Toast.makeText(this, "Check that your data is correct", Toast.LENGTH_SHORT).show()
@@ -229,8 +235,17 @@ class SingUpActivity : AppCompatActivity() {
 
                         if(it.isSuccessful){
 
-                            val intent = Intent(this, MainActivityPassenger::class.java)
-                            startActivity(intent)
+                            if(box_driver.isChecked){
+
+                                val intent = Intent(this, VehicleFormActivity::class.java)
+                                startActivity(intent)}
+
+
+
+                            else{
+                                val intent = Intent(this, MainActivityPassenger::class.java)
+                                startActivity(intent)
+                            }
 
                         }
                         else{
@@ -254,8 +269,17 @@ class SingUpActivity : AppCompatActivity() {
 
                             if(it.isSuccessful){
 
-                                val intent = Intent(this, MainActivityPassenger::class.java)
-                                startActivity(intent)
+                                if(box_driver.isChecked){
+
+                                    val intent = Intent(this, VehicleFormActivity::class.java)
+                                    startActivity(intent)}
+
+
+
+                                else{
+                                    val intent = Intent(this, MainActivityPassenger::class.java)
+                                    startActivity(intent)
+                                }
 
                             }
                             else{

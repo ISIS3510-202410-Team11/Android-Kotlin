@@ -238,6 +238,9 @@ class ViewModelMainActivity  : ViewModel()    {
     val _isSwitchChecked = MutableLiveData<Boolean>()
     val isSwitchChecked: LiveData<Boolean>
         get() = _isSwitchChecked
+    init {
+        _isSwitchChecked.value = true
+    }
 
     fun change_pg_name(newpage:String){
         page_name = newpage
