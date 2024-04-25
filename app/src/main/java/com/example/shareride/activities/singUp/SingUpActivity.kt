@@ -98,7 +98,7 @@ class SingUpActivity : AppCompatActivity() {
 
 
 
-            if (warningName.visibility == View.GONE && warningEmail.visibility== View.GONE && warningPassword.visibility == View.GONE && !box_driver.isChecked){
+            if (warningName.visibility == View.GONE && warningEmail.visibility== View.GONE && warningPassword.visibility == View.GONE ){
 
 
                 println("vew value")
