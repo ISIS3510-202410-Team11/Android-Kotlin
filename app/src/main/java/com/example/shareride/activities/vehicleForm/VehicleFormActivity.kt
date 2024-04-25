@@ -24,6 +24,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.io.File
 import java.io.FileOutputStream
+import java.security.MessageDigest
+import java.text.SimpleDateFormat
+import java.util.*
 
 class VehicleFormActivity : AppCompatActivity() {
 
@@ -38,6 +41,7 @@ class VehicleFormActivity : AppCompatActivity() {
     private lateinit var markCache: LruCache<String, ArrayList<String>>
 
     private val REQUEST_IMAGE_CAPTURE = 1
+    private var imageBitmap: Bitmap? = null // Store the captured image bitmap
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -176,14 +180,18 @@ class VehicleFormActivity : AppCompatActivity() {
             return
         }
 
+        val fileName = generateFileName() + ".png"
+
         // Create a new vehicle object
-        val vehicle = Vehicle(mark, type, plate, reference, color)
+        val vehicle = Vehicle(mark, type, plate, reference, color, fileName)
         userId = "RKtI9Ep1e9daaITIMXIyKasi3pr2" //TODO: Delete this when Sign Up is working again.
         // Save the vehicle to the Firebase database under the user's ID
         userId?.let {
             database.child("users").child(it).child("vehicles").push().setValue(vehicle)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
+                        // Save the image only if registration is successful
+                        saveImageToStorage(fileName)
                         startActivity(Intent(this, MainActivityPassenger::class.java))
                         finish()
                     } else {
@@ -203,25 +211,36 @@ class VehicleFormActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            val imageBitmap = data?.extras?.get("data") as Bitmap
-            saveImageToStorage(imageBitmap)
+            imageBitmap = data?.extras?.get("data") as Bitmap
         }
     }
 
-    private fun saveImageToStorage(bitmap: Bitmap) {
-        val fileName = "my_picture.jpg"
+    private fun saveImageToStorage(fileName:String) {
         val directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         val file = File(directory, fileName)
 
         try {
             val fileOutputStream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+            // Check if imageBitmap is not null before saving
+            imageBitmap?.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
             fileOutputStream.close()
             Toast.makeText(this, "Image saved successfully", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun generateFileName(): String {
+        val plate = binding.plateInput.text.toString().trim()
+        val currentDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+        val combinedString = "$plate-$currentDate"
+        return hashString(combinedString)
+    }
+
+    private fun hashString(input: String): String {
+        val bytes = MessageDigest.getInstance("SHA-256").digest(input.toByteArray())
+        return bytes.joinToString("") { "%02x".format(it) }
     }
 }
 
@@ -230,5 +249,6 @@ data class Vehicle(
     val type: String,
     val plate: String,
     val reference: String,
-    val color: String
+    val color: String,
+    val imageName:String
 )
