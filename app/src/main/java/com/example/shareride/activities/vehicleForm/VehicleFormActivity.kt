@@ -1,9 +1,12 @@
 package com.example.shareride.activities.vehicleForm
 
+import ConnectivityReceiver
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -27,6 +30,12 @@ import java.io.FileOutputStream
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.*
+import android.content.Context
+import android.content.IntentFilter
+import android.net.NetworkInfo
+import com.example.shareride.clases.Vehicle
+import com.google.gson.Gson
+
 
 class VehicleFormActivity : AppCompatActivity() {
 
@@ -39,6 +48,10 @@ class VehicleFormActivity : AppCompatActivity() {
     private lateinit var colorAdapter: ArrayAdapter<String>
     private lateinit var colorCache: LruCache<String, ArrayList<String>>
     private lateinit var markCache: LruCache<String, ArrayList<String>>
+
+    private lateinit var connectivityReceiver: ConnectivityReceiver
+
+
 
     private val REQUEST_IMAGE_CAPTURE = 1
     private var imageBitmap: Bitmap? = null // Store the captured image bitmap
@@ -98,7 +111,13 @@ class VehicleFormActivity : AppCompatActivity() {
         binding.takePictureButton.setOnClickListener {
             dispatchTakePictureIntent()
         }
+        connectivityReceiver = ConnectivityReceiver()
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(connectivityReceiver, filter)
+
     }
+
+
 
     private fun populateUIWithLatestData(colorList: ArrayList<String>, markList: ArrayList<String>) {
         // Update UI with latest data from network
@@ -187,18 +206,42 @@ class VehicleFormActivity : AppCompatActivity() {
         userId = "RKtI9Ep1e9daaITIMXIyKasi3pr2" //TODO: Delete this when Sign Up is working again.
         // Save the vehicle to the Firebase database under the user's ID
         userId?.let {
-            database.child("users").child(it).child("vehicles").push().setValue(vehicle)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        // Save the image only if registration is successful
-                        saveImageToStorage(fileName)
-                        startActivity(Intent(this, MainActivityPassenger::class.java))
-                        finish()
-                    } else {
-                        Toast.makeText(this, "Vehicle registration failed", Toast.LENGTH_SHORT).show()
+            val isNetwork = isNetworkConnected()
+            if (isNetwork) {
+                database.child("users").child(it).child("vehicles").push().setValue(vehicle)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            // Save the image only if registration is successful
+                            saveImageToStorage(fileName)
+                            startActivity(Intent(this, MainActivityPassenger::class.java))
+                            finish()
+                        } else {
+                            Toast.makeText(this, "Vehicle registration failed", Toast.LENGTH_SHORT).show()
+                        }
                     }
-                }
+            } else {
+                // Save vehicle data to SharedPreferences
+                saveVehicleToSharedPreferences(vehicle)
+                // Start MainActivityPassenger
+                startActivity(Intent(this, MainActivityPassenger::class.java))
+            }
         }
+    }
+
+    private fun saveVehicleToSharedPreferences(vehicle: Vehicle) {
+        val sharedPref = getSharedPreferences("your_pref_name", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("vehicle_key", Gson().toJson(vehicle))
+            apply()
+        }
+    }
+
+
+
+    private fun isNetworkConnected(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetworkInfo = connectivityManager.activeNetworkInfo
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected
     }
 
     private fun dispatchTakePictureIntent() {
@@ -221,7 +264,6 @@ class VehicleFormActivity : AppCompatActivity() {
 
         try {
             val fileOutputStream = FileOutputStream(file)
-            // Check if imageBitmap is not null before saving
             imageBitmap?.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
             fileOutputStream.close()
             Toast.makeText(this, "Image saved successfully", Toast.LENGTH_SHORT).show()
@@ -242,13 +284,10 @@ class VehicleFormActivity : AppCompatActivity() {
         val bytes = MessageDigest.getInstance("SHA-256").digest(input.toByteArray())
         return bytes.joinToString("") { "%02x".format(it) }
     }
-}
 
-data class Vehicle(
-    val mark: String,
-    val type: String,
-    val plate: String,
-    val reference: String,
-    val color: String,
-    val imageName:String
-)
+    override fun onDestroy() {
+        super.onDestroy()
+        // Unregister BroadcastReceiver
+        unregisterReceiver(connectivityReceiver)
+    }
+}

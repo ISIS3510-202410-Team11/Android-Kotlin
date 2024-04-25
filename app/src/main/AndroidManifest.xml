@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
 
     <application
@@ -37,6 +39,7 @@
             android:name="com.google.geo.API_KEY"
             android:value="" />
 
+
         <activity
             android:name=".activities.mainActivity.MainActivityPassenger"
             android:exported="false" />
@@ -55,6 +58,8 @@
             android:theme="@style/Theme.ShareRide" />
         <activity android:name=".activities.logIn.LogInActivity" />
         <activity android:name=".activities.forgotPasswordActivity.ForgotPasswordActivity" />
+
+
     </application>
 
 </manifest>

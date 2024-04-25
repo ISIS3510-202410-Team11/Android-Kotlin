@@ -86,7 +86,8 @@
             android:inputType="text"
             android:textColor="@color/common_google_signin_btn_text_light"
             android:textColorHint="@color/common_google_signin_btn_text_light"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            />
 
         <EditText
             android:id="@+id/typeInput"
