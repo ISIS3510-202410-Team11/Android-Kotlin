@@ -1,15 +1,43 @@
 package com.example.shareride.activities.singUp
 
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.shareride.connectivity.ConnectivityObserver
+import com.example.shareride.connectivity.NetworkConnectivityObserver
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
 
-class viewModelSignUp:ViewModel() {
+class viewModelSignUp(private val networkConnectivityObserver: NetworkConnectivityObserver):ViewModel(){
     var inputpassword: String= ""
     var inputEmail: String = ""
     var inputText: String= ""
+    var pending_singup = false
 
+
+
+
+
+
+
+    val connectivityStatus: MutableLiveData<ConnectivityObserver.Status> = MutableLiveData()
+
+    init {
+        observeNetworkConnectivity()
+    }
+
+    private fun observeNetworkConnectivity() {
+        viewModelScope.launch {
+            networkConnectivityObserver.observe().collect { status ->
+                connectivityStatus.postValue(status)
+        }
+        }
+    }
 
 
 
@@ -27,6 +55,8 @@ class viewModelSignUp:ViewModel() {
 
         inputText = new_name
     }
+
+
 
 
 

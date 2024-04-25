@@ -2,9 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+
 
     <application
         android:allowBackup="true"
@@ -17,6 +28,9 @@
         android:theme="@style/Theme.ShareRide"
         tools:targetApi="31">
         <activity
+            android:name=".activities.mainActivity.CreateRideActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.trips.TripActivity"
             android:exported="false" />
         <activity android:name=".activities.vehicleForm.VehicleFormActivity" />
@@ -24,6 +38,7 @@
         <meta-data
             android:name="com.google.geo.API_KEY"
             android:value="" />
+
 
         <activity
             android:name=".activities.mainActivity.MainActivityPassenger"
@@ -40,9 +55,11 @@
         </activity>
         <activity
             android:name=".activities.singUp.SingUpActivity"
-            android:theme="@style/Theme.ShareRide"></activity>
+            android:theme="@style/Theme.ShareRide" />
         <activity android:name=".activities.logIn.LogInActivity" />
         <activity android:name=".activities.forgotPasswordActivity.ForgotPasswordActivity" />
+
+
     </application>
 
 </manifest>
