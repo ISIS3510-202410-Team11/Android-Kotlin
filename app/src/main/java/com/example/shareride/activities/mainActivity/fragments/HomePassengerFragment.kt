@@ -5,10 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shareride.R
@@ -49,15 +50,16 @@ class HomePassengerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         val sch_bar = view.findViewById<SearchBar>(R.id.where_to)
+        val ldg_pop = view.findViewById<ProgressBar>(R.id.poploadingbar)
 
         val showpopup = popWhereToFragment()
 
 
 
-        val titles = listOf("Universidad de los andes", "Lugar2","Lugar2")
-        val directions = listOf("calle 123, #44 -98", "calle2 ","calle 123, #44 -98")
-        val adapter = CustomAdapterCard(titles, directions){ title ->
+        viewModel.getMostpopularDestination(5)
+        val adapter = CustomAdapterCard(viewModel._locationsLVdata){ title ->
             viewModel.updateDestination(title)
+
             showpopup.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
 
         }
@@ -74,6 +76,20 @@ class HomePassengerFragment : Fragment() {
             showpopup.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
 
         }
+
+        viewModel.isPenddingPopLocations.observe(viewLifecycleOwner, Observer { isrequestPending ->
+            if(isrequestPending){
+
+                recyclerView.visibility = View.GONE
+                ldg_pop.visibility = View.VISIBLE
+
+            }
+            else{
+                recyclerView.visibility = View.VISIBLE
+                ldg_pop.visibility = View.GONE
+
+            }
+        })
 
 
 
