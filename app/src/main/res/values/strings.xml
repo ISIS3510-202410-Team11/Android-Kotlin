@@ -56,6 +56,7 @@
     <string name="vehicleformreference_hint">vehicleFormReference_Hint</string>
     <string name="vehicleformcolor_hint">vehicleFormColor_Hint</string>
     <string name="vehicleformbutton">Send</string>
+    <string name="vehicle_formPictureButton">Vehicle Picture</string>
     <string name="vehicle_color">Vehicle Color</string>
     <string name="vehicle_mark">Vehicle Mark</string>
     <string name="vehicle_reference">Vehicle Reference</string>

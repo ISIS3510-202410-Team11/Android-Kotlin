@@ -66,7 +66,7 @@
             android:id="@+id/autoCompleteTextViewMark"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:layout_marginVertical="15sp"
+            android:layout_marginVertical="10sp"
             android:background="@drawable/edit_text_border"
             android:ems="10"
             android:hint="@string/vehicle_mark"
@@ -79,7 +79,7 @@
             android:id="@+id/autoCompleteTextViewColor"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:layout_marginVertical="15sp"
+            android:layout_marginVertical="10sp"
             android:background="@drawable/edit_text_border"
             android:ems="10"
             android:hint="@string/vehicle_color"
@@ -94,7 +94,7 @@
             android:layout_height="64dp"
             android:ems="10"
             android:inputType="text"
-            android:layout_marginVertical="15dp"
+            android:layout_marginVertical="10dp"
             android:hint="@string/vehicle_type"
             android:autofillHints="name"
             android:textSize="20sp"
@@ -111,7 +111,7 @@
             android:ems="10"
             android:inputType="text"
             android:hint="@string/vehicle_plate"
-            android:layout_marginVertical="15sp"
+            android:layout_marginVertical="10sp"
             android:textSize="20sp"
             android:maxLines="1"
             android:maxLength="8"
@@ -126,7 +126,7 @@
             android:layout_height="64dp"
             android:ems="10"
             android:inputType="text"
-            android:layout_marginVertical="15sp"
+            android:layout_marginVertical="10sp"
             android:textSize="20sp"
             android:textColor="@color/common_google_signin_btn_text_light"
             android:hint="@string/vehicle_reference"
@@ -136,11 +136,26 @@
 
 
         <Button
+            android:id="@+id/takePictureButton"
+            style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:text="@string/vehicle_formPictureButton"
+            android:textAlignment="center"
+            android:textColor="@color/md_theme_light_onPrimary"
+            android:textSize="20sp"
+            app:backgroundTint="@color/md_theme_light_primary"
+            app:cornerRadius="100dp"
+            />
+
+
+        <Button
             android:id="@+id/registerVehicle"
             style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="30dp"
+            android:layout_marginVertical="10dp"
             android:text="@string/vehicleformbutton"
             android:textAlignment="center"
             android:textColor="@color/md_theme_light_onPrimary"
@@ -149,6 +164,7 @@
             app:cornerRadius="100dp"
 
             />
+
 
     </LinearLayout>
 
