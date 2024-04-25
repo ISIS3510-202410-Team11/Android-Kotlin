@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shareride.MapBoxAPI.IQLocationAPI
 import com.example.shareride.clases.Event
+import com.example.shareride.clases.Location
 import com.example.shareride.clases.LocationIQResponse
 import com.example.shareride.clases.Trip
 import com.example.shareride.persistence.AnaliticsPersistence
@@ -56,6 +57,15 @@ class ViewModelMainActivity  : ViewModel()    {
     }
 
 
+    val livelatitudDestination: MutableLiveData<Double> by lazy {
+        MutableLiveData<Double>()
+    }
+
+    val livelaongitudDestination: MutableLiveData<Double> by lazy {
+        MutableLiveData<Double>()
+    }
+
+
     var isaddingloc =false
 
 
@@ -83,6 +93,16 @@ class ViewModelMainActivity  : ViewModel()    {
 
 
 
+    val _ispendingPOPloc = MutableLiveData<Boolean>()
+
+    val isPenddingPopLocations: LiveData<Boolean>
+        get() = _ispendingPOPloc
+
+    init {
+        _ispendingPOPloc.value = false
+    }
+
+
     // Persistence
 
 
@@ -95,7 +115,8 @@ class ViewModelMainActivity  : ViewModel()    {
 
 
 
-
+    val _locationsLVdata = MutableLiveData<List<Location?>?>()
+    val poplocations: MutableLiveData<List<Location?>?> = _locationsLVdata
 
 
     fun downloadmap(){
@@ -106,6 +127,25 @@ class ViewModelMainActivity  : ViewModel()    {
                 .maxZoom(14)
                 .build()
         )
+    }
+
+
+    fun getMostpopularDestination( count: Int){
+        _ispendingPOPloc.value = true
+
+        viewModelScope.launch {
+            val locations = tripsPersistence.getPopularDestinations(count) { locations ->
+                _ispendingPOPloc.value = false
+                if(locations!= null){
+                    _locationsLVdata.value = locations
+
+                }
+
+            }
+        }
+
+
+
     }
 
 

@@ -3,6 +3,7 @@ package com.example.shareride.persistence
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.shareride.cache.TripCache
+import com.example.shareride.clases.Location
 import com.example.shareride.clases.Trip
 import com.example.shareride.repository.TripRepository
 import java.text.SimpleDateFormat
@@ -65,6 +66,13 @@ class TripPersistence {
             }
             callback(trips)
 
+        }
+    }
+
+
+    fun getPopularDestinations(count: Int,callback: (List<Location>?) -> Unit) {
+        repository.getTripsDestinationOrder(count){trips ->
+            callback(trips)
         }
     }
 

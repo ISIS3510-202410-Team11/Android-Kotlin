@@ -6,12 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shareride.R
@@ -19,8 +17,6 @@ import com.example.shareride.StartActivity
 import com.example.shareride.activities.custom_cards.CustomAdapterCard
 import com.example.shareride.activities.custom_cards.CustomVehicleCard
 import com.example.shareride.clases.Transport
-import com.example.shareride.databinding.ActivityMainBinding
-import com.google.firebase.auth.FirebaseAuth
 
 
 class ProfilePassengerFragment : Fragment() {
@@ -69,14 +65,11 @@ class ProfilePassengerFragment : Fragment() {
         val title_transport: TextView = view.findViewById(R.id.transportation_title)
 
 
-        val titles = listOf("Nueva Servicio", "En dirección a ","En dirección a ")
-        val directions = listOf("calle 123, #44 -98", "calle2 ","calle 123, #44 -98")
+
         val my_name = "Sandra"
         val my_rating = "4,5"
         val my_method = "Cash"
-        val adapter = CustomAdapterCard(titles, directions){
 
-        }
         val eje1: Transport = Transport("Vehicle 1", "Automobile", "ABC123", "Chebrolete")
         val my_transports = listOf<Transport>(eje1)
         val adapter_vehicle = CustomVehicleCard(my_transports)
@@ -86,7 +79,6 @@ class ProfilePassengerFragment : Fragment() {
 
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = adapter
 
         recylceViewCars.layoutManager = LinearLayoutManager(requireContext())
         recylceViewCars.adapter = adapter_vehicle
