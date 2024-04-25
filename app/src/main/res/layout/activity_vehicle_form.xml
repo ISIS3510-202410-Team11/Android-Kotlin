@@ -62,10 +62,36 @@
             android:layout_width="match_parent"
             android:layout_height="20dp" />
 
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextViewMark"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginVertical="15sp"
+            android:background="@drawable/edit_text_border"
+            android:ems="10"
+            android:hint="@string/vehicle_mark"
+            android:inputType="text"
+            android:textColor="@color/common_google_signin_btn_text_light"
+            android:textColorHint="@color/common_google_signin_btn_text_light"
+            android:textSize="20sp" />
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextViewColor"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginVertical="15sp"
+            android:background="@drawable/edit_text_border"
+            android:ems="10"
+            android:hint="@string/vehicle_color"
+            android:inputType="text"
+            android:textColor="@color/common_google_signin_btn_text_light"
+            android:textColorHint="@color/common_google_signin_btn_text_light"
+            android:textSize="20sp" />
+
         <EditText
             android:id="@+id/typeInput"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="64dp"
             android:ems="10"
             android:inputType="text"
             android:layout_marginVertical="15dp"
@@ -81,7 +107,7 @@
         <EditText
             android:id="@+id/plateInput"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="64dp"
             android:ems="10"
             android:inputType="text"
             android:hint="@string/vehicle_plate"
@@ -97,7 +123,7 @@
         <EditText
             android:id="@+id/referenceInput"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="64dp"
             android:ems="10"
             android:inputType="text"
             android:layout_marginVertical="15sp"
@@ -108,40 +134,13 @@
             android:textColorHint="@color/common_google_signin_btn_text_light"
             android:importantForAutofill="no" />
 
-        <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:ems="10"
-            android:inputType="text"
-            android:layout_marginVertical="15sp"
-            android:textSize="20sp"
-            android:textColor="@color/common_google_signin_btn_text_light"
-            android:hint="@string/Mark"
-            android:background="@drawable/edit_text_border"
-            android:textColorHint="@color/common_google_signin_btn_text_light" />
-
-        <EditText
-            android:id="@+id/colorInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="text"
-            android:layout_marginVertical="15sp"
-            android:textSize="20sp"
-            android:textColor="@color/common_google_signin_btn_text_light"
-            android:hint="@string/vehicle_color"
-            android:background="@drawable/edit_text_border"
-            android:textColorHint="@color/common_google_signin_btn_text_light"
-            android:importantForAutofill="no" />
-
 
         <Button
             android:id="@+id/registerVehicle"
             style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="80dp"
+            android:layout_marginVertical="30dp"
             android:text="@string/vehicleformbutton"
             android:textAlignment="center"
             android:textColor="@color/md_theme_light_onPrimary"

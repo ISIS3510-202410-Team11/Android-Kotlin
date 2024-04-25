@@ -18,7 +18,6 @@
     <string name="i_am_a_driver_optional">I am a driver (Optional)</string>
     <string name="i_would_like_to_receive_your_newsletter_and_other_promotional_information">I would like to receive your newsletter and other promotional information.</string>
     <string name="sign_up">Sign Up</string>
-    <string name="Mark">Mark</string>
     <string name="login">Login</string>
     <string name="close_sing_up">Close Sing UP</string>
     <string name="avoid_using_special_characters_in_your_name">Avoid using special characters in your name</string>
@@ -56,8 +55,9 @@
     <string name="vehicleformplate_hint">vehicleFormPlate_Hint</string>
     <string name="vehicleformreference_hint">vehicleFormReference_Hint</string>
     <string name="vehicleformcolor_hint">vehicleFormColor_Hint</string>
-    <string name="vehicleformbutton">vehicleFormButton</string>
+    <string name="vehicleformbutton">Send</string>
     <string name="vehicle_color">Vehicle Color</string>
+    <string name="vehicle_mark">Vehicle Mark</string>
     <string name="vehicle_reference">Vehicle Reference</string>
     <string name="vehicle_plate">Vehicle Plate</string>
     <string name="vehicle_type">Vehicle Type</string>

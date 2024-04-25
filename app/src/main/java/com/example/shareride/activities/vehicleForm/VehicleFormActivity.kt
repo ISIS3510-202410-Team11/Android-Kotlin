@@ -3,15 +3,15 @@ package com.example.shareride.activities.vehicleForm
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.LruCache
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.shareride.R
-import com.example.shareride.activities.mainActivity.MainActivityPassenger
+import com.example.shareride.StartActivity
 import com.example.shareride.databinding.ActivityVehicleFormBinding
 import com.google.firebase.auth.FirebaseAuth
-import android.widget.Toast
-import com.example.shareride.StartActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -22,45 +22,99 @@ class VehicleFormActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityVehicleFormBinding
     private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var databaseReference: DatabaseReference
     private lateinit var database: DatabaseReference
     private lateinit var colorList: ArrayList<String>
     private lateinit var markList: ArrayList<String>
     private lateinit var markAdapter: ArrayAdapter<String>
+    private lateinit var colorAdapter: ArrayAdapter<String>
+    private lateinit var colorCache: LruCache<String, ArrayList<String>>
+    private lateinit var markCache: LruCache<String, ArrayList<String>>
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityVehicleFormBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        // Initialize Firebase components
+        firebaseAuth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance().getReference("/acceptedVehiclesForm/")
+
+        // Initialize caches
+        val maxCacheSize = (Runtime.getRuntime().maxMemory() / 1024).toInt() / 8
+        colorCache = LruCache(maxCacheSize)
+        markCache = LruCache(maxCacheSize)
+
+        // Initialize lists and adapter
         colorList = ArrayList()
         markList = ArrayList()
 
-        fetchDataFromFirebase()
-
         markAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, markList)
-        binding.autoCompleteTextView.threshold = 0 // Show all suggestions when touched
-        binding.autoCompleteTextView.setAdapter(markAdapter)
+        colorAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, colorList)
 
-        binding.autoCompleteTextView.setOnTouchListener { v, event ->
-            binding.autoCompleteTextView.showDropDown()
+        binding.autoCompleteTextViewMark.threshold = 0 // Show all suggestions when touched
+        binding.autoCompleteTextViewMark.setAdapter(markAdapter)
+
+        binding.autoCompleteTextViewColor.threshold = 0 // Show all suggestions when touched
+        binding.autoCompleteTextViewColor.setAdapter(colorAdapter)
+
+        binding.autoCompleteTextViewMark.setOnTouchListener { v, event ->
+            binding.autoCompleteTextViewMark.showDropDown()
+            false
+        }
+        binding.autoCompleteTextViewColor.setOnTouchListener { v, event ->
+            binding.autoCompleteTextViewColor.showDropDown()
             false
         }
 
-        setContentView(binding.root)
+        // Fetch data from cache and check for updates
+        fetchDataFromCacheAndCheckForUpdates()
+
+        val cancelButton: ImageButton = findViewById(R.id.cancel_button)
+        cancelButton.setOnClickListener {
+            // Navigate back to the profile view
+            startActivity(Intent(this, StartActivity::class.java))
+            finish()
+        }
     }
 
-    private fun fetchDataFromFirebase() {
-        database = FirebaseDatabase.getInstance().getReference("/acceptedVehiclesForm/")
-        database.addListenerForSingleValueEvent(object : ValueEventListener {
+    private fun populateUIWithLatestData(colorList: ArrayList<String>, markList: ArrayList<String>) {
+        // Update UI with latest data from network
+        runOnUiThread {
+            this.markList.clear()
+            this.markList.addAll(markList)
+            markAdapter.notifyDataSetChanged()
+
+            this.colorList.clear()
+            this.colorList.addAll(colorList)
+            colorAdapter.notifyDataSetChanged()
+        }
+
+    }
+
+    private fun fetchDataFromCacheAndCheckForUpdates() {
+        val cachedColorList = colorCache.get("colorList")
+        val cachedMarkList = markCache.get("markList")
+
+        if (cachedColorList != null && cachedMarkList != null) {
+            // If cached data is available, populate the UI with it
+            populateUIWithLatestData(cachedColorList, cachedMarkList)
+        }
+
+        // Now check for updates in the background
+        checkForUpdatesInBackground()
+    }
+
+    private fun checkForUpdatesInBackground() {
+        database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val jsonObject = dataSnapshot.value as? Map<*, *>?
 
                 if (jsonObject != null && jsonObject.containsKey("Color") && jsonObject.containsKey("Mark")) {
-                    colorList = (jsonObject["Color"] as? ArrayList<String>)!!
-                    markList = (jsonObject["Mark"] as? ArrayList<String>)!!
-                    markAdapter.clear()
-                    markAdapter.addAll(markList)
-                    markAdapter.notifyDataSetChanged()
+                    val colorListFromFirebase = (jsonObject["Color"] as? ArrayList<String>)!!
+                    val markListFromFirebase = (jsonObject["Mark"] as? ArrayList<String>)!!
+                    populateUIWithLatestData(colorListFromFirebase, markListFromFirebase)
+                    updateCache(colorListFromFirebase, markListFromFirebase)
 
                 } else {
                     println("JSON object is null or does not contain 'Color' key.")
@@ -73,37 +127,9 @@ class VehicleFormActivity : AppCompatActivity() {
         })
     }
 
-    private fun registerVehicle() {
-        val userId = firebaseAuth.currentUser?.uid
-        val type = binding.typeInput.text.toString().trim()
-        val plate = binding.plateInput.text.toString().trim()
-        val reference = binding.referenceInput.text.toString().trim()
-        val color = binding.colorInput.text.toString().trim()
 
-        if (type.isEmpty() || plate.isEmpty() || reference.isEmpty() || color.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val vehicle = Vehicle(type, plate, reference, color)
-
-        userId?.let {
-            databaseReference.child("users").child(it).child("vehicles").push().setValue(vehicle)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        finish()
-                    } else {
-                        Toast.makeText(this, "Vehicle registration failed", Toast.LENGTH_SHORT).show()
-                    }
-                }
-        }
+    private fun updateCache(colorList: ArrayList<String>, markList: ArrayList<String>) {
+        colorCache.put("colorList", colorList)
+        markCache.put("markList", markList)
     }
 }
-
-// Define a data class to represent a vehicle
-data class Vehicle(
-    val type: String,
-    val plate: String,
-    val reference: String,
-    val color: String
-)
