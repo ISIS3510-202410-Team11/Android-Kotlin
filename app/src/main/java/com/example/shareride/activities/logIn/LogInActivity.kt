@@ -3,12 +3,18 @@ package com.example.shareride.activities.logIn
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageButton
 import com.example.shareride.R
 import com.example.shareride.StartActivity
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.example.shareride.activities.mainActivity.MainActivityPassenger
 import com.example.shareride.activities.forgotPasswordActivity.ForgotPasswordActivity
+import com.example.shareride.activities.singUp.ViewModelFactory
+import com.example.shareride.activities.singUp.viewModelSignUp
+import com.example.shareride.connectivity.ConnectivityObserver
+import com.example.shareride.connectivity.NetworkConnectivityObserver
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -20,6 +26,8 @@ class LogInActivity : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
         super.onCreate(savedInstanceState)
         binding = ActivityLogInBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -58,6 +66,39 @@ class LogInActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        val networkConnectivityObserver = NetworkConnectivityObserver(applicationContext)
+        val viewModelFactory = ViewModelFactory(networkConnectivityObserver)
+        val viewModel = ViewModelProvider(this, viewModelFactory).get(viewModelSignUp::class.java)
+
+
+
+        viewModel.connectivityStatus.observe(this@LogInActivity){status ->
+            when (status){
+                ConnectivityObserver.Status.Lost -> {
+
+                    binding.offlinelog.visibility = View.VISIBLE
+                }
+
+                ConnectivityObserver.Status.Unavailable -> {
+                    binding.offlinelog.visibility = View.VISIBLE
+
+
+                }
+
+                ConnectivityObserver.Status.Avalilable ->{
+                    binding.offlinelog.visibility = View.GONE
+
+
+                }
+                ConnectivityObserver.Status.Losing->{
+                    binding.offlinelog.visibility = View.GONE
+
+
+                }
+            }
+        }
+
+
 
         if(firebaseAuth.currentUser != null){
             val intent = Intent(this, MainActivityPassenger::class.java)

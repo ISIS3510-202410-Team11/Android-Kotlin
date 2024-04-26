@@ -67,5 +67,7 @@
     <string name="pick_your_ride">Pick your ride</string>
     <string name="add_new_destination_location">add new destination location</string>
     <string name="add_your_locationa_as_origin">add your locationa as origin</string>
+    <string name="connect_to_the_internet_to_interact_with_our_map">Connect to the internet to interact with our map</string>
+    <string name="your_are_currently_offline">Your are currently offline</string>
 </resources>
 

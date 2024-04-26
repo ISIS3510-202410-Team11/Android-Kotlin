@@ -3,6 +3,8 @@ package com.example.shareride.activities.trips
 import android.os.Bundle
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,12 +18,11 @@ class TripActivity : ComponentActivity() {
     private lateinit var tripAdapter: CustomTripCard
 
 
-    val viewModel: ViewModelMainActivity by lazy {
 
-        ViewModelProvider(this).get(ViewModelMainActivity::class.java)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+         val viewModel: ViewModelMainActivity by viewModels()
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trip)
 
@@ -29,6 +30,7 @@ class TripActivity : ComponentActivity() {
         val title = findViewById<TextView>(R.id.pickYourRideTO)
 
         val destination = viewModel.destination.value
+        println(destination)
 
         if (destination != null) {
                 title.text = "Pick your ride to: $destination"
