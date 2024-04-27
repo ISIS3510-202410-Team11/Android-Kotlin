@@ -17,6 +17,7 @@ import com.example.shareride.R
 import com.example.shareride.activities.mainActivity.fragments.HomeDriverFragment
 import com.example.shareride.activities.mainActivity.fragments.ViewModelMainActivity
 import com.example.shareride.activities.singUp.ViewModelFactory
+import com.example.shareride.clases.ConnectivityReceiver
 import com.example.shareride.connectivity.ConnectivityObserver
 import com.example.shareride.connectivity.NetworkConnectivityObserver
 import com.example.shareride.databinding.ActivityMainBinding
