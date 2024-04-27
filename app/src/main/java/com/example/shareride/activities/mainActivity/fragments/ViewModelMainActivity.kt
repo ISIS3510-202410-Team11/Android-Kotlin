@@ -2,13 +2,10 @@ package com.example.shareride.activities.mainActivity.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shareride.MapBoxAPI.IQLocationAPI
 import com.example.shareride.clases.Event
 import com.example.shareride.clases.Location
 import com.example.shareride.clases.LocationIQResponse
@@ -17,6 +14,7 @@ import com.example.shareride.connectivity.ConnectivityObserver
 import com.example.shareride.connectivity.NetworkConnectivityObserver
 import com.example.shareride.persistence.AnaliticsPersistence
 import com.example.shareride.persistence.TripPersistence
+import com.example.shareride.storage.PrefPopularLocations
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -25,15 +23,14 @@ import com.google.firebase.analytics.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
-import com.mapbox.maps.OfflineManager
-import com.mapbox.maps.Style
-import com.mapbox.maps.TilesetDescriptorOptions
+import com.google.gson.JsonParseException
+import com.google.gson.JsonSyntaxException
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
-class ViewModelMainActivity (private val networkConnectivityObserver: NetworkConnectivityObserver):ViewModel(){
+class ViewModelMainActivity (private val networkConnectivityObserver: NetworkConnectivityObserver, private val context: Context):ViewModel(){
 
     var page_name: String = "Home"
     var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -120,10 +117,44 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
 
 
 
+
     val connectivityStatus: MutableLiveData<ConnectivityObserver.Status> = MutableLiveData()
 
     init {
         observeNetworkConnectivity()
+    }
+
+    private val prefPopularLocations = PrefPopularLocations(context)
+
+
+
+    fun getcachePopLocations() {
+        val cachedLocations = prefPopularLocations.getTopNlocations()
+
+        val gson = Gson()
+        val type = object : TypeToken<List<Location>>() {}.type
+        println(cachedLocations.toString())
+
+        val locationsList: List<Location> = if (cachedLocations.toString() != "null") {
+            println("wtf")
+            gson.fromJson(cachedLocations, type)
+        } else {
+            emptyList()
+        }
+
+        _locationsLVdata.value = locationsList
+
+    }
+
+    fun fetchAndCachePopLocations(){
+        getMostpopularDestination(5)
+        viewModelScope.launch(Dispatchers.IO) {
+
+        val gson = Gson()
+        val jsonLocations = gson.toJson(_locationsLVdata.value)
+        prefPopularLocations.saveTopNlocations(jsonLocations)}
+
+
     }
 
     private fun observeNetworkConnectivity() {

@@ -42,7 +42,7 @@ class MainActivityPassenger : AppCompatActivity() {
         setContentView(binding.root)
 
         networkConnectivityObserver = NetworkConnectivityObserver(applicationContext)
-        viewModelFactory = ViewModelFactory(networkConnectivityObserver)
+        viewModelFactory = ViewModelFactory(networkConnectivityObserver, this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(ViewModelMainActivity::class.java)
 
 

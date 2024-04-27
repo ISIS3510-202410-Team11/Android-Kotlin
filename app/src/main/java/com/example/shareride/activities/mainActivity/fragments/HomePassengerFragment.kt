@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -16,6 +17,7 @@ import com.example.shareride.R
 import com.example.shareride.activities.custom_cards.CustomAdapterCard
 import com.example.shareride.activities.mainActivity.popUps.popWhereToFragment
 import com.example.shareride.activities.trips.TripActivity
+import com.example.shareride.connectivity.ConnectivityObserver
 import com.google.android.material.search.SearchBar
 
 /**
@@ -51,12 +53,34 @@ class HomePassengerFragment : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         val sch_bar = view.findViewById<SearchBar>(R.id.where_to)
         val ldg_pop = view.findViewById<ProgressBar>(R.id.poploadingbar)
+        val txt_title = view.findViewById<TextView>(R.id.popdestiTitle)
 
         val showpopup = popWhereToFragment()
 
+        var response : Boolean
+
+        viewModel.connectivityStatus.observe(viewLifecycleOwner){status ->
+            when (status) {
+
+                ConnectivityObserver.Status.Unavailable ,  ConnectivityObserver.Status.Lost-> {
+                    viewModel.getcachePopLocations()
 
 
-        viewModel.getMostpopularDestination(5)
+
+
+                }
+
+                ConnectivityObserver.Status.Avalilable, ConnectivityObserver.Status.Losing -> {
+
+
+                    viewModel.fetchAndCachePopLocations()
+
+                }
+                }
+
+
+            }
+
         val adapter = CustomAdapterCard(viewModel._locationsLVdata){ title ->
             viewModel.updateDestination(title)
 
@@ -90,6 +114,11 @@ class HomePassengerFragment : Fragment() {
 
             }
         })
+
+        viewModel._locationsLVdata.observe( data ->
+        if
+
+        )
 
 
 

@@ -66,37 +66,10 @@ class LogInActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val networkConnectivityObserver = NetworkConnectivityObserver(applicationContext)
-        val viewModelFactory = ViewModelFactory(networkConnectivityObserver)
-        val viewModel = ViewModelProvider(this, viewModelFactory).get(viewModelSignUp::class.java)
 
 
 
-        viewModel.connectivityStatus.observe(this@LogInActivity){status ->
-            when (status){
-                ConnectivityObserver.Status.Lost -> {
 
-                    binding.offlinelog.visibility = View.VISIBLE
-                }
-
-                ConnectivityObserver.Status.Unavailable -> {
-                    binding.offlinelog.visibility = View.VISIBLE
-
-
-                }
-
-                ConnectivityObserver.Status.Avalilable ->{
-                    binding.offlinelog.visibility = View.GONE
-
-
-                }
-                ConnectivityObserver.Status.Losing->{
-                    binding.offlinelog.visibility = View.GONE
-
-
-                }
-            }
-        }
 
 
 
