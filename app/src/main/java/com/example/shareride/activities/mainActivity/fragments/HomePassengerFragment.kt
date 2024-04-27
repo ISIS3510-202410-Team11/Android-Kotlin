@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -54,6 +55,8 @@ class HomePassengerFragment : Fragment() {
         val sch_bar = view.findViewById<SearchBar>(R.id.where_to)
         val ldg_pop = view.findViewById<ProgressBar>(R.id.poploadingbar)
         val txt_title = view.findViewById<TextView>(R.id.popdestiTitle)
+        val pop_space = view.findViewById<LinearLayout>(R.id.poplocations)
+        val no_int_space = view.findViewById<LinearLayout>(R.id.NoIntenernet)
 
         val showpopup = popWhereToFragment()
 
@@ -115,10 +118,11 @@ class HomePassengerFragment : Fragment() {
             }
         })
 
-        viewModel._locationsLVdata.observe( data ->
-        if
 
-        )
+
+       
+
+
 
 
 

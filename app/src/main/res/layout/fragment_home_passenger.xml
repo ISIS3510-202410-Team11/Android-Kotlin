@@ -102,6 +102,15 @@
             android:visibility="gone"
             >
 
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:text="Popular destinations:"
+                android:textSize="20sp"
+                android:layout_margin="10dp"
+                android:layout_marginHorizontal="20dp"
+                />
+
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -118,7 +127,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/connect_to_the_internet_to_interact_with_our_map"
+                android:text="@string/we_can_t_access_the_current_popular_destinations"
                 android:textSize="21dp"/>
         </LinearLayout>
         <LinearLayout
@@ -128,7 +137,8 @@
             android:fillViewport="true"
             android:layout_gravity="center"
             android:gravity="center"
-            android:id="@+id/popular_destinations"
+
+            android:id="@+id/poplocations"
 
             >
             <TextView

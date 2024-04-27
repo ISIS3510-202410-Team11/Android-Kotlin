@@ -69,5 +69,7 @@
     <string name="add_your_locationa_as_origin">add your locationa as origin</string>
     <string name="connect_to_the_internet_to_interact_with_our_map">Connect to the internet to interact with our map</string>
     <string name="your_are_currently_offline">Your are currently offline</string>
+    <string name="we_can_t_acces_to_the_current_popular_destinations">We can\'t acces to the current popular destinations</string>
+    <string name="we_can_t_access_the_current_popular_destinations">We can\'t access the current popular destinations</string>
 </resources>
 
