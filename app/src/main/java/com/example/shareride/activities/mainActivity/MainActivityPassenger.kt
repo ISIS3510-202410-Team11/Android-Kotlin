@@ -5,6 +5,7 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
@@ -15,7 +16,9 @@ import com.example.shareride.activities.mainActivity.fragments.ProfilePassengerF
 import com.example.shareride.R
 import com.example.shareride.activities.mainActivity.fragments.HomeDriverFragment
 import com.example.shareride.activities.mainActivity.fragments.ViewModelMainActivity
-import com.example.shareride.clases.ConnectivityReceiver
+import com.example.shareride.activities.singUp.ViewModelFactory
+import com.example.shareride.connectivity.ConnectivityObserver
+import com.example.shareride.connectivity.NetworkConnectivityObserver
 import com.example.shareride.databinding.ActivityMainBinding
 
 class MainActivityPassenger : AppCompatActivity() {
@@ -31,17 +34,21 @@ class MainActivityPassenger : AppCompatActivity() {
     private var profileFragment: ProfilePassengerFragment? = null
 
 
-    val viewModel: ViewModelMainActivity by lazy {
 
-        ViewModelProvider(this).get(ViewModelMainActivity::class.java)
-    }
+
+    private lateinit var networkConnectivityObserver: NetworkConnectivityObserver
+    private lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var viewModel: ViewModelMainActivity
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
-
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        networkConnectivityObserver = NetworkConnectivityObserver(applicationContext)
+        viewModelFactory = ViewModelFactory(networkConnectivityObserver, this)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(ViewModelMainActivity::class.java)
+
+
         viewModel.setSwitchChecked(false)
 
         replaceFragment(getInitialFragment())
@@ -61,31 +68,61 @@ class MainActivityPassenger : AppCompatActivity() {
         binding.bottomNavView.setOnItemSelectedListener {
 
 
-            when(it.itemId ){
-                R.id.home_it -> {replaceFragment(getHomeFragment())
+            when (it.itemId) {
+                R.id.home_it -> {
+                    replaceFragment(getHomeFragment())
                     page_name.text = viewModel.page_name
                     viewModel.clicks_bf_createride("Home")
 
                 }
-                R.id.account_it -> {replaceFragment(getProfileFragment())
+
+                R.id.account_it -> {
+                    replaceFragment(getProfileFragment())
                     page_name.text = viewModel.page_name
                     viewModel.clicks_bf_createride("Profile")
 
                 }
 
-                else->{
+                else -> {
 
 
                 }
-                }
+            }
             true
         }
 
+        viewModel.connectivityStatus.observe(this@MainActivityPassenger) { status ->
+            when (status) {
+
+                ConnectivityObserver.Status.Lost -> {
+                    binding.warningconnectivity.visibility = View.VISIBLE
+                }
+
+                ConnectivityObserver.Status.Unavailable -> {
+                    binding.warningconnectivity.visibility = View.VISIBLE
+
+                }
+
+                ConnectivityObserver.Status.Avalilable -> {
+                    binding.warningconnectivity.visibility = View.GONE
+
+                }
+
+                ConnectivityObserver.Status.Losing -> {
+                    binding.warningconnectivity.visibility = View.GONE
+
+                }
+
+                else -> {}
+
+            }
+        }
 
     }
 
 
-    private fun getInitialFragment(): Fragment {
+
+     private fun getInitialFragment(): Fragment {
         return if(viewModel._isSwitchChecked.value == false){
             viewModel.change_pg_name("Home")
 

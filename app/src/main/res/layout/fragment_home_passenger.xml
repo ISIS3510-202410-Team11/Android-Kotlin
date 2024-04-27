@@ -22,9 +22,38 @@
 
         >
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:id="@+id/offlineSign"
+            android:visibility="gone"
+            >
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp"
+                android:src="@drawable/baseline_cloud_off_24"
+                android:background="@android:color/transparent"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="You are offline"
+                android:textSize="26dp"
+                />
 
 
-    <LinearLayout
+
+
+        </LinearLayout>
+
+
+
+
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -61,7 +90,46 @@
         </LinearLayout>
 
 
-        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:orientation="vertical"
+            android:layout_marginVertical="20dp"
+            android:id="@+id/NoIntenernet"
+            android:background="@android:color/transparent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:visibility="gone"
+            >
+
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:text="Popular destinations:"
+                android:textSize="20sp"
+                android:layout_margin="10dp"
+                android:layout_marginHorizontal="20dp"
+                />
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/baseline_cloud_off_24"
+                android:layout_marginVertical="30dp"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/your_are_currently_offline"
+                android:textSize="24dp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/we_can_t_access_the_current_popular_destinations"
+                android:textSize="21dp"/>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="300dp"
@@ -70,6 +138,8 @@
             android:layout_gravity="center"
             android:gravity="center"
 
+            android:id="@+id/poplocations"
+
             >
             <TextView
                 android:layout_width="280dp"
@@ -77,6 +147,7 @@
                 android:text="Popular destinations:"
                 android:textSize="20sp"
                 android:layout_margin="10dp"
+                android:id="@+id/popdestiTitle"
                 />
 
             <androidx.core.widget.NestedScrollView
@@ -101,6 +172,8 @@
 
 
 
+
+
             <ProgressBar
                 android:layout_width="30dp"
                 android:layout_height="match_parent"
@@ -108,6 +181,8 @@
                 android:id="@+id/poploadingbar"
                 android:visibility="gone"
                 />
+
+
 
             
 
