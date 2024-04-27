@@ -15,21 +15,16 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import com.example.shareride.MapBoxAPI.IQLocationAPI
 import com.example.shareride.R
 import com.example.shareride.activities.mainActivity.fragments.ViewModelMainActivity
-import com.example.shareride.activities.singUp.SingUpActivity
 import com.example.shareride.activities.trips.TripActivity
 import com.example.shareride.connectivity.ConnectivityObserver
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -40,15 +35,11 @@ import com.mapbox.common.MapboxOptions
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
-import com.mapbox.maps.extension.style.style
-import com.mapbox.maps.plugin.LocationPuck2D
-import com.mapbox.maps.plugin.animation.camera
 import com.mapbox.maps.plugin.gestures.OnMoveListener
 import com.mapbox.maps.plugin.gestures.addOnMapClickListener
 import com.mapbox.maps.plugin.gestures.gestures
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.maps.plugin.locationcomponent.location
-import kotlinx.coroutines.launch
 
 
 class MyViewModel : ViewModel() {
@@ -89,7 +80,8 @@ class popWhereToFragment : DialogFragment() {
     private  lateinit var noInternet: LinearLayout
     private  lateinit var nomap: LinearLayout
 
-
+    private  lateinit var to_txt_bar: EditText
+    private  lateinit var from_txt_bar: EditText
 
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -121,13 +113,49 @@ class popWhereToFragment : DialogFragment() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        mapview.onStart()
+
+        mapview.getMapboxMap().addOnMapClickListener { point ->
+            val latitude = point.latitude()
+            val longitude = point.longitude()
+            val coordenadas = LatLng(latitude, longitude)
+            val destination_unk = "Latitud: $latitude, Longitud: $longitude"
+            to_txt_bar.hint = destination_unk
+            to_txt_bar.setText(destination_unk)
+            to_txt_bar.textSize = 12.0F
+            myViewModel.livelaongitudDestination.postValue(longitude)
+            myViewModel.livelatitudDestination.postValue(latitude)
+            viewModel.clicks_bf_createride("map")
+            viewModel.reverse_geocode_destination(longitude, latitude)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mapview.onStop()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mapview.onDestroy()
+    }
+
+
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapview.onLowMemory()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         noInternet = view.findViewById<LinearLayout>(R.id.offlineSign)
         val search_button = view.findViewById<Button>(R.id.ssearchbutton)
         nomap = view.findViewById(R.id.NoIntenernet)
-        val from_txt_bar = view.findViewById<EditText>(R.id.fromTxT)
-        val to_txt_bar = view.findViewById<EditText>(R.id.ToTxT)
+         from_txt_bar = view.findViewById<EditText>(R.id.fromTxT)
+         to_txt_bar = view.findViewById<EditText>(R.id.ToTxT)
         val botton_newLoc = view.findViewById<Button>(R.id.add_new_loc)
 
         val add_loc = view.findViewById<LinearLayout>(R.id.add_loc_linear)
@@ -368,18 +396,18 @@ class popWhereToFragment : DialogFragment() {
                     add_loc.visibility = View.VISIBLE
                     nomap.visibility = View.GONE
                     mapview.visibility = View.VISIBLE
+                    mapview.onStart()
+
 
                 }
                 else{
                     viewModel.isaddingloc = false
 
                     snd_button_.visibility = View.GONE
+
                     add_loc.visibility = View.GONE
                     nomap.visibility = View.GONE
-                    mapview.visibility = View.INVISIBLE
-
-
-
+                    println("destrucción")
                 }
 
             }
@@ -388,12 +416,15 @@ class popWhereToFragment : DialogFragment() {
 
                     viewModel.isaddingloc = true
                     snd_button_.visibility = View.VISIBLE
-                    nomap.visibility = View.VISIBLE}
+                    nomap.visibility = View.VISIBLE
+                    mapview.onDestroy()
+                }
                 else{
                     viewModel.isaddingloc = false
 
                     snd_button_.visibility = View.GONE
                     nomap.visibility = View.GONE
+                    mapview.onDestroy()
 
                 }
 
@@ -418,10 +449,27 @@ class popWhereToFragment : DialogFragment() {
 
             viewModel.clicks_bf_createride("search")
 
+            if (viewModel.connectivityStatus.value.toString() == "Avalilable" || viewModel.connectivityStatus.value.toString() == "Losing"){
 
 
-            val intent = Intent(requireContext(), TripActivity::class.java)
-            startActivity(intent)
+
+
+
+                if (viewModel.destination != null || viewModel.origin != null){
+                    val intent = Intent(requireContext(), TripActivity::class.java)
+                    startActivity(intent)
+
+
+
+
+                }
+            else{
+
+                    Toast.makeText(requireContext(), "Check your data", Toast.LENGTH_SHORT).show()
+
+                }
+
+            }
 
         }
 

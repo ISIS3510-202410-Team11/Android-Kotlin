@@ -21,7 +21,7 @@ class TripActivity : ComponentActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-         val viewModel: ViewModelMainActivity by viewModels()
+         //val viewModel: ViewModelMainActivity by viewModels()
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trip)
@@ -29,8 +29,8 @@ class TripActivity : ComponentActivity() {
         val trip_cards = findViewById<RecyclerView>(R.id.automobileTrips)
         val title = findViewById<TextView>(R.id.pickYourRideTO)
 
-        val destination = viewModel.destination.value
-        println(destination)
+        val destination = null//viewModel.destination.value
+        //println(destination)
 
         if (destination != null) {
                 title.text = "Pick your ride to: $destination"
@@ -47,13 +47,13 @@ class TripActivity : ComponentActivity() {
         tripAdapter = CustomTripCard(emptyList(), "Car")
         trip_cards.adapter = tripAdapter
 
-        viewModel._tripsLvdata.observe(this, Observer {
+        /*viewModel._tripsLvdata.observe(this, Observer {
             trips ->
             tripAdapter.updateTrips(trips)
         })
 
 
-        viewModel.fetchTrips()
+        viewModel.fetchTrips()*/
 
 
     }
