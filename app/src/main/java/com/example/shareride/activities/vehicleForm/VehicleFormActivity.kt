@@ -32,7 +32,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.content.Context
 import android.content.IntentFilter
-import android.net.NetworkInfo
 import com.example.shareride.clases.ConnectivityReceiver
 import com.example.shareride.clases.Vehicle
 import com.google.gson.Gson
