@@ -88,6 +88,7 @@ dependencies {
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("androidx.compose.material3:material3:1.2.1")
     implementation("com.google.firebase:firebase-firestore-ktx:24.11.1")
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
     //implementation("com.android.car.ui:car-ui-lib:2.6.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
