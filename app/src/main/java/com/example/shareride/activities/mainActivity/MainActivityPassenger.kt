@@ -1,5 +1,9 @@
 package com.example.shareride.activities.mainActivity
 
+import ConnectivityReceiver
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
@@ -13,6 +17,7 @@ import com.example.shareride.R
 import com.example.shareride.activities.mainActivity.fragments.HomeDriverFragment
 import com.example.shareride.activities.mainActivity.fragments.ViewModelMainActivity
 import com.example.shareride.databinding.ActivityMainBinding
+import com.example.shareride.service.FormService
 
 class MainActivityPassenger : AppCompatActivity() {
 
@@ -41,6 +46,10 @@ class MainActivityPassenger : AppCompatActivity() {
         viewModel.setSwitchChecked(false)
 
         replaceFragment(getInitialFragment())
+
+        var connectivityReceiver = ConnectivityReceiver()
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(connectivityReceiver, filter)
 
 
 

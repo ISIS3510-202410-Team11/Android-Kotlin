@@ -12,20 +12,12 @@ import com.google.gson.Gson
 class ConnectivityReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent?.action == ConnectivityManager.CONNECTIVITY_ACTION) {
-            Log.d("ConnectivityReceiver", "hola1")
+            Log.d("ConnectivityReceiver", "Internet connection status changed")
             val isConnected = isNetworkConnected(context)
             if (isConnected) {
+                Log.d("ConnectivityReceiver", "Internet connected")
                 // If connected to the internet, upload vehicle data from SharedPreferences
-                val sharedPref = context?.getSharedPreferences("your_pref_name", Context.MODE_PRIVATE)
-                val vehicleDataJson = sharedPref?.getString("vehicle_key", null)
-                val vehicle2 = Gson().fromJson(vehicleDataJson, Vehicle::class.java)
-                if (!vehicleDataJson.isNullOrEmpty()) {
-                    val vehicle = Gson().fromJson(vehicleDataJson, Vehicle::class.java)
-                    // Upload vehicle data to Firebase
-                    uploadVehicleToFirebase(context, vehicle)
-                    // Clear vehicle data from SharedPreferences
-                    clearVehicleDataFromSharedPreferences(context)
-                }
+                uploadCachedVehicleData(context)
             }
         }
     }
@@ -36,11 +28,21 @@ class ConnectivityReceiver : BroadcastReceiver() {
         return networkInfo != null && networkInfo.isConnected
     }
 
-    private fun uploadVehicleToFirebase(context: Context?, vehicle: Vehicle) {
+    private fun uploadCachedVehicleData(context: Context?) {
+        val sharedPref = context?.getSharedPreferences("your_pref_name", Context.MODE_PRIVATE)
+        val formDataJson = sharedPref?.getString("vehicle_key", null)
+        if (!formDataJson.isNullOrEmpty()) {
+            val form = Gson().fromJson(formDataJson, Form::class.java)
+            uploadVehicleToFirebase(context, form)
+            clearVehicleDataFromSharedPreferences(context)
+        }
+    }
+
+    private fun uploadVehicleToFirebase(context: Context?, form: Form) {
         val database = FirebaseDatabase.getInstance().reference
-        val userId = "RKtI9Ep1e9daaITIMXIyKasi3pr2"
+        val userId = form.userId
         userId?.let {
-            database.child("users").child(it).child("vehicles").push().setValue(vehicle)
+            database.child("users").child(it).child("vehicles").push().setValue(form.vehicle)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Toast.makeText(context, "Vehicle data uploaded successfully", Toast.LENGTH_SHORT).show()
@@ -51,9 +53,9 @@ class ConnectivityReceiver : BroadcastReceiver() {
         }
     }
 
-
     private fun clearVehicleDataFromSharedPreferences(context: Context?) {
         val sharedPref = context?.getSharedPreferences("your_pref_name", Context.MODE_PRIVATE)
         sharedPref?.edit()?.remove("vehicle_key")?.apply()
+        context?.unregisterReceiver(this)
     }
 }
