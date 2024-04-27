@@ -62,7 +62,7 @@ class SingUpActivity : AppCompatActivity() {
 
 
         val networkConnectivityObserver = NetworkConnectivityObserver(applicationContext)
-        val viewModelFactory = ViewModelFactory(networkConnectivityObserver)
+        val viewModelFactory = ViewModelFactory(networkConnectivityObserver, this)
         val viewModel = ViewModelProvider(this, viewModelFactory).get(viewModelSignUp::class.java)
 
 
@@ -337,6 +337,14 @@ class SingUpActivity : AppCompatActivity() {
         textBar_name.isEnabled= avalability
         singUpbutton.isEnabled = avalability
         singUpbutton.isClickable = avalability
+        if (!avalability ){
+            singUpbutton.text = "Loading .."
+        }
+        else{
+            singUpbutton.text = "Sing Up"
+
+        }
+
 
 
 

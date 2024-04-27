@@ -6,119 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".activities.mainActivity.CreateRideActivity">
 
-
-
-    <EditText
-        android:id="@+id/editTextDepartureLocation"
-        android:layout_width="0dp"
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:text="Incontruction >:)"
+    android:textSize="48dp"/>
+    <ImageView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/edit_text_border"
-        android:hint="@string/departure_location"
-        android:padding="12dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:autofillHints=""
+        android:src="@drawable/logo"
+        tools:ignore="MissingConstraints" />
 
-        tools:ignore="TextFields" />
 
-    <EditText
-        android:id="@+id/editTextDestinationLocation"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/edit_text_border"
-        android:hint="@string/destination_location"
-        android:padding="12dp"
-        app:layout_constraintTop_toBottomOf="@id/editTextDepartureLocation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:autofillHints=""
-
-        tools:ignore="TextFields" />
-
-    <MultiAutoCompleteTextView
-        android:id="@+id/selectVehicle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/select_vehicle"
-        app:layout_constraintTop_toBottomOf="@id/editTextDestinationLocation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <MultiAutoCompleteTextView
-        android:id="@+id/numberOfPassengers"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/number_of_passengers"
-        app:layout_constraintTop_toBottomOf="@id/selectVehicle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <EditText
-        android:id="@+id/editTextDate"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/edit_text_border"
-        android:focusable="false"
-        android:hint="@string/today"
-        android:padding="12dp"
-        app:layout_constraintTop_toBottomOf="@id/numberOfPassengers"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:autofillHints=""
-
-        tools:ignore="TextFields" />
-
-    <EditText
-        android:id="@+id/editTextTime"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/edit_text_border"
-        android:focusable="false"
-        android:hint="@string/_00_00_pm"
-        android:padding="12dp"
-        app:layout_constraintTop_toBottomOf="@id/editTextDate"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:autofillHints=""
-        />
-
-    <EditText
-        android:id="@+id/editTextPrice"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/edit_text_border"
-        android:hint="@string/price"
-        android:inputType="numberDecimal"
-        android:padding="12dp"
-        app:layout_constraintTop_toBottomOf="@id/editTextTime"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:autofillHints="" />
-
-    <Button
-        android:id="@+id/buttonCreateRide"
-        style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="30dp"
-        android:backgroundTint="@color/md_theme_light_primary"
-        android:text="@string/create_new_ride"
-        android:textAlignment="textStart"
-        android:textColor="@color/md_theme_light_onPrimary"
-
-        android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/editTextPrice"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

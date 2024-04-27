@@ -12,7 +12,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:scrollbars="vertical"
         android:background="@drawable/edit_text_border"
         >
@@ -23,9 +23,36 @@
         android:orientation="vertical"
         android:layout_marginHorizontal="20dp"
 
+        android:layout_marginVertical="10dp"
         >
-    <!-- TODO: Update blank fragment layout -->
 
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:id="@+id/offlineSign"
+            >
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp"
+                android:src="@drawable/baseline_cloud_off_24"
+                android:background="@android:color/transparent"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="You are offline"
+                android:textSize="26dp"
+                />
+
+
+
+
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -49,7 +76,6 @@
                 android:layout_height="match_parent"
                 android:progress="0"
                 android:id="@+id/mylocationloading"
-                android:visibility="gone"
 
                 />
 
@@ -61,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:layout_marginVertical="15dp"
-                android:hint="@string/from"
+                android:hint=" Double tap to get your location"
                 android:autofillHints="name"
                 android:textSize="20sp"
                 android:textColor="@color/common_google_signin_btn_text_light"
@@ -156,24 +182,32 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:orientation="vertical"
-            android:fillViewport="true"
-            android:id="@+id/historical_whereto"
-            >
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_marginHorizontal="30dp"
-                android:nestedScrollingEnabled="false"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:fadeScrollbars="false"
-                android:scrollbars="vertical"
+            android:layout_marginVertical="20dp"
+            android:id="@+id/NoIntenernet"
+            android:background="@android:color/transparent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:visibility="gone"
             >
 
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/baseline_cloud_off_24"
+                android:layout_marginVertical="30dp"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/your_are_currently_offline"
+                android:textSize="24dp"
+                />
 
-            </androidx.recyclerview.widget.RecyclerView>
-
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/connect_to_the_internet_to_interact_with_our_map"
+                android:textSize="21dp"/>
         </LinearLayout>
 
 
@@ -184,6 +218,7 @@
             android:layout_marginVertical="10dp"
             android:visibility="gone"
             android:id="@+id/add_loc_linear"
+            android:background="@android:color/transparent"
             >
 
             <TextView
@@ -247,6 +282,8 @@
             </Button>
 
         </LinearLayout>
+
+
 
 
 

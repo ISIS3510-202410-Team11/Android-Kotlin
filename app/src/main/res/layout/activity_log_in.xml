@@ -8,17 +8,56 @@
     android:orientation="vertical"
     android:scrollbars="vertical"
 
-    tools:context=".activities.singUp.SingUpActivity">
+    tools:context=".activities.logIn.LogInActivity">
 
-    <LinearLayout
 
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/md_theme_light_onPrimary"
-        android:orientation="vertical"
-        android:padding="25dp">
+        android:background="@android:color/transparent"
+        >
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:orientation="vertical"
+            android:padding="25dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:id="@+id/offlinelog"
+                android:visibility="gone"
+
+                >
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="10dp"
+                    android:src="@drawable/baseline_cloud_off_24"
+                    android:background="@android:color/transparent"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="You are offline"
+                    android:textSize="26dp"
+                    />
+
+
+
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/md_theme_light_onPrimary"
@@ -52,9 +91,7 @@
 
         </LinearLayout>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
+
 
 
         <EditText
@@ -115,10 +152,12 @@
             android:textStyle="bold"
             android:clickable="true"
             android:focusable="true" />
+        </LinearLayout>
 
-    </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
+
 
 
 
