@@ -1,9 +1,9 @@
 package com.example.shareride.activities.vehicleForm
 
-import ConnectivityReceiver
+
+import Form
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.BroadcastReceiver
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.ConnectivityManager
@@ -33,6 +33,7 @@ import java.util.*
 import android.content.Context
 import android.content.IntentFilter
 import android.net.NetworkInfo
+import com.example.shareride.clases.ConnectivityReceiver
 import com.example.shareride.clases.Vehicle
 import com.google.gson.Gson
 
@@ -203,7 +204,6 @@ class VehicleFormActivity : AppCompatActivity() {
 
         // Create a new vehicle object
         val vehicle = Vehicle(mark, type, plate, reference, color, fileName)
-        userId = "RKtI9Ep1e9daaITIMXIyKasi3pr2" //TODO: Delete this when Sign Up is working again.
         // Save the vehicle to the Firebase database under the user's ID
         userId?.let {
             val isNetwork = isNetworkConnected()
@@ -220,18 +220,19 @@ class VehicleFormActivity : AppCompatActivity() {
                         }
                     }
             } else {
+                val form = Form(userId, vehicle)
                 // Save vehicle data to SharedPreferences
-                saveVehicleToSharedPreferences(vehicle)
+                saveVehicleToSharedPreferences(form)
                 // Start MainActivityPassenger
                 startActivity(Intent(this, MainActivityPassenger::class.java))
             }
         }
     }
 
-    private fun saveVehicleToSharedPreferences(vehicle: Vehicle) {
+    private fun saveVehicleToSharedPreferences(form:Form) {
         val sharedPref = getSharedPreferences("your_pref_name", Context.MODE_PRIVATE)
         with(sharedPref.edit()) {
-            putString("vehicle_key", Gson().toJson(vehicle))
+            putString("vehicle_key", Gson().toJson(form))
             apply()
         }
     }

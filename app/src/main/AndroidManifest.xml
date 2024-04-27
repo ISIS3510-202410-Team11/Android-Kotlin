@@ -58,6 +58,11 @@
             android:theme="@style/Theme.ShareRide" />
         <activity android:name=".activities.logIn.LogInActivity" />
         <activity android:name=".activities.forgotPasswordActivity.ForgotPasswordActivity" />
+        <receiver android:name=".clases.ConnectivityReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
 
 
     </application>

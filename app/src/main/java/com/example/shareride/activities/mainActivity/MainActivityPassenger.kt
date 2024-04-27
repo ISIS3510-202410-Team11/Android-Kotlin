@@ -1,5 +1,8 @@
 package com.example.shareride.activities.mainActivity
 
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -49,6 +52,10 @@ class MainActivityPassenger : AppCompatActivity() {
         viewModel.setSwitchChecked(false)
 
         replaceFragment(getInitialFragment())
+
+        var connectivityReceiver = ConnectivityReceiver()
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(connectivityReceiver, filter)
 
 
 
