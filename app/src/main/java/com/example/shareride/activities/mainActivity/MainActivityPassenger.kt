@@ -1,6 +1,5 @@
 package com.example.shareride.activities.mainActivity
 
-import ConnectivityReceiver
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
@@ -16,8 +15,8 @@ import com.example.shareride.activities.mainActivity.fragments.ProfilePassengerF
 import com.example.shareride.R
 import com.example.shareride.activities.mainActivity.fragments.HomeDriverFragment
 import com.example.shareride.activities.mainActivity.fragments.ViewModelMainActivity
+import com.example.shareride.clases.ConnectivityReceiver
 import com.example.shareride.databinding.ActivityMainBinding
-import com.example.shareride.service.FormService
 
 class MainActivityPassenger : AppCompatActivity() {
 

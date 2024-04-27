@@ -1,11 +1,12 @@
+package com.example.shareride.clases
+
+import Form
+import NotificationHelper
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.util.Log
-import android.widget.Toast
-import com.example.shareride.clases.Vehicle
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.Gson
 
@@ -44,10 +45,13 @@ class ConnectivityReceiver : BroadcastReceiver() {
         userId?.let {
             database.child("users").child(it).child("vehicles").push().setValue(form.vehicle)
                 .addOnCompleteListener { task ->
+                    val notificationHelper = NotificationHelper(context!!)
                     if (task.isSuccessful) {
-                        Toast.makeText(context, "Vehicle data uploaded successfully", Toast.LENGTH_SHORT).show()
+                        val notification = notificationHelper.buildNotification("Upload Status", "Vehicle data uploaded successfully")
+                        notificationHelper.notify(1, notification)
                     } else {
-                        Toast.makeText(context, "Failed to upload vehicle data", Toast.LENGTH_SHORT).show()
+                        val notification = notificationHelper.buildNotification("Upload Status", "Failed to upload vehicle data")
+                        notificationHelper.notify(2, notification)
                     }
                 }
         }

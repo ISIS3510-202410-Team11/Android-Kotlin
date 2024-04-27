@@ -1,10 +1,9 @@
 package com.example.shareride.activities.vehicleForm
 
-import ConnectivityReceiver
+
 import Form
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.BroadcastReceiver
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.ConnectivityManager
@@ -34,8 +33,8 @@ import java.util.*
 import android.content.Context
 import android.content.IntentFilter
 import android.net.NetworkInfo
+import com.example.shareride.clases.ConnectivityReceiver
 import com.example.shareride.clases.Vehicle
-import com.example.shareride.service.FormService
 import com.google.gson.Gson
 
 
