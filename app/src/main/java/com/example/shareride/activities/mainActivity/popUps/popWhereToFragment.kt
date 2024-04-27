@@ -118,6 +118,11 @@ class popWhereToFragment : DialogFragment() {
         mapview.onStart()
 
         mapview.getMapboxMap().addOnMapClickListener { point ->
+
+
+
+
+
             val latitude = point.latitude()
             val longitude = point.longitude()
             val coordenadas = LatLng(latitude, longitude)
@@ -128,7 +133,14 @@ class popWhereToFragment : DialogFragment() {
             myViewModel.livelaongitudDestination.postValue(longitude)
             myViewModel.livelatitudDestination.postValue(latitude)
             viewModel.clicks_bf_createride("map")
-            viewModel.reverse_geocode_destination(longitude, latitude)
+            if (viewModel.connectivityStatus.value.toString() == "Avalilable" || viewModel.connectivityStatus.value.toString() == "Losing"){
+
+                viewModel.reverse_geocode_destination(longitude, latitude)}
+            else{
+                viewModel.destination.value="We need you to be connected to acces your location"
+            }
+            true
+
         }
     }
 
@@ -369,8 +381,11 @@ class popWhereToFragment : DialogFragment() {
 
             viewModel.clicks_bf_createride("from bar")
 
+            if (viewModel.connectivityStatus.value.toString() == "Avalilable" || viewModel.connectivityStatus.value.toString() == "Losing"){
 
-            saveLocation()
+
+
+                saveLocation()
 
             from_txt_bar.textSize = 15F
 
@@ -381,6 +396,14 @@ class popWhereToFragment : DialogFragment() {
 
                 }
             })}
+            else{
+                from_txt_bar.hint = " We can't access your location"
+            }
+
+
+
+
+        }
 
 
         botton_newLoc.setOnClickListener {

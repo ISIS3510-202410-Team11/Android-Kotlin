@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:layout_marginVertical="15dp"
-                android:hint="Click to get your location"
+                android:hint=" Double tap to get your location"
                 android:autofillHints="name"
                 android:textSize="20sp"
                 android:textColor="@color/common_google_signin_btn_text_light"
