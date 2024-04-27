@@ -13,6 +13,8 @@ import com.example.shareride.clases.Event
 import com.example.shareride.clases.Location
 import com.example.shareride.clases.LocationIQResponse
 import com.example.shareride.clases.Trip
+import com.example.shareride.connectivity.ConnectivityObserver
+import com.example.shareride.connectivity.NetworkConnectivityObserver
 import com.example.shareride.persistence.AnaliticsPersistence
 import com.example.shareride.persistence.TripPersistence
 import com.github.kittinunf.fuel.httpGet
@@ -31,7 +33,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class ViewModelMainActivity  : ViewModel()    {
+class ViewModelMainActivity (private val networkConnectivityObserver: NetworkConnectivityObserver):ViewModel(){
 
     var page_name: String = "Home"
     var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -75,11 +77,9 @@ class ViewModelMainActivity  : ViewModel()    {
     var clicks_bf_create=0
     var is_click_create = false
 
-    val offlineManager: OfflineManager = OfflineManager()
 
 
 
-    val api_location: IQLocationAPI = IQLocationAPI()
 
 
 
@@ -119,16 +119,20 @@ class ViewModelMainActivity  : ViewModel()    {
     val poplocations: MutableLiveData<List<Location?>?> = _locationsLVdata
 
 
-    fun downloadmap(){
-        val region = offlineManager.createTilesetDescriptor(
-            TilesetDescriptorOptions.Builder()
-                .styleURI(Style.MAPBOX_STREETS)
-                .minZoom(0)
-                .maxZoom(14)
-                .build()
-        )
+
+    val connectivityStatus: MutableLiveData<ConnectivityObserver.Status> = MutableLiveData()
+
+    init {
+        observeNetworkConnectivity()
     }
 
+    private fun observeNetworkConnectivity() {
+        viewModelScope.launch {
+            networkConnectivityObserver.observe().collect { status ->
+                connectivityStatus.postValue(status)
+            }
+        }
+    }
 
     fun getMostpopularDestination( count: Int){
         _ispendingPOPloc.value = true
@@ -150,7 +154,6 @@ class ViewModelMainActivity  : ViewModel()    {
 
 
     fun reverse_geocode_destination(longitud: Double, latitud:Double): Boolean {
-        var locationIQResponse: String? = null
 
         if ( _isRequestDestinationPending.value == true) {
             return false

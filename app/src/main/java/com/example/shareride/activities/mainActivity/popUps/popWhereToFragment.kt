@@ -19,6 +19,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -30,6 +31,7 @@ import com.example.shareride.R
 import com.example.shareride.activities.mainActivity.fragments.ViewModelMainActivity
 import com.example.shareride.activities.singUp.SingUpActivity
 import com.example.shareride.activities.trips.TripActivity
+import com.example.shareride.connectivity.ConnectivityObserver
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
@@ -84,6 +86,9 @@ class popWhereToFragment : DialogFragment() {
     private  lateinit var progressDestination: ProgressBar
     private  lateinit var destinationIcon: ImageButton
 
+    private  lateinit var noInternet: LinearLayout
+    private  lateinit var nomap: LinearLayout
+
 
 
 
@@ -98,13 +103,13 @@ class popWhereToFragment : DialogFragment() {
 
     private  val viewModel: ViewModelMainActivity by activityViewModels()
 
-    //private var viewModel: viewModelMainActivity = ViewModelProvider(requireActivity()).get(viewModelMainActivity::class.java)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
         myViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
+
 
 
         MapboxOptions.accessToken = "pk.eyJ1IjoicGNhbXBpbm9ycnIiLCJhIjoiY2x0eW8zY2Y0MGo3dzJocGFrNGxwZG0xNiJ9._UAVbyNYayAoA5RSiwOrfg"
@@ -117,6 +122,57 @@ class popWhereToFragment : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        noInternet = view.findViewById<LinearLayout>(R.id.offlineSign)
+        val search_button = view.findViewById<Button>(R.id.ssearchbutton)
+        nomap = view.findViewById(R.id.NoIntenernet)
+        val from_txt_bar = view.findViewById<EditText>(R.id.fromTxT)
+        val to_txt_bar = view.findViewById<EditText>(R.id.ToTxT)
+        val botton_newLoc = view.findViewById<Button>(R.id.add_new_loc)
+
+        val add_loc = view.findViewById<LinearLayout>(R.id.add_loc_linear)
+
+        val snd_button_ = view.findViewById<Button>(R.id.send_button)
+        val txt_bar = view.findViewById<EditText>(R.id.new_loc_text)
+
+
+        viewModel.connectivityStatus.observe(this){status ->
+            println(status.toString())
+            when (status) {
+
+                 ConnectivityObserver.Status.Unavailable ,  ConnectivityObserver.Status.Lost-> {
+
+                     noInternet.visibility = View.VISIBLE
+                     search_button.isEnabled = true
+                     search_button.isClickable = false
+                     search_button.alpha = 0.5f
+                     add_loc.visibility = View.GONE
+
+
+
+
+
+
+                }
+
+
+                ConnectivityObserver.Status.Avalilable, ConnectivityObserver.Status.Losing -> {
+                    noInternet.visibility = View.GONE
+                    search_button.isEnabled = true
+                    search_button.isClickable = true
+                    search_button.alpha = 1f
+                    nomap.visibility =View.GONE
+
+
+                }
+
+
+
+                else -> {}
+
+            }
+
+        }
 
 
 
@@ -178,21 +234,11 @@ class popWhereToFragment : DialogFragment() {
 
         super.onViewCreated(view, savedInstanceState)
 
-        val from_txt_bar = view.findViewById<EditText>(R.id.fromTxT)
-        val to_txt_bar = view.findViewById<EditText>(R.id.ToTxT)
-        val botton_newLoc = view.findViewById<Button>(R.id.add_new_loc)
-
-        val add_loc = view.findViewById<LinearLayout>(R.id.add_loc_linear)
-        val hist_layour = view.findViewById<LinearLayout>(R.id.historical_whereto)
-
-        val snd_button_ = view.findViewById<Button>(R.id.send_button)
-        val txt_bar = view.findViewById<EditText>(R.id.new_loc_text)
 
 
 
 
 
-        val search_button = view.findViewById<Button>(R.id.ssearchbutton)
 
         progreess = view.findViewById(R.id.mylocationloading)
         mlocIcon= view.findViewById(R.id.mylocationicon)
@@ -313,20 +359,48 @@ class popWhereToFragment : DialogFragment() {
             viewModel.clicks_bf_createride("new loc")
 
 
-            if(!viewModel.isaddingloc){
+            if (viewModel.connectivityStatus.value.toString() == "Avalilable" || viewModel.connectivityStatus.value.toString() == "Losing"){
 
-                viewModel.isaddingloc = false
-                hist_layour.visibility = View.GONE
-                snd_button_.visibility = View.VISIBLE
-                add_loc.visibility = View.VISIBLE}
-            else{
-                viewModel.isaddingloc = true
+                if(!viewModel.isaddingloc){
 
-                hist_layour.visibility = View.VISIBLE
-                snd_button_.visibility = View.GONE
-                add_loc.visibility = View.GONE
+                    viewModel.isaddingloc = true
+                    snd_button_.visibility = View.VISIBLE
+                    add_loc.visibility = View.VISIBLE
+                    nomap.visibility = View.GONE
+                    mapview.visibility = View.VISIBLE
+
+                }
+                else{
+                    viewModel.isaddingloc = false
+
+                    snd_button_.visibility = View.GONE
+                    add_loc.visibility = View.GONE
+                    nomap.visibility = View.GONE
+                    mapview.visibility = View.INVISIBLE
+
+
+
+                }
 
             }
+            else{
+                if(!viewModel.isaddingloc){
+
+                    viewModel.isaddingloc = true
+                    snd_button_.visibility = View.VISIBLE
+                    nomap.visibility = View.VISIBLE}
+                else{
+                    viewModel.isaddingloc = false
+
+                    snd_button_.visibility = View.GONE
+                    nomap.visibility = View.GONE
+
+                }
+
+            }
+
+
+
 
 
 
@@ -368,7 +442,6 @@ class popWhereToFragment : DialogFragment() {
 
                 // TODO:(Enviar nuevo lugar)
                 add_loc.visibility = View.GONE
-                hist_layour.visibility = View.VISIBLE
 
 
             }
@@ -444,7 +517,7 @@ class popWhereToFragment : DialogFragment() {
 
             }
             else{
-                Toast.makeText(requireContext(), "Unsucesfull adquiered location", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Unsucesfull adquiered location, please turn on your Location", Toast.LENGTH_SHORT).show()
 
             }
 
