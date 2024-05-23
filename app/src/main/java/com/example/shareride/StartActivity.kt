@@ -31,11 +31,11 @@ class StartActivity : AppCompatActivity() {
         viewModelMainActivity.connectivityStatus.observe(this){status ->
             when (status) {
                 ConnectivityObserver.Status.Unavailable ,  ConnectivityObserver.Status.Lost-> {
-                    viewModelMainActivity.fetchAndCachePopLocations()
+                    viewModelMainActivity.fetchAndCachePopLocations(){}
 
                 }
                 ConnectivityObserver.Status.Avalilable, ConnectivityObserver.Status.Losing -> {
-                    viewModelMainActivity.fetchAndCachePopLocations()
+                    viewModelMainActivity.fetchAndCachePopLocations(){}
                 }
             }
 

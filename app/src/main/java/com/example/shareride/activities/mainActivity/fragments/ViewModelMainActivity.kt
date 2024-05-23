@@ -129,7 +129,8 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
 
     private val prefPopularLocations = PrefPopularLocations(context)
 
-    fun getcachePopLocations() {
+    fun getcachePopLocations(callback: (List<String>?) -> Unit) {
+
         val cachedLocations = prefPopularLocations.getTopNlocations()
 
         val gson = Gson()
@@ -144,11 +145,12 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
         }
 
         _locationsLVdata.value = locationsList
+        callback(locationsList)
 
     }
 
-    fun fetchAndCachePopLocations() {
-        getMostpopularDestination(count =5 ){ location ->
+    fun fetchAndCachePopLocations(callback: (List<String>?) -> Unit) {
+        getMostpopularDestination(count = 5) { location ->
             _locationsLVdata.postValue(location)
 
             viewModelScope.launch(Dispatchers.IO) {
@@ -157,6 +159,7 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
                 prefPopularLocations.saveTopNlocations(jsonLocations)
             }
 
+            callback(location)
         }
     }
 
@@ -165,15 +168,9 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
 
         tripsPersistence.getPopularDestinations(count) { locations ->
             _ispendingPOPloc.value = false
-            if (locations != null) {
-                callback(locations)
-            }
-            else{
-                callback(null)
-            }
+            callback(locations)
         }
     }
-
     private fun observeNetworkConnectivity() {
         viewModelScope.launch {
             networkConnectivityObserver.observe().collect { status ->

@@ -4,12 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shareride.R
-import com.example.shareride.clases.Location
 
-class CustomAdapterCard(private val locations: MutableLiveData<List<String?>?>,
+class CustomAdapterCard(private val locations: List<String>?,
                         private val onItemClick: (String) -> Unit ) :
     RecyclerView.Adapter<CustomAdapterCard.ViewHolder>() {
 
@@ -19,17 +17,14 @@ class CustomAdapterCard(private val locations: MutableLiveData<List<String?>?>,
     }
 
     override fun getItemCount(): Int {
-        return locations.value?.size ?: 0
+        return locations?.size ?: 0
     }
 
-    fun updateLocations(newLocations: List<String?>) {
-        locations.postValue(newLocations)
-        notifyDataSetChanged()
-    }
+
 
     override fun onBindViewHolder(holder: ViewHolder, i: Int) {
 
-        val locationList = locations.value ?: return
+        val locationList = locations ?: return
 
         val location = locationList[i]
         if (location == null) return
