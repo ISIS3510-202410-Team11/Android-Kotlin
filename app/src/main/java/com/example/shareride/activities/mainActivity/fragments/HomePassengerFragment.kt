@@ -66,7 +66,19 @@ class HomePassengerFragment : Fragment() {
             when (status) {
 
                 ConnectivityObserver.Status.Unavailable ,  ConnectivityObserver.Status.Lost-> {
-                    viewModel.getcachePopLocations()
+                    viewModel.getcachePopLocations(){
+                        val adapter = CustomAdapterCard(it){ title ->
+                            viewModel.updateDestination(title)
+
+                            showpopup.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
+
+                        }
+
+                        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+
+                        recyclerView.adapter = adapter
+                    }
 
 
 
@@ -76,7 +88,21 @@ class HomePassengerFragment : Fragment() {
                 ConnectivityObserver.Status.Avalilable, ConnectivityObserver.Status.Losing -> {
 
 
-                    viewModel.fetchAndCachePopLocations()
+                    viewModel.fetchAndCachePopLocations(){
+
+                        val adapter = CustomAdapterCard(it){ title ->
+                            viewModel.updateDestination(title)
+
+                            showpopup.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
+
+                        }
+
+                        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+
+                        recyclerView.adapter = adapter
+
+                    }
 
                 }
                 }
@@ -84,17 +110,8 @@ class HomePassengerFragment : Fragment() {
 
             }
 
-        val adapter = CustomAdapterCard(viewModel._locationsLVdata){ title ->
-            viewModel.updateDestination(title)
-
-            showpopup.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
-
-        }
-
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
 
-        recyclerView.adapter = adapter
 
 
         sch_bar.setOnClickListener {
@@ -117,6 +134,8 @@ class HomePassengerFragment : Fragment() {
 
             }
         })
+
+
 
 
 

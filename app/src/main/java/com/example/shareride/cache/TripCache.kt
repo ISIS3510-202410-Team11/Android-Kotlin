@@ -5,7 +5,7 @@ import java.util.Date
 
 object TripCache {
 
-      val tripMap= mutableMapOf<Int, Trip>()
-      val tripMap_update= mutableMapOf<Int, Date>()
+      val tripMap= mutableMapOf<String, Trip>()
+      val tripMap_update= mutableMapOf<String, Date>()
 
 }

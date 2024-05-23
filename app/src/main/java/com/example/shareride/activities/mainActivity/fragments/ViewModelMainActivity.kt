@@ -23,11 +23,14 @@ import com.google.firebase.analytics.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
-import com.google.gson.JsonParseException
-import com.google.gson.JsonSyntaxException
+
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.time.delay
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
 
 
 class ViewModelMainActivity (private val networkConnectivityObserver: NetworkConnectivityObserver, private val context: Context):ViewModel(){
@@ -112,8 +115,8 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
 
 
 
-    val _locationsLVdata = MutableLiveData<List<Location?>?>()
-    val poplocations: MutableLiveData<List<Location?>?> = _locationsLVdata
+    val _locationsLVdata = MutableLiveData<List<String?>?>()
+    val poplocations: MutableLiveData<List<String?>?> = _locationsLVdata
 
 
 
@@ -126,16 +129,15 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
 
     private val prefPopularLocations = PrefPopularLocations(context)
 
+    fun getcachePopLocations(callback: (List<String>?) -> Unit) {
 
-
-    fun getcachePopLocations() {
         val cachedLocations = prefPopularLocations.getTopNlocations()
 
         val gson = Gson()
-        val type = object : TypeToken<List<Location>>() {}.type
+        val type = object : TypeToken<List<String>>() {}.type
         println(cachedLocations.toString())
 
-        val locationsList: List<Location> = if (cachedLocations.toString() != "null") {
+        val locationsList: List<String> = if (cachedLocations.toString() != "null") {
             println("wtf")
             gson.fromJson(cachedLocations, type)
         } else {
@@ -143,20 +145,32 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
         }
 
         _locationsLVdata.value = locationsList
+        callback(locationsList)
 
     }
 
-    fun fetchAndCachePopLocations(){
-        getMostpopularDestination(5)
-        viewModelScope.launch(Dispatchers.IO) {
+    fun fetchAndCachePopLocations(callback: (List<String>?) -> Unit) {
+        getMostpopularDestination(count = 5) { location ->
+            _locationsLVdata.postValue(location)
 
-        val gson = Gson()
-        val jsonLocations = gson.toJson(_locationsLVdata.value)
-        prefPopularLocations.saveTopNlocations(jsonLocations)}
+            viewModelScope.launch(Dispatchers.IO) {
+                val gson = Gson()
+                val jsonLocations = gson.toJson(location)
+                prefPopularLocations.saveTopNlocations(jsonLocations)
+            }
 
-
+            callback(location)
+        }
     }
 
+    fun getMostpopularDestination(count: Int, callback: (List<String>?) -> Unit) {
+        _ispendingPOPloc.value = true
+
+        tripsPersistence.getPopularDestinations(count) { locations ->
+            _ispendingPOPloc.value = false
+            callback(locations)
+        }
+    }
     private fun observeNetworkConnectivity() {
         viewModelScope.launch {
             networkConnectivityObserver.observe().collect { status ->
@@ -165,22 +179,54 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
         }
     }
 
-    fun getMostpopularDestination( count: Int){
-        _ispendingPOPloc.value = true
 
-        viewModelScope.launch {
-            val locations = tripsPersistence.getPopularDestinations(count) { locations ->
-                _ispendingPOPloc.value = false
-                if(locations!= null){
-                    _locationsLVdata.value = locations
 
+
+
+
+    fun geocode_location (location:String, callback: (Location?, ) -> Unit){
+
+
+
+
+        val apiKey = "pk.0c90a8ce84e34aafc741efec3190ab55"
+        val url = "https://us1.locationiq.com/v1/reverse"
+        val queryParams = listOf(
+            "key" to apiKey,
+            "q" to location,
+            "format" to "json"
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val (_, _, result) = url.httpGet(queryParams).responseString()
+
+            when (result) {
+                is Result.Failure -> {
+                    // Handle error
+                    _isRequestDestinationPending.postValue(false)
+                    callback(null)
                 }
+                is Result.Success -> {
+                    val data = result.get()
+                    try {
+                        val json = JSONObject(data)
+                        val lat = json.getString("lat")
+                        val lon = json.getString("lon")
+                        val displayName = json.getString("display_name")
 
+                        val location = Location(
+                            latitud = lat.toDoubleOrNull() ?: 0.0,
+                            longitud = lon.toDoubleOrNull() ?: 0.0,
+                            destination = location
+                        )
+
+                        callback(location)
+                    } catch (e: Exception) {
+                        callback(null)
+                    }
+                }
             }
         }
-
-
-
     }
 
 
@@ -203,6 +249,8 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
                 "lon" to longitud.toString(),
                 "format" to "json"
             )
+
+
 
 
 

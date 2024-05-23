@@ -18,7 +18,7 @@ class CustomTripCard(private var trips: List<Trip>, private val type:String) :Re
     }
     override fun onBindViewHolder(holder: viewHolderTrip, i: Int) {
         val trip=trips[i]
-        holder.bind(trip.vehicle, trip.date,trip.price)
+        holder.bind(trip.start_location, trip.start_time,trip.price)
     }
 
 
@@ -38,7 +38,7 @@ class CustomTripCard(private var trips: List<Trip>, private val type:String) :Re
         var itemcost: TextView = itemView.findViewById(R.id.cost_item)
 
 
-        fun bind(vehicle:String, itemtime: String, cost: Double){
+        fun bind(vehicle:String, itemtime: String, cost: String){
 
             item_vehicle.text = vehicle
             itemTime.text = itemtime.toString()
