@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.shareride.R
 import com.example.shareride.clases.Location
 
-class CustomAdapterCard(private val locations: MutableLiveData<List<Location?>?>,
+class CustomAdapterCard(private val locations: MutableLiveData<List<String?>?>,
                         private val onItemClick: (String) -> Unit ) :
     RecyclerView.Adapter<CustomAdapterCard.ViewHolder>() {
 
@@ -22,6 +22,11 @@ class CustomAdapterCard(private val locations: MutableLiveData<List<Location?>?>
         return locations.value?.size ?: 0
     }
 
+    fun updateLocations(newLocations: List<String?>) {
+        locations.postValue(newLocations)
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, i: Int) {
 
         val locationList = locations.value ?: return
@@ -29,11 +34,10 @@ class CustomAdapterCard(private val locations: MutableLiveData<List<Location?>?>
         val location = locationList[i]
         if (location == null) return
 
-        val title = location.destination
+        val title = location
 
 
-        val idTrip = "${location?.latitud} ${location?.longitud}"
-        holder.bind(title, idTrip)
+        holder.bind(title)
         holder.itemView.setOnClickListener {
             onItemClick(title)
 
@@ -44,18 +48,15 @@ class CustomAdapterCard(private val locations: MutableLiveData<List<Location?>?>
         var itemName: TextView = itemView.findViewById(R.id.item_name)
         var itemDirection: TextView = itemView.findViewById(R.id.item_dir)
 
-        fun bind(title: String, direction: String) {
+        fun bind(title: String) {
             var actualTitle = title
-            var actualDir = direction
 
             if (title.length > 25) {
                 actualTitle = title.substring(0, 25)
             }
-            if (direction.length > 25) {
-                actualDir = direction.substring(0, 25)
-            }
+
             itemName.text = actualTitle
-            itemDirection.text = actualDir
+            itemDirection.text = ""
         }
     }
 }

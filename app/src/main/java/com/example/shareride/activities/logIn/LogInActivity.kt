@@ -10,8 +10,14 @@ import android.widget.ImageButton
 import com.example.shareride.R
 import com.example.shareride.StartActivity
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.shareride.activities.mainActivity.MainActivityPassenger
 import com.example.shareride.activities.forgotPasswordActivity.ForgotPasswordActivity
+import com.example.shareride.activities.mainActivity.fragments.ViewModelMainActivity
+import com.example.shareride.activities.singUp.ViewModelFactory
+import com.example.shareride.connectivity.ConnectivityObserver
+import com.example.shareride.connectivity.NetworkConnectivityObserver
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -21,18 +27,31 @@ class LogInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLogInBinding
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var viewModelMainActivity: ViewModelMainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
 
 
         super.onCreate(savedInstanceState)
         binding = ActivityLogInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val networkConnectivityObserver = NetworkConnectivityObserver(this) // Asume que tienes una instancia válida
+        val factory = ViewModelFactory(networkConnectivityObserver, applicationContext)
+        viewModelMainActivity = ViewModelProvider(this, factory).get(ViewModelMainActivity::class.java)
+
+
+        println(viewModelMainActivity._locationsLVdata.value)
+
+
+
         val closeButton: ImageButton = findViewById(R.id.cancel_button)
         closeButton.setOnClickListener {
             val intent = Intent(this, StartActivity::class.java)
             startActivity(intent)
+            finish()
+
         }
 
         binding.textView.setOnClickListener {

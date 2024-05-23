@@ -26,7 +26,10 @@ import com.google.gson.Gson
 
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.time.delay
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 
@@ -112,8 +115,8 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
 
 
 
-    val _locationsLVdata = MutableLiveData<List<Location?>?>()
-    val poplocations: MutableLiveData<List<Location?>?> = _locationsLVdata
+    val _locationsLVdata = MutableLiveData<List<String?>?>()
+    val poplocations: MutableLiveData<List<String?>?> = _locationsLVdata
 
 
 
@@ -135,7 +138,7 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
         val type = object : TypeToken<List<Location>>() {}.type
         println(cachedLocations.toString())
 
-        val locationsList: List<Location> = if (cachedLocations.toString() != "null") {
+        val locationsList: List<String> = if (cachedLocations.toString() != "null") {
             println("wtf")
             gson.fromJson(cachedLocations, type)
         } else {
@@ -148,12 +151,17 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
 
     fun fetchAndCachePopLocations(){
         getMostpopularDestination(5)
+
         viewModelScope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.Main) {
 
-        val gson = Gson()
-        val jsonLocations = gson.toJson(_locationsLVdata.value)
-        prefPopularLocations.saveTopNlocations(jsonLocations)}
 
+                    val gson = Gson()
+                    val jsonLocations = gson.toJson(_locationsLVdata.value)
+                    prefPopularLocations.saveTopNlocations(jsonLocations)
+
+            }
+        }
 
     }
 
@@ -165,40 +173,25 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
         }
     }
 
-    private fun getMostpopularDestination(count: Int){
+    fun getMostpopularDestination(count: Int){
         _ispendingPOPloc.value = true
 
         viewModelScope.launch {
-            val locations = tripsPersistence.getPopularDestinations(count) { locations ->
+            tripsPersistence.getPopularDestinations(count) { locations ->
                 _ispendingPOPloc.value = false
                 if(locations!= null){
-                    val locationList = mutableListOf<Location?>()
 
-                    for (location in locations) {
-                        geocode_location(location) { geocodedLocation ->
-
-                            if (geocodedLocation != null) {
-                                locationList.add(geocodedLocation)
-                                    _locationsLVdata.postValue(locationList)
-
-                            }else {
-                            }
-
-                        }
-
-
-                    }
+                    _locationsLVdata.postValue(locations)
                 }
-
             }
         }
-
-
 
     }
 
 
-    fun geocode_location (location:String, callback: (Location?) -> Unit){
+
+
+    fun geocode_location (location:String, callback: (Location?, ) -> Unit){
 
 
 
@@ -233,6 +226,7 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
                             longitud = lon.toDoubleOrNull() ?: 0.0,
                             destination = location
                         )
+
                         callback(location)
                     } catch (e: Exception) {
                         callback(null)

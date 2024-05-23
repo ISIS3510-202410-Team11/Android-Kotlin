@@ -118,6 +118,14 @@ class HomePassengerFragment : Fragment() {
             }
         })
 
+        viewModel._locationsLVdata.observe(viewLifecycleOwner){
+            locations ->
+            if (locations != null) {
+                adapter.updateLocations(locations)
+            }
+
+        }
+
 
 
        
