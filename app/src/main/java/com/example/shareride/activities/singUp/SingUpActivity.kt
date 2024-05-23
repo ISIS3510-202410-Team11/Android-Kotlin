@@ -41,7 +41,7 @@ class SingUpActivity : AppCompatActivity() {
     lateinit var textbar_email: EditText
     lateinit var textbar_password: EditText
 
-
+    lateinit var singupTitle: TextView
     lateinit var offlinewarning: LinearLayout
 
 
@@ -59,6 +59,7 @@ class SingUpActivity : AppCompatActivity() {
         textBar_name= findViewById(R.id.nametextbar)
         textbar_email = findViewById(R.id.emailTextBar)
         textbar_password = findViewById(R.id.passwordTextbar)
+        singupTitle= findViewById(R.id.title_signup)
 
         offlinewarning = findViewById(R.id.offlineSign)
 
@@ -66,17 +67,31 @@ class SingUpActivity : AppCompatActivity() {
         val networkConnectivityObserver = NetworkConnectivityObserver(applicationContext)
         val viewModelFactory = ViewModelFactory(networkConnectivityObserver, this)
         val viewModel = ViewModelProvider(this, viewModelFactory).get(viewModelSignUp::class.java)
+        displayInva(avalability = false)
+        display_wait_loading(true)
+        viewModel.loadUserData(){ user ->
+            displayInva(avalability = true)
+            display_wait_loading(false)
+
+            textbar_password.setText(user.password)
+
+            textbar_email.setText(user.email)
+
+            textBar_name.setText(user.name)
+
+        }
 
 
 
-        var inputpassword: String= viewModel.inputpassword
-        var inputEmail: String = viewModel.inputEmail
-        var inputText: String= viewModel.inputText
+
+
+
 
 
         val warningName: LinearLayout = findViewById(R.id.warning_name)
         val warningEmail: LinearLayout = findViewById(R.id.warning_email)
         val warningPassword: LinearLayout = findViewById(R.id.warning_password)
+
 
 
         val fireBaseAuth =FirebaseAuth.getInstance()
@@ -108,8 +123,10 @@ class SingUpActivity : AppCompatActivity() {
 
                 if (viewModel.connectivityStatus.value.toString() =="Lost" || viewModel.connectivityStatus.value.toString() =="Unavailable" ){
 
+                    println(viewModel.connectivityStatus.value.toString() )
 
                     if (viewModel.pending_singup){
+
 
                         showCustomToast(this, "Your user will be created after your recover connectivity")
 
@@ -123,7 +140,10 @@ class SingUpActivity : AppCompatActivity() {
 
                 }
                 else{
-                    fireBaseAuth.createUserWithEmailAndPassword(viewModel.inputEmail,viewModel.inputpassword).addOnCompleteListener {
+
+                    println(viewModel.inputEmail.value.toString())
+                    println(viewModel.inputPassword.value.toString())
+                    fireBaseAuth.createUserWithEmailAndPassword(viewModel.inputEmail.value.toString(),viewModel.inputPassword.value.toString()).addOnCompleteListener {
                         if(it.isSuccessful){
                             if(box_driver.isChecked){
 
@@ -164,11 +184,11 @@ class SingUpActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                 inputpassword = s.toString()
+                val password_new= s.toString()
                 val regexPattern = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
                 val pattern = Pattern.compile(regexPattern)
-                val matcher = pattern.matcher(inputpassword)
-                viewModel.change_password(inputpassword)
+                val matcher = pattern.matcher(password_new)
+                viewModel.change_password(password_new)
                 if (!matcher.matches()) {
                     warningPassword.visibility= View.VISIBLE
                 }
@@ -191,7 +211,7 @@ class SingUpActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                 inputEmail = s.toString()
+                val inputEmail = s.toString()
                 val regexPattern = "^[\\w.-]+@(uniandes\\.)+(edu\\.co)\$"
                 val pattern = Pattern.compile(regexPattern)
                 val matcher = pattern.matcher(inputEmail)
@@ -233,7 +253,7 @@ class SingUpActivity : AppCompatActivity() {
                     displayInva(avalability = false)
 
 
-                    fireBaseAuth.createUserWithEmailAndPassword(viewModel.inputEmail,viewModel.inputpassword).addOnCompleteListener {
+                    fireBaseAuth.createUserWithEmailAndPassword(viewModel.inputEmail.value.toString(),viewModel.inputPassword.value.toString()).addOnCompleteListener {
 
 
                         if(it.isSuccessful){
@@ -252,6 +272,8 @@ class SingUpActivity : AppCompatActivity() {
 
                         }
                         else{
+
+                            println(it.result)
                             showCustomToast(this, "Check that your data is correct")
 
                             displayInva(avalability = true)
@@ -268,7 +290,7 @@ class SingUpActivity : AppCompatActivity() {
                     if (viewModel.pending_singup){
                         displayInva(avalability = false)
 
-                        fireBaseAuth.createUserWithEmailAndPassword(viewModel.inputEmail,viewModel.inputpassword).addOnCompleteListener {
+                        fireBaseAuth.createUserWithEmailAndPassword(viewModel.inputEmail.value.toString(),viewModel.inputPassword.value.toString()).addOnCompleteListener {
 
 
                             if(it.isSuccessful){
@@ -308,7 +330,7 @@ class SingUpActivity : AppCompatActivity() {
 
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                 inputText = s.toString()
+                 val inputText = s.toString()
 
                 val regexPattern = "^[A-Za-z]{2,16}( [A-Za-z]{2,16})?$"
 
@@ -365,6 +387,20 @@ class SingUpActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    fun display_wait_loading(up:Boolean){
+        if (up){
+
+            singupTitle.text="Sign Up: loading"
+            singupTitle.textSize=15.0F
+
+        }
+        else{
+            singupTitle.text="Sign Up"
+            singupTitle.textSize=35.0F
+
+        }
 
 
     }

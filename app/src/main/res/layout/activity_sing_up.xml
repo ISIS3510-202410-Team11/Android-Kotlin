@@ -95,6 +95,7 @@
             android:layout_marginHorizontal="30dp"
             android:text="@string/sign_up"
             android:textSize="35sp"
+            android:id="@+id/title_signup"
 
             android:elegantTextHeight="true"
             />

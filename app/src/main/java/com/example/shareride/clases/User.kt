@@ -1,4 +1,13 @@
 package com.example.shareride.clases
 
-class User {
+data class User(
+
+    val name:String = "",
+    val email:String = "",
+    val password: String = ""
+) {
+
+    constructor(): this(
+        name = "", email="", password=""
+    )
 }

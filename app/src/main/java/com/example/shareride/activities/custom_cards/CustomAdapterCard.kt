@@ -34,20 +34,19 @@ class CustomAdapterCard(private val locations: MutableLiveData<List<String?>?>,
         val location = locationList[i]
         if (location == null) return
 
-        val title = location
 
 
-        holder.bind(title)
+
+        holder.bind(location)
         holder.itemView.setOnClickListener {
-            onItemClick(title)
+            onItemClick(location)
+            println("click in title")
 
         }
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var itemName: TextView = itemView.findViewById(R.id.item_name)
-        var itemDirection: TextView = itemView.findViewById(R.id.item_dir)
-
         fun bind(title: String) {
             var actualTitle = title
 
@@ -56,7 +55,6 @@ class CustomAdapterCard(private val locations: MutableLiveData<List<String?>?>,
             }
 
             itemName.text = actualTitle
-            itemDirection.text = ""
         }
     }
 }
