@@ -23,11 +23,11 @@ import com.google.firebase.analytics.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
-import com.google.gson.JsonParseException
-import com.google.gson.JsonSyntaxException
+
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 
 class ViewModelMainActivity (private val networkConnectivityObserver: NetworkConnectivityObserver, private val context: Context):ViewModel(){
@@ -165,15 +165,29 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
         }
     }
 
-    fun getMostpopularDestination( count: Int){
+    private fun getMostpopularDestination(count: Int){
         _ispendingPOPloc.value = true
 
         viewModelScope.launch {
             val locations = tripsPersistence.getPopularDestinations(count) { locations ->
                 _ispendingPOPloc.value = false
                 if(locations!= null){
-                    _locationsLVdata.value = locations
+                    val locationList = mutableListOf<Location?>()
 
+                    for (location in locations) {
+                        geocode_location(location) { geocodedLocation ->
+
+                            if (geocodedLocation != null) {
+                                locationList.add(geocodedLocation)
+                                    _locationsLVdata.postValue(locationList)
+
+                            }else {
+                            }
+
+                        }
+
+
+                    }
                 }
 
             }
@@ -181,6 +195,51 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
 
 
 
+    }
+
+
+    fun geocode_location (location:String, callback: (Location?) -> Unit){
+
+
+
+
+        val apiKey = "pk.0c90a8ce84e34aafc741efec3190ab55"
+        val url = "https://us1.locationiq.com/v1/reverse"
+        val queryParams = listOf(
+            "key" to apiKey,
+            "q" to location,
+            "format" to "json"
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val (_, _, result) = url.httpGet(queryParams).responseString()
+
+            when (result) {
+                is Result.Failure -> {
+                    // Handle error
+                    _isRequestDestinationPending.postValue(false)
+                    callback(null)
+                }
+                is Result.Success -> {
+                    val data = result.get()
+                    try {
+                        val json = JSONObject(data)
+                        val lat = json.getString("lat")
+                        val lon = json.getString("lon")
+                        val displayName = json.getString("display_name")
+
+                        val location = Location(
+                            latitud = lat.toDoubleOrNull() ?: 0.0,
+                            longitud = lon.toDoubleOrNull() ?: 0.0,
+                            destination = location
+                        )
+                        callback(location)
+                    } catch (e: Exception) {
+                        callback(null)
+                    }
+                }
+            }
+        }
     }
 
 
@@ -203,6 +262,8 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
                 "lon" to longitud.toString(),
                 "format" to "json"
             )
+
+
 
 
 

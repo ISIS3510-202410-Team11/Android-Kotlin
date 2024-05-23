@@ -1,5 +1,6 @@
 package com.example.shareride.activities.singUp
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,6 +14,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.shareride.activities.mainActivity.MainActivityPassenger
@@ -108,12 +110,13 @@ class SingUpActivity : AppCompatActivity() {
 
 
                     if (viewModel.pending_singup){
-                        Toast.makeText(this, "Your user will be created after your recover connectivity", Toast.LENGTH_LONG).show()
+
+                        showCustomToast(this, "Your user will be created after your recover connectivity")
 
                     }else{
                         viewModel.pending_singup = true
                         displayInva(avalability = false)
-                        Toast.makeText(this, "We will notify the creation of your user once you recover connectivity", Toast.LENGTH_LONG).show()
+                        showCustomToast(this, "We will notify the creation of your user once you recover connectivity")
 
                     }
 
@@ -140,7 +143,7 @@ class SingUpActivity : AppCompatActivity() {
                         }
                         else{
                             // si el email está repetido manda un error
-                            Toast.makeText(this, it.exception.toString(), Toast.LENGTH_LONG).show()
+                            showCustomToast(this, "Verify your email and password")
 
                         }
 
@@ -150,7 +153,7 @@ class SingUpActivity : AppCompatActivity() {
             }
 
             else{
-                Toast.makeText(this, "Check that your data is correct", Toast.LENGTH_SHORT).show()
+                showCustomToast(this, "Check that your data is correct")
 
             }
 
@@ -249,7 +252,8 @@ class SingUpActivity : AppCompatActivity() {
 
                         }
                         else{
-                            Toast.makeText(this, it.exception.toString(), Toast.LENGTH_LONG).show()
+                            showCustomToast(this, "Check that your data is correct")
+
                             displayInva(avalability = true)
 
                         }
@@ -283,7 +287,7 @@ class SingUpActivity : AppCompatActivity() {
 
                             }
                             else{
-                                Toast.makeText(this, it.exception.toString(), Toast.LENGTH_LONG).show()
+                                showCustomToast(this, "Check that your data is correct")
                                 displayInva(avalability = true)
 
                             }
@@ -328,7 +332,22 @@ class SingUpActivity : AppCompatActivity() {
         })
 
 
+
 }
+
+    fun showCustomToast(context: Context, message: String) {
+        val builder = AlertDialog.Builder(context)
+        builder.setMessage(message)
+            .setCancelable(true)
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+            }
+        val alert = builder.create()
+        alert.show()
+
+        val textViewMessage = alert.findViewById<TextView>(android.R.id.message)
+        textViewMessage?.textSize = 18f
+    }
 
     fun displayInva( avalability: Boolean){
 

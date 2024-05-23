@@ -29,7 +29,9 @@ class CustomAdapterCard(private val locations: MutableLiveData<List<Location?>?>
         val location = locationList[i]
         if (location == null) return
 
-        val title = location?.destination ?: ""
+        val title = location.destination
+
+
         val idTrip = "${location?.latitud} ${location?.longitud}"
         holder.bind(title, idTrip)
         holder.itemView.setOnClickListener {

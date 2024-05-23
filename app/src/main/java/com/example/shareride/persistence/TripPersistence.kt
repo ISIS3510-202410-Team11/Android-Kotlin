@@ -7,6 +7,7 @@ import com.example.shareride.clases.Location
 import com.example.shareride.clases.Trip
 import com.example.shareride.repository.TripRepository
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 
 class TripPersistence {
@@ -15,39 +16,45 @@ class TripPersistence {
     private val _tripByIdLvdata = MutableLiveData<Trip?>()
     val tripById: LiveData<Trip?> = _tripByIdLvdata
 
-    fun postTrip (){
 
 
 
 
-    }
-
-
-    fun getTrip(tripid:Int){
-        val currentDate:Date = getCurrentDateTime()
+    fun getTrip(tripid: String) {
+        val currentDate = getCurrentDateTime()
         val cachedTrip = TripCache.tripMap[tripid]
         val lst_update = TripCache.tripMap_update[tripid]
-        if (cachedTrip!= null && lst_update != null) {
-            val differenceInMillis = currentDate.time - lst_update.time
-            val thirtySecondsInMillis = 30 * 1000
+        val thirtySecondsInMillis = 30 * 1000
 
+        if (cachedTrip != null && lst_update != null) {
+            val differenceInMillis = currentDate.time - lst_update.time
             if (differenceInMillis <= thirtySecondsInMillis) {
                 _tripByIdLvdata.postValue(cachedTrip)
                 return
             }
-
         }
 
-        val response = repository.getTrip(tripid)
-        _tripByIdLvdata.postValue(response)
+        repository.getTrip(tripid) { trip ->
+            trip?.let {
+                _tripByIdLvdata.postValue(it)
+                TripCache.tripMap[tripid] = it
+                TripCache.tripMap_update[tripid] = getCurrentDateTime()
+            } ?: run {
+                // Handle the case where the trip is not found in Firestore
+                _tripByIdLvdata.postValue(null)
+            }
+        }
+    }
 
-        response?.let {
-            TripCache.tripMap[tripid] = it
-            TripCache.tripMap_update[tripid] = getCurrentDateTime()
-        }}
+
+
 
 
     fun getTrips(count: Int, destination: String, origin:String,callback: (List<Trip>?) -> Unit) {
+
+
+
+
         repository.getTrips(count, destination, origin){ trips ->
 
             if(trips != null) {
@@ -70,7 +77,7 @@ class TripPersistence {
     }
 
 
-    fun getPopularDestinations(count: Int,callback: (List<Location>?) -> Unit) {
+    fun getPopularDestinations(count: Int,callback: (List<String>?) -> Unit) {
         repository.getTripsDestinationOrder(count){trips ->
             callback(trips)
         }
