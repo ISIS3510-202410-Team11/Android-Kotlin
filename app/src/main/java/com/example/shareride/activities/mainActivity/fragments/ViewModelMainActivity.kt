@@ -129,13 +129,11 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
 
     private val prefPopularLocations = PrefPopularLocations(context)
 
-
-
     fun getcachePopLocations() {
         val cachedLocations = prefPopularLocations.getTopNlocations()
 
         val gson = Gson()
-        val type = object : TypeToken<List<Location>>() {}.type
+        val type = object : TypeToken<List<String>>() {}.type
         println(cachedLocations.toString())
 
         val locationsList: List<String> = if (cachedLocations.toString() != "null") {
@@ -149,20 +147,31 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
 
     }
 
-    fun fetchAndCachePopLocations(){
-        getMostpopularDestination(5)
+    fun fetchAndCachePopLocations() {
+        getMostpopularDestination(count =5 ){ location ->
+            _locationsLVdata.postValue(location)
 
-        viewModelScope.launch(Dispatchers.IO) {
-            withContext(Dispatchers.Main) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val gson = Gson()
+                val jsonLocations = gson.toJson(location)
+                prefPopularLocations.saveTopNlocations(jsonLocations)
+            }
 
+        }
+    }
 
-                    val gson = Gson()
-                    val jsonLocations = gson.toJson(_locationsLVdata.value)
-                    prefPopularLocations.saveTopNlocations(jsonLocations)
+    fun getMostpopularDestination(count: Int, callback: (List<String>?) -> Unit) {
+        _ispendingPOPloc.value = true
 
+        tripsPersistence.getPopularDestinations(count) { locations ->
+            _ispendingPOPloc.value = false
+            if (locations != null) {
+                callback(locations)
+            }
+            else{
+                callback(null)
             }
         }
-
     }
 
     private fun observeNetworkConnectivity() {
@@ -173,20 +182,7 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
         }
     }
 
-    fun getMostpopularDestination(count: Int){
-        _ispendingPOPloc.value = true
 
-        viewModelScope.launch {
-            tripsPersistence.getPopularDestinations(count) { locations ->
-                _ispendingPOPloc.value = false
-                if(locations!= null){
-
-                    _locationsLVdata.postValue(locations)
-                }
-            }
-        }
-
-    }
 
 
 
