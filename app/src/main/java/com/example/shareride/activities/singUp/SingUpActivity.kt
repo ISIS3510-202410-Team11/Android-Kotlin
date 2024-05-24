@@ -260,10 +260,10 @@ class SingUpActivity : AppCompatActivity() {
                     displayInva(avalability = false)
 
 
-                    fireBaseAuth.createUserWithEmailAndPassword(viewModel.inputEmail.value.toString(),viewModel.inputPassword.value.toString()).addOnCompleteListener {
+                    fireBaseAuth.createUserWithEmailAndPassword(viewModel.inputEmail.value.toString(),viewModel.inputPassword.value.toString()).addOnSuccessListener {
 
 
-                        if(it.isSuccessful){
+
 
                             if(box_driver.isChecked){
 
@@ -277,16 +277,15 @@ class SingUpActivity : AppCompatActivity() {
                                 startActivity(intent)
                             }
 
-                        }
-                        else{
+                        }.addOnFailureListener{
 
-                            println(it.result)
+                            println(it.message)
                             showCustomToast(this, "Check that your data is correct")
 
                             displayInva(avalability = true)
 
                         }
-                    }
+
 
                 }
 
@@ -339,7 +338,7 @@ class SingUpActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                  val inputText = s.toString()
 
-                val name_corr=check_name(viewModel.inputText.value.toString())
+                val name_corr=check_name(inputText)
 
                 viewModel.change_name(inputText,name_corr)
 
