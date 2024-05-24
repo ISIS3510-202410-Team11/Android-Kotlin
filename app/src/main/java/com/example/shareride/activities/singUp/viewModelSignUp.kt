@@ -1,5 +1,6 @@
 package com.example.shareride.activities.singUp
 
+import android.content.Context
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.LiveData
@@ -7,8 +8,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shareride.clases.User
+import com.example.shareride.clases.Warnings
 import com.example.shareride.connectivity.ConnectivityObserver
 import com.example.shareride.connectivity.NetworkConnectivityObserver
+import com.example.shareride.storage.PrefPopularLocations
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,7 +20,7 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
-class viewModelSignUp(private val networkConnectivityObserver: NetworkConnectivityObserver):ViewModel(){
+class viewModelSignUp(private val networkConnectivityObserver: NetworkConnectivityObserver,private val context: Context):ViewModel(){
     private val _inputPassword = MutableLiveData<String>()
     val inputPassword: LiveData<String> = _inputPassword
 
@@ -26,6 +29,11 @@ class viewModelSignUp(private val networkConnectivityObserver: NetworkConnectivi
 
     private val _inputText = MutableLiveData<String>()
     val inputText: LiveData<String> = _inputText
+    private val prefPopularLocations = PrefPopularLocations(context)
+
+    var match_mail: Boolean= false
+    var match_pass: Boolean= false
+    var match_name: Boolean= false
 
 
     var pending_singup = false
@@ -66,68 +74,57 @@ class viewModelSignUp(private val networkConnectivityObserver: NetworkConnectivi
 
 
 
-    fun change_password(new_pass: String){
+    fun change_password(new_pass: String, warn: Boolean){
         //_inputPassword.value = new_pass
-        saveToFirestore("input_password", new_pass)
+        prefPopularLocations.save_password( new_pass)
+        prefPopularLocations.save_assword_warn(warn)
 
     }
 
-    fun change_email(new_email: String){
+    fun change_email(new_email: String, warn: Boolean){
         //_inputEmail.value = new_email
-        saveToFirestore("input_email", new_email)
+        prefPopularLocations.save_email( new_email)
+        prefPopularLocations.save_email_warn(warn)
+
 
     }
-    fun change_name (new_name: String){
+    fun change_name (new_name: String, warn: Boolean){
 
         Firebase.analytics.logEvent("Close_sign_up", null)
-        saveToFirestore("input_name", new_name)
+        prefPopularLocations.save_name( new_name)
+        prefPopularLocations.save_name_warn(warn)
 
         //_inputText.value = new_name
     }
 
 
-    private fun saveToFirestore(field: String, value: Any) {
-        val userId = "0"
-        val userRef = firestore.collection("user").document(userId)
-        userRef.get().addOnSuccessListener { document ->
-            if (document.exists()) {
-                userRef.update(field, value)
-                    .addOnSuccessListener {
-                        println("huh")
-                    }
-                    .addOnFailureListener { e ->
-                        println(e.message.toString())
 
-                    }
-            } else {
-                val data = hashMapOf(field to value)
-                userRef.set(data, SetOptions.merge())
-                    .addOnSuccessListener {
-                        println("ya")
-                    }
-                    .addOnFailureListener { e ->
-                        println(e.message.toString())
-                    }
-            }
-        }
-    }
+
 
     fun loadUserData(callback: (User) -> Unit) {
         viewModelScope.launch {
-            val userRef = firestore.collection("user").document("0")
-            userRef.get().addOnSuccessListener { snapshot ->
-                if (snapshot != null && snapshot.exists()) {
-                     _inputPassword.value = snapshot.getString("input_password") ?: ""
-                    _inputEmail.value = snapshot.getString("input_email") ?: ""
-                   _inputText.value = snapshot.getString("input_name") ?: ""
+
+                     _inputPassword.value = prefPopularLocations.get_password()
+                    _inputEmail.value = prefPopularLocations.get_email()
+                   _inputText.value = prefPopularLocations.get_name()
                     val newUser = User(_inputText.value.toString(), _inputEmail.value.toString(), _inputPassword.value.toString())
-                    callback(newUser)
-                } else {
-                    println("Snapshot is null or does not exist.")
-                }
-            }.addOnFailureListener { e ->
-                println(e.message.toString())
+            println(prefPopularLocations.get_password())
+            println(  _inputEmail.value )
+
+            callback(newUser)
+
             }
+        }
+    fun loadWarning(callback: (Warnings) -> Unit) {
+        viewModelScope.launch {
+
+            match_mail = prefPopularLocations.get_email_warn().toBoolean()
+            match_pass = prefPopularLocations.get_password_warn().toBoolean()
+            match_name = prefPopularLocations.get_name_warn().toBoolean()
+            val active_warnings = Warnings(match_mail, match_pass, match_name)
+
+            callback(active_warnings)
+
         }
     }
 
