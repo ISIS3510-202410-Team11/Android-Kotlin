@@ -28,19 +28,7 @@ class StartActivity : AppCompatActivity() {
         viewModelMainActivity = ViewModelProvider(this, factory).get(ViewModelMainActivity::class.java)
 
 
-        viewModelMainActivity.connectivityStatus.observe(this){status ->
-            when (status) {
-                ConnectivityObserver.Status.Unavailable ,  ConnectivityObserver.Status.Lost-> {
-                    viewModelMainActivity.fetchAndCachePopLocations(){}
 
-                }
-                ConnectivityObserver.Status.Avalilable, ConnectivityObserver.Status.Losing -> {
-                    viewModelMainActivity.fetchAndCachePopLocations(){}
-                }
-            }
-
-
-        }
 
 
 
