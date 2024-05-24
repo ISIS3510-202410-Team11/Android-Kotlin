@@ -22,6 +22,7 @@ import com.example.shareride.R
 import com.example.shareride.StartActivity
 import com.example.shareride.activities.logIn.LogInActivity
 import com.example.shareride.activities.vehicleForm.VehicleFormActivity
+import com.example.shareride.clases.Warnings
 import com.example.shareride.connectivity.ConnectivityObserver
 import com.example.shareride.connectivity.NetworkConnectivityObserver
 import com.google.firebase.analytics.ktx.analytics
@@ -42,9 +43,19 @@ class SingUpActivity : AppCompatActivity() {
     lateinit var textbar_password: EditText
 
     lateinit var singupTitle: TextView
+
+
     lateinit var offlinewarning: LinearLayout
 
 
+
+    lateinit var warningEmail: LinearLayout
+    lateinit var warningPassword: LinearLayout
+    lateinit var warningName: LinearLayout
+
+    var match_mail: Boolean= false
+    var match_pass: Boolean= false
+    var match_name: Boolean= false
     override fun onCreate(savedInstanceState: Bundle?) {
 
 
@@ -64,6 +75,11 @@ class SingUpActivity : AppCompatActivity() {
         offlinewarning = findViewById(R.id.offlineSign)
 
 
+        warningName = findViewById(R.id.warning_name)
+        warningEmail = findViewById(R.id.warning_email)
+        warningPassword = findViewById(R.id.warning_password)
+
+
         val networkConnectivityObserver = NetworkConnectivityObserver(applicationContext)
         val viewModelFactory = ViewModelFactory(networkConnectivityObserver, this)
         val viewModel = ViewModelProvider(this, viewModelFactory).get(viewModelSignUp::class.java)
@@ -79,6 +95,11 @@ class SingUpActivity : AppCompatActivity() {
 
             textBar_name.setText(user.name)
 
+            viewModel.loadWarning() {
+                    warnings ->
+                warn_visivility(warnings)
+            }
+
         }
 
 
@@ -88,9 +109,7 @@ class SingUpActivity : AppCompatActivity() {
 
 
 
-        val warningName: LinearLayout = findViewById(R.id.warning_name)
-        val warningEmail: LinearLayout = findViewById(R.id.warning_email)
-        val warningPassword: LinearLayout = findViewById(R.id.warning_password)
+
 
 
 
@@ -185,25 +204,22 @@ class SingUpActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val password_new= s.toString()
-                val regexPattern = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
-                val pattern = Pattern.compile(regexPattern)
-                val matcher = pattern.matcher(password_new)
-                viewModel.change_password(password_new)
-                if (!matcher.matches()) {
-                    warningPassword.visibility= View.VISIBLE
-                }
-                else{
-                    warningPassword.visibility= View.GONE
+                val correctnes=check_password(password_new)
 
-                }
+                viewModel.change_password(password_new,correctnes)
+
             }
 
             override fun afterTextChanged(s: Editable?) {
+
+
 
             }
 
 
         })
+
+
 
 
         textbar_email.addTextChangedListener  (object :TextWatcher{
@@ -212,18 +228,9 @@ class SingUpActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val inputEmail = s.toString()
-                val regexPattern = "^[\\w.-]+@(uniandes\\.)+(edu\\.co)\$"
-                val pattern = Pattern.compile(regexPattern)
-                val matcher = pattern.matcher(inputEmail)
-                viewModel.change_email(inputEmail)
+                val correctens=check_email(inputEmail)
+                viewModel.change_email(inputEmail,correctens)
 
-                if (!matcher.matches()) {
-                    warningEmail.visibility= View.VISIBLE
-                }
-                else{
-                    warningEmail.visibility= View.GONE
-
-                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -332,19 +339,10 @@ class SingUpActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                  val inputText = s.toString()
 
-                val regexPattern = "^[A-Za-z]{2,16}( [A-Za-z]{2,16})?$"
+                val name_corr=check_name(viewModel.inputText.value.toString())
 
-                val pattern = Pattern.compile(regexPattern)
-                viewModel.change_name(inputText)
+                viewModel.change_name(inputText,name_corr)
 
-                val matcher = pattern.matcher(inputText)
-                if (!matcher.matches()) {
-                    warningName.visibility= View.VISIBLE
-                }
-                else{
-                    warningName.visibility= View.GONE
-
-                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -387,6 +385,84 @@ class SingUpActivity : AppCompatActivity() {
         }
 
 
+    }
+    fun check_email(email:String): Boolean {
+
+        val regexPattern = "^[\\w.-]+@(uniandes\\.)+(edu\\.co)\$"
+        val pattern = Pattern.compile(regexPattern)
+        val matcher = pattern.matcher(email)
+
+        if (!matcher.matches()) {
+            warningEmail.visibility= View.VISIBLE
+            return true
+        }
+        else{
+            warningEmail.visibility= View.GONE
+            return false
+
+        }
+
+    }
+    fun check_name(name:String): Boolean {
+        val regexPattern = "^[A-Za-z]{2,16}( [A-Za-z]{2,16})?$"
+
+        val pattern = Pattern.compile(regexPattern)
+
+        val matcher = pattern.matcher(name)
+
+        if (!matcher.matches()) {
+            warningName.visibility= View.VISIBLE
+            return true
+        }
+        else{
+            warningName.visibility= View.GONE
+            return false
+
+        }
+    }
+
+    fun check_password(password:String): Boolean {
+        val regexPattern = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
+        val pattern = Pattern.compile(regexPattern)
+        val matcher = pattern.matcher(password)
+
+        if (!matcher.matches()) {
+            warningPassword.visibility= View.VISIBLE
+            return true
+        }
+        else{
+            warningPassword.visibility= View.GONE
+            return false
+
+        }
+    }
+
+
+    fun warn_visivility(warnings: Warnings){
+
+        if (warnings.match_pass) {
+            warningPassword.visibility= View.VISIBLE
+        }
+        else{
+            warningPassword.visibility= View.GONE
+
+        }
+
+        if (warnings.match_name) {
+            warningName.visibility= View.VISIBLE
+        }
+        else{
+            warningName.visibility= View.GONE
+
+        }
+
+        if (warnings.match_mail) {
+            warningEmail.visibility= View.VISIBLE
+        }
+        else{
+            warningEmail.visibility= View.GONE
+
+        }
     }
 
     fun display_wait_loading(up:Boolean){
