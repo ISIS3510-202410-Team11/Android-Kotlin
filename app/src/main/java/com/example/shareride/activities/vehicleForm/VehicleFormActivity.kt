@@ -1,10 +1,11 @@
 package com.example.shareride.activities.vehicleForm
 
-
 import Form
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.net.ConnectivityManager
 import android.os.Bundle
@@ -18,43 +19,33 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.shareride.R
 import com.example.shareride.StartActivity
 import com.example.shareride.activities.mainActivity.MainActivityPassenger
+import com.example.shareride.clases.ConnectivityReceiver
+import com.example.shareride.clases.Vehicle
 import com.example.shareride.databinding.ActivityVehicleFormBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.gson.Gson
 import java.io.File
 import java.io.FileOutputStream
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.*
-import android.content.Context
-import android.content.IntentFilter
-import com.example.shareride.clases.ConnectivityReceiver
-import com.example.shareride.clases.Vehicle
-import com.google.gson.Gson
-
 
 class VehicleFormActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityVehicleFormBinding
     private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var database: DatabaseReference
+    private lateinit var firestore: FirebaseFirestore
     private lateinit var colorList: ArrayList<String>
     private lateinit var markList: ArrayList<String>
     private lateinit var markAdapter: ArrayAdapter<String>
     private lateinit var colorAdapter: ArrayAdapter<String>
     private lateinit var colorCache: LruCache<String, ArrayList<String>>
     private lateinit var markCache: LruCache<String, ArrayList<String>>
-
     private lateinit var connectivityReceiver: ConnectivityReceiver
 
-
-
     private val REQUEST_IMAGE_CAPTURE = 1
-    private var imageBitmap: Bitmap? = null // Store the captured image bitmap
+    private var imageBitmap: Bitmap? = null
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,65 +53,96 @@ class VehicleFormActivity : AppCompatActivity() {
         binding = ActivityVehicleFormBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Initialize Firebase components
-        firebaseAuth = FirebaseAuth.getInstance()
-        database = FirebaseDatabase.getInstance().getReference("/acceptedVehiclesForm/")
-
-        // Initialize caches
-        val maxCacheSize = (Runtime.getRuntime().maxMemory() / 1024).toInt() / 8
-        colorCache = LruCache(maxCacheSize)
-        markCache = LruCache(maxCacheSize)
-
-        // Initialize lists and adapter
-        colorList = ArrayList()
-        markList = ArrayList()
-
-        markAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, markList)
-        colorAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, colorList)
-
-        binding.autoCompleteTextViewMark.threshold = 0 // Show all suggestions when touched
-        binding.autoCompleteTextViewMark.setAdapter(markAdapter)
-
-        binding.autoCompleteTextViewColor.threshold = 0 // Show all suggestions when touched
-        binding.autoCompleteTextViewColor.setAdapter(colorAdapter)
-
-        binding.autoCompleteTextViewMark.setOnTouchListener { v, event ->
-            binding.autoCompleteTextViewMark.showDropDown()
-            false
-        }
-        binding.autoCompleteTextViewColor.setOnTouchListener { v, event ->
-            binding.autoCompleteTextViewColor.showDropDown()
-            false
-        }
-
-        // Fetch data from cache and check for updates
+        initializeFirebase()
+        initializeCache()
+        initializeUI()
         fetchDataFromCacheAndCheckForUpdates()
 
         val cancelButton: ImageButton = findViewById(R.id.cancel_button)
         cancelButton.setOnClickListener {
-            // Navigate back to the profile view
-            startActivity(Intent(this, StartActivity::class.java))
-            finish()
+            navigateToStartActivity()
         }
 
         binding.registerVehicle.setOnClickListener {
-            // Register the vehicle and save it in the Firebase database
             registerVehicle()
         }
 
         binding.takePictureButton.setOnClickListener {
             dispatchTakePictureIntent()
         }
-        connectivityReceiver = ConnectivityReceiver()
-        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        registerReceiver(connectivityReceiver, filter)
 
+        registerConnectivityReceiver()
     }
 
+    private fun initializeFirebase() {
+        firebaseAuth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
+    }
 
+    private fun initializeCache() {
+        val maxCacheSize = (Runtime.getRuntime().maxMemory() / 1024).toInt() / 8
+        colorCache = LruCache(maxCacheSize)
+        markCache = LruCache(maxCacheSize)
+    }
+
+    private fun initializeUI() {
+        colorList = ArrayList()
+        markList = ArrayList()
+
+        markAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, markList)
+        colorAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, colorList)
+
+        with(binding.autoCompleteTextViewMark) {
+            threshold = 0
+            setAdapter(markAdapter)
+            setOnTouchListener { _, _ ->
+                showDropDown()
+                false
+            }
+        }
+
+        with(binding.autoCompleteTextViewColor) {
+            threshold = 0
+            setAdapter(colorAdapter)
+            setOnTouchListener { _, _ ->
+                showDropDown()
+                false
+            }
+        }
+    }
+
+    private fun fetchDataFromCacheAndCheckForUpdates() {
+        val cachedColorList = colorCache.get("colorList")
+        val cachedMarkList = markCache.get("markList")
+
+        if (cachedColorList != null && cachedMarkList != null) {
+            populateUIWithLatestData(cachedColorList, cachedMarkList)
+        }
+
+        checkForUpdatesInBackground()
+    }
+
+    private fun checkForUpdatesInBackground() {
+        firestore.collection("acceptedVehiclesForm").get()
+            .addOnSuccessListener { querySnapshot ->
+                val document = querySnapshot.documents.firstOrNull()
+                document?.let {
+                    val colorListFromFirestore = it.get("Color") as? ArrayList<String>
+                    val markListFromFirestore = it.get("Mark") as? ArrayList<String>
+                    if (colorListFromFirestore != null && markListFromFirestore != null) {
+                        populateUIWithLatestData(colorListFromFirestore, markListFromFirestore)
+                        updateCache(colorListFromFirestore, markListFromFirestore)
+                    } else {
+                        println("Document does not contain 'Color' or 'Mark' keys.")
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                println("Error getting documents: $exception")
+            }
+    }
 
     private fun populateUIWithLatestData(colorList: ArrayList<String>, markList: ArrayList<String>) {
-        // Update UI with latest data from network
         runOnUiThread {
             this.markList.clear()
             this.markList.addAll(markList)
@@ -132,111 +154,69 @@ class VehicleFormActivity : AppCompatActivity() {
         }
     }
 
-    private fun fetchDataFromCacheAndCheckForUpdates() {
-        val cachedColorList = colorCache.get("colorList")
-        val cachedMarkList = markCache.get("markList")
-
-        if (cachedColorList != null && cachedMarkList != null) {
-            // If cached data is available, populate the UI with it
-            populateUIWithLatestData(cachedColorList, cachedMarkList)
-        }
-
-        // Now check for updates in the background
-        checkForUpdatesInBackground()
-    }
-
-    private fun checkForUpdatesInBackground() {
-        database.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val jsonObject = dataSnapshot.value as? Map<*, *>?
-
-                if (jsonObject != null && jsonObject.containsKey("Color") && jsonObject.containsKey("Mark")) {
-                    val colorListFromFirebase = (jsonObject["Color"] as? ArrayList<String>)!!
-                    val markListFromFirebase = (jsonObject["Mark"] as? ArrayList<String>)!!
-                    populateUIWithLatestData(colorListFromFirebase, markListFromFirebase)
-                    updateCache(colorListFromFirebase, markListFromFirebase)
-
-                } else {
-                    println("JSON object is null or does not contain 'Color' key.")
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Handle error
-            }
-        })
-    }
-
     private fun updateCache(colorList: ArrayList<String>, markList: ArrayList<String>) {
         colorCache.put("colorList", colorList)
         markCache.put("markList", markList)
     }
 
     private fun registerVehicle() {
-        database = FirebaseDatabase.getInstance().reference
-        var userId = firebaseAuth.currentUser?.uid
+        val userId = firebaseAuth.currentUser?.uid
         val mark = binding.autoCompleteTextViewMark.text.toString().trim()
         val type = binding.typeInput.text.toString().trim()
         val plate = binding.plateInput.text.toString().trim()
         val reference = binding.referenceInput.text.toString().trim()
         val color = binding.autoCompleteTextViewColor.text.toString().trim()
 
-        // Checking for empty values
-        if (mark.isEmpty() || type.isEmpty() || plate.isEmpty() || reference.isEmpty() || color.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        //Checking for valid values
-        if (!colorList.contains(color) || !markList.contains(mark)) {
-            Toast.makeText(this, "Invalid color or mark selected", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val platePattern = Regex("[A-Z]{3}[0-9]{3}")
-        if (!platePattern.matches(plate)) {
-            Toast.makeText(this, "Invalid plate format. Please provide a valid plate.", Toast.LENGTH_SHORT).show()
-            return
-        }
+        if (!validateInput(mark, type, plate, reference, color)) return
 
         val fileName = generateFileName() + ".png"
-
-        // Create a new vehicle object
         val vehicle = Vehicle(mark, type, plate, reference, color, fileName)
-        // Save the vehicle to the Firebase database under the user's ID
+
         userId?.let {
-            val isNetwork = isNetworkConnected()
-            if (isNetwork) {
-                database.child("users").child(it).child("vehicles").push().setValue(vehicle)
+            if (isNetworkConnected()) {
+                firestore.collection("users").document(it).collection("vehicles").add(vehicle)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            // Save the image only if registration is successful
                             saveImageToStorage(fileName)
-                            startActivity(Intent(this, MainActivityPassenger::class.java))
-                            finish()
+                            navigateToMainActivityPassenger()
                         } else {
                             Toast.makeText(this, "Vehicle registration failed", Toast.LENGTH_SHORT).show()
                         }
                     }
             } else {
-                val form = Form(userId, vehicle)
-                // Save vehicle data to SharedPreferences
-                saveVehicleToSharedPreferences(form)
-                // Start MainActivityPassenger
-                startActivity(Intent(this, MainActivityPassenger::class.java))
+                saveVehicleToSharedPreferences(Form(userId, vehicle))
+                navigateToMainActivityPassenger()
             }
         }
     }
 
-    private fun saveVehicleToSharedPreferences(form:Form) {
+    private fun validateInput(mark: String, type: String, plate: String, reference: String, color: String): Boolean {
+        if (mark.isEmpty() || type.isEmpty() || plate.isEmpty() || reference.isEmpty() || color.isEmpty()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (!colorList.contains(color) || !markList.contains(mark)) {
+            Toast.makeText(this, "Invalid color or mark selected", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        val platePattern = Regex("[A-Z]{3}[0-9]{3}")
+        if (!platePattern.matches(plate)) {
+            Toast.makeText(this, "Invalid plate format. Please provide a valid plate.", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        return true
+    }
+
+    private fun saveVehicleToSharedPreferences(form: Form) {
         val sharedPref = getSharedPreferences("your_pref_name", Context.MODE_PRIVATE)
         with(sharedPref.edit()) {
             putString("vehicle_key", Gson().toJson(form))
             apply()
         }
     }
-
-
 
     private fun isNetworkConnected(): Boolean {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -258,7 +238,7 @@ class VehicleFormActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveImageToStorage(fileName:String) {
+    private fun saveImageToStorage(fileName: String) {
         val directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         val file = File(directory, fileName)
 
@@ -285,9 +265,24 @@ class VehicleFormActivity : AppCompatActivity() {
         return bytes.joinToString("") { "%02x".format(it) }
     }
 
+    private fun navigateToStartActivity() {
+        startActivity(Intent(this, StartActivity::class.java))
+        finish()
+    }
+
+    private fun navigateToMainActivityPassenger() {
+        startActivity(Intent(this, MainActivityPassenger::class.java))
+        finish()
+    }
+
+    private fun registerConnectivityReceiver() {
+        connectivityReceiver = ConnectivityReceiver()
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(connectivityReceiver, filter)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        // Unregister BroadcastReceiver
         unregisterReceiver(connectivityReceiver)
     }
 }
