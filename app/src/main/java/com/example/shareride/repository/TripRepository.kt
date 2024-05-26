@@ -12,12 +12,14 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
 class TripRepository {
 
     private lateinit var database: DatabaseReference
     private  lateinit var destinationCountMap : MutableMap<String, Int>
+    private  lateinit var mFirestore:  FirebaseFirestore
 
 
 
@@ -46,78 +48,75 @@ class TripRepository {
 
 
 
-    fun getTrip(id:Int): Trip? {
+    fun getTrip(id:String,callback: (Trip?) -> Unit){
         var gotTrip: Trip? = null
+        mFirestore = FirebaseFirestore.getInstance()
 
-        database = FirebaseDatabase.getInstance().getReference("/trips/"+id.toString())
-        database.get().continueWith { task ->
-            if (task.isSuccessful) {
-                val snapshot: DataSnapshot? = task.result
-                gotTrip = snapshot?.getValue(Trip::class.java)
+        mFirestore.collection("active_trips").whereEqualTo("id",id).get()
+            .addOnSuccessListener{querySnapshot ->
+            if (!querySnapshot.isEmpty) {
+                val document = querySnapshot.documents[0]
+                val gotTrip = document.toObject(Trip::class.java)
+                callback(gotTrip)
             } else {
-            }}
+                callback(null)
 
-        return gotTrip
+            }
+        }
+            .addOnFailureListener {
+                callback(null)
 
+            }
     }
 
 
-    fun getTripsDestinationOrder(count: Int,callback: (List<Location>?) -> Unit){
+    fun getTripsDestinationOrder(count: Int,callback: (List<String>?) -> Unit){
 
-        val database = FirebaseDatabase.getInstance()
-        val reference = database.getReference("/trips")
-        reference.orderByChild("date").limitToLast(count)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                @RequiresApi(Build.VERSION_CODES.N)
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val destinationCountMap = mutableMapOf<String, Int>()
-                    val loc_data = mutableMapOf<String, com.example.shareride.clases.Location>()
-                    var currentCount = 0
+        mFirestore = FirebaseFirestore.getInstance()
 
-                    snapshot.children.forEach { tripSnapshot ->
-                        val trip = tripSnapshot.getValue(Trip::class.java)
-                        if (trip != null) {
-                            val destination = trip.destination
+        mFirestore.collection("active_trips")
+            .limit(count.toLong())
+            .get()
 
-                            if (destination != null) {
+            .addOnSuccessListener { querySnapshot ->
+                val destinationCountMap = mutableMapOf<String, Int>()
+                val loc_data = mutableMapOf<String, String>()
 
-                                if (destinationCountMap.containsKey(destination)){
-                                    destinationCountMap[destination] =
-                                        destinationCountMap.get(destination)!!+1
-                                }
-                                else{
-                                    destinationCountMap[destination] = 1
+                querySnapshot.documents.forEach { document ->
+                    val trip = document.toObject(Trip::class.java)
+                    if (trip != null) {
+                        val destination = trip.end_location
 
-                                }
+                        if (destination != null) {
+                            if (destinationCountMap.containsKey(destination)) {
+                                destinationCountMap[destination] = destinationCountMap[destination]!! + 1
+                            } else {
+                                destinationCountMap[destination] = 1
+                            }
 
-                                val location = Location(trip.destination,trip.destinationlatitud, trip.destinationlongitud)
-
-                                loc_data[destination] = location                            }
+                            loc_data[destination] = trip.end_location
                         }
                     }
+                }
 
+                val popularDestinations = destinationCountMap.entries.sortedByDescending { it.value }
+                    .map { it.key }
 
-                    val popularDestinations = destinationCountMap.entries.sortedByDescending { it.value }
-                        .map { it.key }
+                val popularLocations = mutableListOf<String>()
+                popularDestinations.forEach { destination ->
+                    val location = loc_data[destination]
+                    if (location != null) {
+                        popularLocations.add(location)
 
-
-                    val popularLocations = mutableListOf<Location>()
-                    popularDestinations.forEach { entry ->
-                        val destination = entry
-                        val location = loc_data[destination]
-
-                        if (location != null) {
-                            popularLocations.add(location)
-                        }
                     }
-
-                    callback(popularLocations)
                 }
+                callback(popularLocations)
 
-                override fun onCancelled(error: DatabaseError) {
-                    callback(null)
-                }
-            })
+            }
+
+            .addOnFailureListener { exception ->
+                callback(null)
+            }
     }
 
 
@@ -126,27 +125,26 @@ class TripRepository {
 
 
     fun getTrips(count: Int, destination: String, origin:String ,callback: (List<Trip>?) -> Unit) {
-        val database = FirebaseDatabase.getInstance()
-        val reference = database.getReference("/trips")
 
-        reference.orderByChild("destination").equalTo(destination).limitToLast(count)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val tripsList = mutableListOf<Trip>()
+        mFirestore = FirebaseFirestore.getInstance()
+        mFirestore.collection("active_trips")
+            .whereEqualTo("end_destination",destination)
+            .limit(count.toLong()).get()
 
-                    for (tripSnapshot in dataSnapshot.children) {
-                        val trip = tripSnapshot.getValue(Trip::class.java)
-                        if (trip != null && trip.origin == origin) {
-                            tripsList.add(trip)
-                        }
-                    }
-                    callback(tripsList)
+            .addOnSuccessListener { querySnapshot ->
+            val tripsList = mutableListOf<Trip>()
+
+            for (document in querySnapshot.documents) {
+                val trip = document.toObject(Trip::class.java)
+                if (trip != null && trip.start_location == origin) {
+                    tripsList.add(trip)
                 }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    callback(null)
-                }
-            })
+            }
+            callback(tripsList)
+        }
+            .addOnFailureListener { exception ->
+                callback(null)
+            }
     }
 
 

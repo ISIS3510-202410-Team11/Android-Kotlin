@@ -330,6 +330,7 @@ class popWhereToFragment : DialogFragment() {
             myViewModel.livelatitudDestination.postValue(latitude)
             viewModel.clicks_bf_createride("map")
             viewModel.reverse_geocode_destination(longitude, latitude)
+            true
         }
 
 

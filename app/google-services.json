@@ -1,13 +1,14 @@
 {
   "project_info": {
-    "project_number": "187856633430",
-    "project_id": "rideshare-46417",
-    "storage_bucket": "rideshare-46417.appspot.com"
+    "project_number": "318644769882",
+    "firebase_url": "https://mobiles-shareride-default-rtdb.firebaseio.com",
+    "project_id": "mobiles-shareride",
+    "storage_bucket": "mobiles-shareride.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:187856633430:android:32f2dab74f5e9d2c2985f7",
+        "mobilesdk_app_id": "1:318644769882:android:a7e6a0ffa5dfc3afa1f463",
         "android_client_info": {
           "package_name": "com.example.shareride"
         }
@@ -15,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCzWj0MigxUlwuUwMsn_c5zSs8LCeMnGqo"
+          "current_key": "AIzaSyA3ugAyXlJ6el0EIZbzUwlqZvljpFwu8ys"
         }
       ],
       "services": {
