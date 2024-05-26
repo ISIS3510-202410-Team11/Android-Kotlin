@@ -68,7 +68,8 @@ class HomePassengerFragment : Fragment() {
                 ConnectivityObserver.Status.Unavailable ,  ConnectivityObserver.Status.Lost-> {
                     viewModel.getcachePopLocations(){
                         val adapter = CustomAdapterCard(it){ title ->
-                            viewModel.updateDestination(title)
+                            viewModel.destination.value = title
+
 
                             showpopup.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
 

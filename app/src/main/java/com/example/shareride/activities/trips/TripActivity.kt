@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.shareride.R
 import com.example.shareride.activities.custom_cards.CustomTripCard
 import com.example.shareride.activities.mainActivity.fragments.ViewModelMainActivity
+import com.example.shareride.activities.singUp.ViewModelFactory
+import com.example.shareride.activities.singUp.viewModelSignUp
+import com.example.shareride.connectivity.NetworkConnectivityObserver
 
 class TripActivity : ComponentActivity() {
 
@@ -21,16 +24,23 @@ class TripActivity : ComponentActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-         //val viewModel: ViewModelMainActivity by viewModels()
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trip)
 
+
+
+        val networkConnectivityObserver = NetworkConnectivityObserver(applicationContext)
+        val viewModelFactory = ViewModelFactory(networkConnectivityObserver, this)
+        val viewModel = ViewModelProvider(this, viewModelFactory).get(viewModelTrips::class.java)
+
+
+        val destination = intent.getStringExtra("DESTINATION")
+        val origin = intent.getStringExtra("ORIGIN")
+
         val trip_cards = findViewById<RecyclerView>(R.id.automobileTrips)
         val title = findViewById<TextView>(R.id.pickYourRideTO)
 
-        val destination = null//viewModel.destination.value
-        //println(destination)
 
         if (destination != null) {
                 title.text = "Pick your ride to: $destination"
@@ -40,6 +50,8 @@ class TripActivity : ComponentActivity() {
 
         }
 
+        viewModel.fetchTrips(destination.toString(),origin.toString())
+
 
         trip_cards.layoutManager = LinearLayoutManager(this)
 
@@ -47,13 +59,12 @@ class TripActivity : ComponentActivity() {
         tripAdapter = CustomTripCard(emptyList(), "Car")
         trip_cards.adapter = tripAdapter
 
-        /*viewModel._tripsLvdata.observe(this, Observer {
+       viewModel._tripsLvdata.observe(this, Observer {
             trips ->
             tripAdapter.updateTrips(trips)
         })
 
 
-        viewModel.fetchTrips()*/
 
 
     }

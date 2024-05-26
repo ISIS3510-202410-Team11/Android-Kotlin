@@ -79,4 +79,27 @@ class PrefPopularLocations(val context: Context) {
         editor.putString("name_warn", new_name.toString())
         editor.apply()
     }
+
+    fun save_origin(origin:String){
+        val editor = storage.edit()
+        editor.putString("origin",origin.toString())
+        editor.apply()
+    }
+
+    fun get_origin(): String? {
+        return storage.getString("origin", "")
+
+    }
+
+
+    fun save_destination(destination:String){
+        val editor = storage.edit()
+        editor.putString("destination",destination.toString())
+        editor.apply()
+    }
+
+    fun get_destination(): String? {
+        return storage.getString("destination", "")
+
+    }
 }

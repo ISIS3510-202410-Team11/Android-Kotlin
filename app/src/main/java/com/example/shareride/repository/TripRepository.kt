@@ -128,14 +128,16 @@ class TripRepository {
 
         mFirestore = FirebaseFirestore.getInstance()
         mFirestore.collection("active_trips")
-            .whereEqualTo("end_destination",destination)
+            .whereEqualTo("end_location",destination)
             .limit(count.toLong()).get()
 
             .addOnSuccessListener { querySnapshot ->
+                println(querySnapshot.documents.toString())
             val tripsList = mutableListOf<Trip>()
 
             for (document in querySnapshot.documents) {
                 val trip = document.toObject(Trip::class.java)
+                println(origin)
                 if (trip != null && trip.start_location == origin) {
                     tripsList.add(trip)
                 }
