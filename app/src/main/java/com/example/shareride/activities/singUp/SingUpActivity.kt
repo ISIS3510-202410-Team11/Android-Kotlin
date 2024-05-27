@@ -23,12 +23,14 @@ import com.example.shareride.StartActivity
 import com.example.shareride.activities.logIn.LogInActivity
 import com.example.shareride.activities.mainActivity.fragments.ViewModelMainActivity
 import com.example.shareride.activities.vehicleForm.VehicleFormActivity
+import com.example.shareride.clases.User
 import com.example.shareride.clases.Warnings
 import com.example.shareride.connectivity.ConnectivityObserver
 import com.example.shareride.connectivity.NetworkConnectivityObserver
 import com.example.shareride.databinding.ActivitySingUpBinding
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import java.util.regex.Pattern
 
@@ -90,6 +92,7 @@ class SingUpActivity : AppCompatActivity() {
         warningPassword = binding.warningPassword
 
         fireBaseAuth =FirebaseAuth.getInstance()
+        val firestore = FirebaseFirestore.getInstance()
 
         box_driver  = binding.driver
         networkConnectivityObserver = NetworkConnectivityObserver(applicationContext)
@@ -171,16 +174,27 @@ class SingUpActivity : AppCompatActivity() {
                     println(viewModel.inputPassword.value.toString())
                     fireBaseAuth.createUserWithEmailAndPassword(viewModel.inputEmail.value.toString(),viewModel.inputPassword.value.toString()).addOnCompleteListener {
                         if(it.isSuccessful){
-                            if(box_driver.isChecked){
+                            val user = fireBaseAuth.currentUser?.uid?.let { it1 ->
+                                com.example.shareride.activities.singUp.User(
+                                    email = viewModel.inputEmail.value.toString(),
+                                    driver = box_driver.isChecked,
+                                    name = viewModel.inputText.value.toString(),
+                                    newsletter = true,
+                                    uid = it1
+                                )
+                            }
 
-                                new_intent = Intent(this, VehicleFormActivity::class.java)
-                                startActivity(new_intent)}
+                            if (user != null) {
+                                firestore.collection("users").document(user.uid).set(user)
+                            }
 
+                            if (box_driver.isChecked) {
 
-
-                            else{
-                                new_intent = Intent(this, MainActivityPassenger::class.java)
-                                startActivity(new_intent)
+                                val intent = Intent(this, VehicleFormActivity::class.java)
+                                startActivity(intent)
+                            } else {
+                                val intent = Intent(this, MainActivityPassenger::class.java)
+                                startActivity(intent)
                             }
 
 
@@ -269,7 +283,19 @@ class SingUpActivity : AppCompatActivity() {
                     fireBaseAuth.createUserWithEmailAndPassword(viewModel.inputEmail.value.toString(),viewModel.inputPassword.value.toString()).addOnSuccessListener {
 
 
-                        println(viewModel.inputEmail.value.toString())
+                        val user = fireBaseAuth.currentUser?.uid?.let { it1 ->
+                            com.example.shareride.activities.singUp.User(
+                                email = viewModel.inputEmail.value.toString(),
+                                driver = box_driver.isChecked,
+                                name = viewModel.inputText.value.toString(),
+                                newsletter = true,
+                                uid = it1
+                            )
+                        }
+
+                        if (user != null) {
+                            firestore.collection("users").document(user.uid).set(user)
+                        }
 
 
                             if(box_driver.isChecked){
@@ -306,6 +332,21 @@ class SingUpActivity : AppCompatActivity() {
 
 
                             if(it.isSuccessful){
+
+
+                                val user = fireBaseAuth.currentUser?.uid?.let { it1 ->
+                                    com.example.shareride.activities.singUp.User(
+                                        email = viewModel.inputEmail.value.toString(),
+                                        driver = box_driver.isChecked,
+                                        name = viewModel.inputText.value.toString(),
+                                        newsletter = true,
+                                        uid = it1
+                                    )
+                                }
+
+                                if (user != null) {
+                                    firestore.collection("users").document(user.uid).set(user)
+                                }
 
                                 if(box_driver.isChecked){
 
@@ -483,3 +524,12 @@ class SingUpActivity : AppCompatActivity() {
 
     }
 }
+
+data class User(
+    val email: String,
+    val driver: Boolean,
+    val name: String,
+    val newsletter: Boolean,
+    val vehicles: List<Any> = emptyList(),
+    val uid: String
+)
