@@ -1,6 +1,8 @@
 package com.example.shareride.activities.trips
 
 import android.os.Bundle
+import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
@@ -14,13 +16,13 @@ import com.example.shareride.activities.custom_cards.CustomTripCard
 import com.example.shareride.activities.mainActivity.fragments.ViewModelMainActivity
 import com.example.shareride.activities.singUp.ViewModelFactory
 import com.example.shareride.activities.singUp.viewModelSignUp
+import com.example.shareride.connectivity.ConnectivityObserver
 import com.example.shareride.connectivity.NetworkConnectivityObserver
 
 class TripActivity : ComponentActivity() {
 
     private lateinit var tripAdapter: CustomTripCard
-
-
+    private lateinit var connectivityWarning: LinearLayout
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +42,7 @@ class TripActivity : ComponentActivity() {
 
         val trip_cards = findViewById<RecyclerView>(R.id.automobileTrips)
         val title = findViewById<TextView>(R.id.pickYourRideTO)
+        connectivityWarning = findViewById(R.id.offlineWarn)
 
 
         if (destination != null) {
@@ -50,7 +53,9 @@ class TripActivity : ComponentActivity() {
 
         }
 
-        viewModel.fetchTrips(destination.toString(),origin.toString())
+
+
+
 
 
         trip_cards.layoutManager = LinearLayoutManager(this)
@@ -62,7 +67,52 @@ class TripActivity : ComponentActivity() {
        viewModel._tripsLvdata.observe(this, Observer {
             trips ->
             tripAdapter.updateTrips(trips)
-        })
+
+           if (trips.isNullOrEmpty()) {
+
+
+               title.text = "There are no rides available"
+               }
+           }
+        )
+
+
+
+        viewModel.connectivityStatus.observe(this) { status ->
+            when (status) {
+                ConnectivityObserver.Status.Lost -> {
+                    connectivityWarning.visibility = View.VISIBLE
+                    viewModel.fetchTripsOfline(destination.toString(), origin.toString())
+
+                }
+                ConnectivityObserver.Status.Unavailable -> {
+
+                    connectivityWarning.visibility = View.VISIBLE
+                    viewModel.fetchTripsOfline(destination.toString(), origin.toString())
+
+                }
+
+                ConnectivityObserver.Status.Avalilable ->{
+                    connectivityWarning.visibility = View.GONE
+                    viewModel.fetchTrips(destination.toString(), origin.toString())
+                }
+
+                ConnectivityObserver.Status.Losing ->{
+                    viewModel.fetchTrips(destination.toString(), origin.toString())
+
+
+                }
+
+
+
+                }
+
+        }
+
+
+
+        viewModel.fetchTrips(destination.toString(),origin.toString())
+
 
 
 

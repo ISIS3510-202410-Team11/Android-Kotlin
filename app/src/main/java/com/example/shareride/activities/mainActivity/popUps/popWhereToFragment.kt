@@ -186,8 +186,8 @@ class popWhereToFragment : DialogFragment() {
 
                      noInternet.visibility = View.VISIBLE
                      search_button.isEnabled = true
-                     search_button.isClickable = false
-                     search_button.alpha = 0.5f
+                     //search_button.isClickable = false
+                     //search_button.alpha = 0.5f
                      add_loc.visibility = View.GONE
 
 
@@ -465,7 +465,6 @@ class popWhereToFragment : DialogFragment() {
 
             viewModel.clicks_bf_createride("search")
 
-            if (viewModel.connectivityStatus.value.toString() == "Avalilable" || viewModel.connectivityStatus.value.toString() == "Losing"){
 
 
 
@@ -476,8 +475,6 @@ class popWhereToFragment : DialogFragment() {
                     val intent = Intent(requireContext(), TripActivity::class.java).apply {
                         putExtra("DESTINATION", viewModel.destination.value.toString()?: "")
                         putExtra("ORIGIN", viewModel.origin.value.toString() ?: "")
-                        println("DESTINATION"+ viewModel.destination.value.toString())
-                        println("ORIGIN"+ viewModel.origin.value.toString() )
 
                     }
                     startActivity(intent)
@@ -492,7 +489,7 @@ class popWhereToFragment : DialogFragment() {
 
                 }
 
-            }
+
 
         }
 

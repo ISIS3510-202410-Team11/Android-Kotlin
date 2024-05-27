@@ -50,4 +50,16 @@ class viewModelTrips(private val networkConnectivityObserver: NetworkConnectivit
             }
         }
     }
+
+    fun fetchTripsOfline(destination: String, origin: String){
+        viewModelScope.launch {
+            tripsPersistence.getTrips(5, destination, origin) { trips ->
+                if(trips!= null){
+                    _tripsLvdata.value = trips
+                    println(trips)
+
+                }
+            }
+        }
+    }
 }
