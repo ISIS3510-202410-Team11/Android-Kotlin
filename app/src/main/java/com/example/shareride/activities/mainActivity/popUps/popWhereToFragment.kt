@@ -117,8 +117,6 @@ class popWhereToFragment : DialogFragment() {
         super.onStart()
         mapview.onStart()
 
-        to_txt_bar.setText(viewModel.destination.value.toString())
-
         mapview.getMapboxMap().addOnMapClickListener { point ->
 
 
@@ -186,8 +184,8 @@ class popWhereToFragment : DialogFragment() {
 
                      noInternet.visibility = View.VISIBLE
                      search_button.isEnabled = true
-                     //search_button.isClickable = false
-                     //search_button.alpha = 0.5f
+                     search_button.isClickable = false
+                     search_button.alpha = 0.5f
                      add_loc.visibility = View.GONE
 
 
@@ -336,38 +334,48 @@ class popWhereToFragment : DialogFragment() {
         }
 
 
+        viewModel.destination.observe(viewLifecycleOwner, Observer { newDestination ->
+            to_txt_bar.setText(newDestination)
+            to_txt_bar.setHint(newDestination)
+
+        })
 
 
 
+        viewModel.origin.observe(viewLifecycleOwner, Observer { newOrigin ->
+            from_txt_bar.setText(newOrigin)
+            from_txt_bar.setHint(newOrigin)
 
-        from_txt_bar.addTextChangedListener (object :TextWatcher{
+        })
+
+        from_txt_bar.addTextChangedListener { object :TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                TODO("Not yet implemented")
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun afterTextChanged(s: Editable?) {
                 viewModel.origin.value = s.toString()
-                println(viewModel.origin.value )
-            }
-
-            override fun afterTextChanged(s: Editable?) {
 
             }
-        } )
+        } }
 
-        to_txt_bar.addTextChangedListener (object :TextWatcher{
+        to_txt_bar.addTextChangedListener { object :TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                TODO("Not yet implemented")
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.destination.value = s.toString()
-                println(viewModel.destination.value )
-
+                TODO("Not yet implemented")
             }
 
             override fun afterTextChanged(s: Editable?) {
+                viewModel.destination.value = s.toString()
 
-
-            }} )
+            }} }
 
 
         from_txt_bar.setOnClickListener {
@@ -465,18 +473,14 @@ class popWhereToFragment : DialogFragment() {
 
             viewModel.clicks_bf_createride("search")
 
+            if (viewModel.connectivityStatus.value.toString() == "Avalilable" || viewModel.connectivityStatus.value.toString() == "Losing"){
 
 
 
 
 
-                if (viewModel.destination.value != null || viewModel.origin.value != null){
-                   println(viewModel.origin.value)
-                    val intent = Intent(requireContext(), TripActivity::class.java).apply {
-                        putExtra("DESTINATION", viewModel.destination.value.toString()?: "")
-                        putExtra("ORIGIN", viewModel.origin.value.toString() ?: "")
-
-                    }
+                if (viewModel.destination != null || viewModel.origin != null){
+                    val intent = Intent(requireContext(), TripActivity::class.java)
                     startActivity(intent)
 
 
@@ -489,7 +493,7 @@ class popWhereToFragment : DialogFragment() {
 
                 }
 
-
+            }
 
         }
 
