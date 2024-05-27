@@ -11,7 +11,7 @@ class ViewModelFactory(private val networkConnectivityObserver: NetworkConnectiv
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(viewModelSignUp::class.java) -> {
-                viewModelSignUp(networkConnectivityObserver, context) as T
+                viewModelSignUp(networkConnectivityObserver) as T
             }
             modelClass.isAssignableFrom(ViewModelMainActivity::class.java) -> {
                 ViewModelMainActivity(networkConnectivityObserver, context) as T
