@@ -27,6 +27,8 @@ import com.example.shareride.R
 import com.example.shareride.activities.mainActivity.fragments.ViewModelMainActivity
 import com.example.shareride.activities.trips.TripActivity
 import com.example.shareride.connectivity.ConnectivityObserver
+import com.example.shareride.databinding.ActivityTripBinding
+import com.example.shareride.databinding.FragmentPopWhereToBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
@@ -38,6 +40,7 @@ import com.mapbox.maps.Style
 import com.mapbox.maps.plugin.gestures.OnMoveListener
 import com.mapbox.maps.plugin.gestures.addOnMapClickListener
 import com.mapbox.maps.plugin.gestures.gestures
+import com.mapbox.maps.plugin.locationcomponent.LocationComponentPlugin
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.maps.plugin.locationcomponent.location
 
@@ -83,6 +86,16 @@ class popWhereToFragment : DialogFragment() {
     private  lateinit var to_txt_bar: EditText
     private  lateinit var from_txt_bar: EditText
 
+    lateinit var botton_newLoc :Button
+    lateinit var add_loc :LinearLayout
+
+    lateinit var snd_button_:Button
+    lateinit var txt_bar :EditText
+    lateinit var search_button: Button
+
+    lateinit var binding: FragmentPopWhereToBinding
+    lateinit var locationComponetn: LocationComponentPlugin
+
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
@@ -108,13 +121,17 @@ class popWhereToFragment : DialogFragment() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_pop_where_to, container, false)
+        binding = FragmentPopWhereToBinding.inflate(inflater, container,false )
+        return binding.root
         saveLocation()
 
     }
 
     override fun onStart() {
+
+
         super.onStart()
+
         mapview.onStart()
 
         to_txt_bar.setText(viewModel.destination.value.toString())
@@ -165,17 +182,17 @@ class popWhereToFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        noInternet = view.findViewById<LinearLayout>(R.id.offlineSign)
-        val search_button = view.findViewById<Button>(R.id.ssearchbutton)
-        nomap = view.findViewById(R.id.NoIntenernet)
-         from_txt_bar = view.findViewById<EditText>(R.id.fromTxT)
-         to_txt_bar = view.findViewById<EditText>(R.id.ToTxT)
-        val botton_newLoc = view.findViewById<Button>(R.id.add_new_loc)
+        noInternet = binding.offlineSign
+         search_button = binding.ssearchbutton
+        nomap = binding.NoIntenernet
+         from_txt_bar = binding.fromTxT
+         to_txt_bar = binding.ToTxT
+         botton_newLoc = binding.addNewLoc
 
-        val add_loc = view.findViewById<LinearLayout>(R.id.add_loc_linear)
+         add_loc = binding.addLocLinear
 
-        val snd_button_ = view.findViewById<Button>(R.id.send_button)
-        val txt_bar = view.findViewById<EditText>(R.id.new_loc_text)
+         snd_button_ = binding.sendButton
+         txt_bar = binding.newLocText
 
 
         viewModel.connectivityStatus.observe(this){status ->
@@ -219,7 +236,7 @@ class popWhereToFragment : DialogFragment() {
 
 
         mapview = view.findViewById<MapView>(R.id.mapView)
-        var locationComponetn = mapview.location
+        locationComponetn = mapview.location
 
 
         mapview.mapboxMap.loadStyle(Style.MAPBOX_STREETS)
@@ -346,7 +363,6 @@ class popWhereToFragment : DialogFragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 viewModel.origin.value = s.toString()
-                println(viewModel.origin.value )
             }
 
             override fun afterTextChanged(s: Editable?) {

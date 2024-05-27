@@ -27,7 +27,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@android:color/transparent"
+            >
 
     <LinearLayout
 
@@ -136,6 +138,7 @@
             android:orientation="horizontal"
             android:layout_margin="10dp"
             android:gravity="center"
+            android:background="@android:color/transparent"
 
             android:id="@+id/warning_name"
 
@@ -190,6 +193,7 @@
             android:layout_margin="10dp"
             android:gravity="center"
             android:id="@+id/warning_email"
+            android:background="@android:color/transparent"
 
             >
             <ImageView

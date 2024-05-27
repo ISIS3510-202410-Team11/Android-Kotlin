@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.shareride.R
 import com.example.shareride.activities.logIn.LogInActivity
 import com.example.shareride.activities.mainActivity.CreateRideActivity
+import com.example.shareride.databinding.ActivityStartBinding
+import com.example.shareride.databinding.FragmentHomeDriverBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,11 +28,14 @@ private const val ARG_PARAM2 = "param2"
 class HomeDriverFragment : Fragment() {
     // TODO: Rename and change types of parameters
 
+    private lateinit var binding: FragmentHomeDriverBinding
 
 
     private val viewModel: ViewModelMainActivity by activityViewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = FragmentHomeDriverBinding.inflate(layoutInflater)
+
 
 
 
@@ -40,20 +45,19 @@ class HomeDriverFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home_driver, container, false)
+        binding = FragmentHomeDriverBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var create_ride_btn: Button  = view.findViewById<Button>(R.id.create_ride)
 
 
 
 
 
-        create_ride_btn.setOnClickListener {
+        binding.createRide.setOnClickListener {
             //TODO:sacar el create ride fragment
 
 

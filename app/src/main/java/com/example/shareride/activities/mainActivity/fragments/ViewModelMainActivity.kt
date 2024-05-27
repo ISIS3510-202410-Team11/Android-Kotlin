@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.time.delay
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.lang.ref.WeakReference
 
 
 class ViewModelMainActivity (private val networkConnectivityObserver: NetworkConnectivityObserver, private val context: Context):ViewModel(){
@@ -130,11 +131,11 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
     private val prefPopularLocations = PrefPopularLocations(context)
 
     fun save_destination(destination:String){
-        prefPopularLocations.save_destination(destination)
+        prefPopularLocations.saveDestination(destination)
     }
 
     fun save_origin(origin:String){
-        prefPopularLocations.save_destination(origin)
+        prefPopularLocations.saveOrigin(origin)
     }
 
     fun getcachePopLocations(callback: (List<String>?) -> Unit) {
@@ -163,7 +164,7 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
 
             viewModelScope.launch(Dispatchers.IO) {
                 val gson = Gson()
-                val jsonLocations = gson.toJson(location)
+                val jsonLocations = (gson.toJson(location))
                 prefPopularLocations.saveTopNlocations(jsonLocations)
             }
 

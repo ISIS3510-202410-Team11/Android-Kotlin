@@ -2,104 +2,91 @@ package com.example.shareride.storage
 
 import android.content.Context
 
-class PrefPopularLocations(val context: Context) {
-    private val SHARED_LOCATION = "shareRideDB"
+class PrefPopularLocations(private val context: Context) {
+    companion object {
+        private const val SHARED_LOCATION = "shareRideDB"
+        private const val KEY_POPULAR_LOCATIONS = "popular_locations"
+        private const val KEY_INPUT_PASSWORD = "input_password"
+        private const val KEY_INPUT_EMAIL = "input_email"
+        private const val KEY_INPUT_NAME = "input_name"
+        private const val KEY_PASSWORD_WARN = "password_warn"
+        private const val KEY_EMAIL_WARN = "email_warn"
+        private const val KEY_NAME_WARN = "name_warn"
+        private const val KEY_ORIGIN = "origin"
+        private const val KEY_DESTINATION = "destination"
+    }
 
     private val storage = context.getSharedPreferences(SHARED_LOCATION, Context.MODE_PRIVATE)
 
     fun saveTopNlocations(jsonList: String) {
-        val editor = storage.edit()
-        editor.putString("popular_locations", jsonList.toString())
-        editor.apply()
+        storage.edit().putString(KEY_POPULAR_LOCATIONS, jsonList).apply()
     }
 
     fun getTopNlocations(): String? {
-        return storage.getString("popular_locations", "[]")
+        return storage.getString(KEY_POPULAR_LOCATIONS, "[]")
     }
 
-    fun save_password(svdpassword: String){
-        val editor = storage.edit()
-        editor.putString("input_password", svdpassword)
-        editor.apply()
+    fun savePassword(svdpassword: String) {
+        storage.edit().putString(KEY_INPUT_PASSWORD, svdpassword).apply()
     }
 
-    fun save_email(email: String){
-        val editor = storage.edit()
-        editor.putString("input_email", email)
-        editor.apply()
-    }
-    fun save_name(new_name: String){
-        val editor = storage.edit()
-        editor.putString("input_name", new_name)
-        editor.apply()
+    fun saveEmail(email: String) {
+        storage.edit().putString(KEY_INPUT_EMAIL, email).apply()
     }
 
-    fun get_email(): String? {
-        return storage.getString("input_email", "")
+    fun saveName(newName: String) {
+        storage.edit().putString(KEY_INPUT_NAME, newName).apply()
     }
 
-
-    fun get_name(): String? {
-        return storage.getString("input_name", "")
+    fun getEmail(): String? {
+        return storage.getString(KEY_INPUT_EMAIL, "")
     }
 
-    fun get_password(): String? {
-        return storage.getString("input_password", "")
+    fun getName(): String? {
+        return storage.getString(KEY_INPUT_NAME, "")
     }
 
-
-
-    fun get_email_warn(): String? {
-        return storage.getString("email_warn", "false")
+    fun getPassword(): String? {
+        return storage.getString(KEY_INPUT_PASSWORD, "")
     }
 
-
-    fun get_name_warn(): String? {
-        return storage.getString("name_warn", "false")
+    fun getEmailWarn(): String? {
+        return storage.getString(KEY_EMAIL_WARN, "false")
     }
 
-    fun get_password_warn(): String? {
-        return storage.getString("password_warn", "false")
+    fun getNameWarn(): String? {
+        return storage.getString(KEY_NAME_WARN, "false")
     }
 
-
-    fun save_assword_warn(svdpassword: Boolean){
-        val editor = storage.edit()
-        editor.putString("password_warn", svdpassword.toString())
-        editor.apply()
+    fun getPasswordWarn(): String? {
+        return storage.getString(KEY_PASSWORD_WARN, "false")
     }
 
-    fun save_email_warn(email: Boolean){
-        val editor = storage.edit()
-        editor.putString("email_warn", email.toString())
-        editor.apply()
-    }
-    fun save_name_warn(new_name: Boolean){
-        val editor = storage.edit()
-        editor.putString("name_warn", new_name.toString())
-        editor.apply()
+    fun savePasswordWarn(svdpassword: Boolean) {
+        storage.edit().putString(KEY_PASSWORD_WARN, svdpassword.toString()).apply()
     }
 
-    fun save_origin(origin:String){
-        val editor = storage.edit()
-        editor.putString("origin",origin.toString())
-        editor.apply()
+    fun saveEmailWarn(email: Boolean) {
+        storage.edit().putString(KEY_EMAIL_WARN, email.toString()).apply()
     }
 
-    fun get_origin(): String? {
-        return storage.getString("origin", "")
-
+    fun saveNameWarn(newName: Boolean) {
+        storage.edit().putString(KEY_NAME_WARN, newName.toString()).apply()
     }
 
-
-    fun save_destination(destination:String){
-        val editor = storage.edit()
-        editor.putString("destination",destination.toString())
-        editor.apply()
+    fun saveOrigin(origin: String) {
+        storage.edit().putString(KEY_ORIGIN, origin).apply()
     }
 
-    fun get_destination(): String? {
-        return storage.getString("destination", "")
+    fun getOrigin(): String? {
+        return storage.getString(KEY_ORIGIN, "")
+    }
 
+    fun saveDestination(destination: String) {
+        storage.edit().putString(KEY_DESTINATION, destination).apply()
+    }
+
+    fun getDestination(): String? {
+        return storage.getString(KEY_DESTINATION, "")
     }
 }

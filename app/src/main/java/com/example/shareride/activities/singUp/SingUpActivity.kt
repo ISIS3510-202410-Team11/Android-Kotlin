@@ -21,10 +21,12 @@ import com.example.shareride.activities.mainActivity.MainActivityPassenger
 import com.example.shareride.R
 import com.example.shareride.StartActivity
 import com.example.shareride.activities.logIn.LogInActivity
+import com.example.shareride.activities.mainActivity.fragments.ViewModelMainActivity
 import com.example.shareride.activities.vehicleForm.VehicleFormActivity
 import com.example.shareride.clases.Warnings
 import com.example.shareride.connectivity.ConnectivityObserver
 import com.example.shareride.connectivity.NetworkConnectivityObserver
+import com.example.shareride.databinding.ActivitySingUpBinding
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
@@ -34,9 +36,7 @@ import java.util.regex.Pattern
 class SingUpActivity : AppCompatActivity() {
 
 
-    lateinit var closeButton: ImageButton
     lateinit var singUpbutton: Button
-    lateinit var logInButton: TextView
 
     lateinit var textBar_name: EditText
     lateinit var textbar_email: EditText
@@ -44,52 +44,64 @@ class SingUpActivity : AppCompatActivity() {
 
     lateinit var singupTitle: TextView
 
-
+    lateinit var new_intent :Intent
     lateinit var offlinewarning: LinearLayout
 
-
+    lateinit var box_driver : CheckBox
 
     lateinit var warningEmail: LinearLayout
     lateinit var warningPassword: LinearLayout
     lateinit var warningName: LinearLayout
 
-    var match_mail: Boolean= false
-    var match_pass: Boolean= false
-    var match_name: Boolean= false
+    val email_regexPattern = "^[\\w.-]+@(uniandes\\.)+(edu\\.co)\$"
+    val name_regexPattern = "^[A-Za-z]{2,16}( [A-Za-z]{2,16})?$"
+    val password_regexPattern = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
+
+    lateinit var networkConnectivityObserver: NetworkConnectivityObserver
+    lateinit var fireBaseAuth : FirebaseAuth
+    private lateinit var binding: ActivitySingUpBinding
+
+    private  lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var viewModel: viewModelSignUp
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
 
-
-
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sing_up)
-        closeButton = findViewById(R.id.cancel_button)
-        singUpbutton = findViewById(R.id.singUpbutton)
-        logInButton = findViewById(R.id.logInButton)
+        binding = ActivitySingUpBinding.inflate(layoutInflater)
 
-        textBar_name= findViewById(R.id.nametextbar)
-        textbar_email = findViewById(R.id.emailTextBar)
-        textbar_password = findViewById(R.id.passwordTextbar)
-        singupTitle= findViewById(R.id.title_signup)
-
-        offlinewarning = findViewById(R.id.offlineSign)
+        setContentView(binding.root)
 
 
-        warningName = findViewById(R.id.warning_name)
-        warningEmail = findViewById(R.id.warning_email)
-        warningPassword = findViewById(R.id.warning_password)
+        singUpbutton = binding.singUpbutton
+
+        textBar_name= binding.nametextbar
+        textbar_email = binding.emailTextBar
+        textbar_password = binding.passwordTextbar
 
 
-        val networkConnectivityObserver = NetworkConnectivityObserver(applicationContext)
-        val viewModelFactory = ViewModelFactory(networkConnectivityObserver, this)
-        val viewModel = ViewModelProvider(this, viewModelFactory).get(viewModelSignUp::class.java)
+        singupTitle= binding.titleSignup
+
+        offlinewarning = binding.offlineSign
+
+
+        warningName = binding.warningName
+        warningEmail = binding.warningEmail
+        warningPassword = binding.warningPassword
+
+        fireBaseAuth =FirebaseAuth.getInstance()
+
+        box_driver  = binding.driver
+        networkConnectivityObserver = NetworkConnectivityObserver(applicationContext)
+        viewModelFactory = ViewModelFactory(networkConnectivityObserver, this)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(viewModelSignUp::class.java)
         displayInva(avalability = false)
         display_wait_loading(true)
         viewModel.loadUserData(){ user ->
             displayInva(avalability = true)
             display_wait_loading(false)
 
-            textbar_password.setText(user.password)
+            binding.passwordTextbar.setText(user.password)
 
             textbar_email.setText(user.email)
 
@@ -113,23 +125,21 @@ class SingUpActivity : AppCompatActivity() {
 
 
 
-        val fireBaseAuth =FirebaseAuth.getInstance()
 
-        val box_driver : CheckBox = findViewById(R.id.driver)
-        closeButton.setOnClickListener {
+        binding.cancelButton.setOnClickListener {
 
-            val intent = Intent(this, StartActivity::class.java)
-            startActivity(intent)
+            new_intent= Intent(this, StartActivity::class.java)
+            startActivity(new_intent)
             Firebase.analytics.logEvent("Close_sign_up", null)
         }
 
-        logInButton.setOnClickListener {
+        binding.logInButton.setOnClickListener {
 
-            val logInAcc = Intent(this, LogInActivity::class.java)
-            startActivity(logInAcc)
+            new_intent = Intent(this, LogInActivity::class.java)
+            startActivity(new_intent)
         }
 
-        singUpbutton.setOnClickListener {
+        binding.singUpbutton.setOnClickListener {
 
 
 
@@ -137,12 +147,9 @@ class SingUpActivity : AppCompatActivity() {
             if (warningName.visibility == View.GONE && warningEmail.visibility== View.GONE && warningPassword.visibility == View.GONE ){
 
 
-                println("vew value")
-                println(viewModel.connectivityStatus.value.toString() )
 
                 if (viewModel.connectivityStatus.value.toString() =="Lost" || viewModel.connectivityStatus.value.toString() =="Unavailable" ){
 
-                    println(viewModel.connectivityStatus.value.toString() )
 
                     if (viewModel.pending_singup){
 
@@ -166,14 +173,14 @@ class SingUpActivity : AppCompatActivity() {
                         if(it.isSuccessful){
                             if(box_driver.isChecked){
 
-                                val intent = Intent(this, VehicleFormActivity::class.java)
-                                startActivity(intent)}
+                                new_intent = Intent(this, VehicleFormActivity::class.java)
+                                startActivity(new_intent)}
 
 
 
                             else{
-                                val intent = Intent(this, MainActivityPassenger::class.java)
-                                startActivity(intent)
+                                new_intent = Intent(this, MainActivityPassenger::class.java)
+                                startActivity(new_intent)
                             }
 
 
@@ -181,7 +188,6 @@ class SingUpActivity : AppCompatActivity() {
 
                         }
                         else{
-                            // si el email está repetido manda un error
                             showCustomToast(this, "Verify your email and password")
 
                         }
@@ -263,23 +269,23 @@ class SingUpActivity : AppCompatActivity() {
                     fireBaseAuth.createUserWithEmailAndPassword(viewModel.inputEmail.value.toString(),viewModel.inputPassword.value.toString()).addOnSuccessListener {
 
 
+                        println(viewModel.inputEmail.value.toString())
 
 
                             if(box_driver.isChecked){
 
-                                val intent = Intent(this, VehicleFormActivity::class.java)
-                                startActivity(intent)}
+                                new_intent = Intent(this, VehicleFormActivity::class.java)
+                                startActivity(new_intent)}
 
 
 
                             else{
-                                val intent = Intent(this, MainActivityPassenger::class.java)
-                                startActivity(intent)
+                                new_intent = Intent(this, MainActivityPassenger::class.java)
+                                startActivity(new_intent)
                             }
 
                         }.addOnFailureListener{
 
-                            println(it.message)
                             showCustomToast(this, "Check that your data is correct")
 
                             displayInva(avalability = true)
@@ -303,14 +309,14 @@ class SingUpActivity : AppCompatActivity() {
 
                                 if(box_driver.isChecked){
 
-                                    val intent = Intent(this, VehicleFormActivity::class.java)
-                                    startActivity(intent)}
+                                    new_intent = Intent(this, VehicleFormActivity::class.java)
+                                    startActivity(new_intent)}
 
 
 
                                 else{
-                                    val intent = Intent(this, MainActivityPassenger::class.java)
-                                    startActivity(intent)
+                                    new_intent = Intent(this, MainActivityPassenger::class.java)
+                                    startActivity(new_intent)
                                 }
 
                             }
@@ -387,8 +393,7 @@ class SingUpActivity : AppCompatActivity() {
     }
     fun check_email(email:String): Boolean {
 
-        val regexPattern = "^[\\w.-]+@(uniandes\\.)+(edu\\.co)\$"
-        val pattern = Pattern.compile(regexPattern)
+        val pattern = Pattern.compile(email_regexPattern)
         val matcher = pattern.matcher(email)
 
         if (!matcher.matches()) {
@@ -403,9 +408,8 @@ class SingUpActivity : AppCompatActivity() {
 
     }
     fun check_name(name:String): Boolean {
-        val regexPattern = "^[A-Za-z]{2,16}( [A-Za-z]{2,16})?$"
 
-        val pattern = Pattern.compile(regexPattern)
+        val pattern = Pattern.compile(name_regexPattern)
 
         val matcher = pattern.matcher(name)
 
@@ -421,8 +425,7 @@ class SingUpActivity : AppCompatActivity() {
     }
 
     fun check_password(password:String): Boolean {
-        val regexPattern = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
-        val pattern = Pattern.compile(regexPattern)
+        val pattern = Pattern.compile(password_regexPattern)
         val matcher = pattern.matcher(password)
 
         if (!matcher.matches()) {

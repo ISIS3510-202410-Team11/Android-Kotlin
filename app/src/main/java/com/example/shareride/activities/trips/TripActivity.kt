@@ -18,30 +18,40 @@ import com.example.shareride.activities.singUp.ViewModelFactory
 import com.example.shareride.activities.singUp.viewModelSignUp
 import com.example.shareride.connectivity.ConnectivityObserver
 import com.example.shareride.connectivity.NetworkConnectivityObserver
+import com.example.shareride.databinding.ActivityTripBinding
+import com.example.shareride.databinding.FragmentHomeDriverBinding
+import com.google.api.Billing.BillingDestination
 
 class TripActivity : ComponentActivity() {
 
     private lateinit var tripAdapter: CustomTripCard
     private lateinit var connectivityWarning: LinearLayout
-
+    lateinit var networkConnectivityObserver: NetworkConnectivityObserver
+    lateinit var viewModelFactory: ViewModelFactory
+    lateinit var viewModel: viewModelTrips
+    lateinit var destination: String
+    lateinit var origin: String
+    lateinit var trip_cards : RecyclerView
+    lateinit var title: TextView
+    private lateinit var binding: ActivityTripBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_trip)
+        binding = ActivityTripBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
 
+         networkConnectivityObserver = NetworkConnectivityObserver(applicationContext)
+         viewModelFactory = ViewModelFactory(networkConnectivityObserver, this)
+         viewModel = ViewModelProvider(this, viewModelFactory).get(viewModelTrips::class.java)
 
-        val networkConnectivityObserver = NetworkConnectivityObserver(applicationContext)
-        val viewModelFactory = ViewModelFactory(networkConnectivityObserver, this)
-        val viewModel = ViewModelProvider(this, viewModelFactory).get(viewModelTrips::class.java)
 
+        destination = intent.getStringExtra("DESTINATION").toString()
+        origin = intent.getStringExtra("ORIGIN").toString()
 
-        val destination = intent.getStringExtra("DESTINATION")
-        val origin = intent.getStringExtra("ORIGIN")
-
-        val trip_cards = findViewById<RecyclerView>(R.id.automobileTrips)
-        val title = findViewById<TextView>(R.id.pickYourRideTO)
+        trip_cards = binding.automobileTrips
+        title = binding.pickYourRideTO
         connectivityWarning = findViewById(R.id.offlineWarn)
 
 

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Adapter
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -19,6 +20,7 @@ import com.example.shareride.activities.custom_cards.CustomAdapterCard
 import com.example.shareride.activities.mainActivity.popUps.popWhereToFragment
 import com.example.shareride.activities.trips.TripActivity
 import com.example.shareride.connectivity.ConnectivityObserver
+import com.example.shareride.databinding.FragmentHomePassengerBinding
 import com.google.android.material.search.SearchBar
 
 /**
@@ -29,9 +31,24 @@ import com.google.android.material.search.SearchBar
 class HomePassengerFragment : Fragment() {
 
     private  val viewModel: ViewModelMainActivity by activityViewModels()
+    private lateinit var binding: FragmentHomePassengerBinding
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var sch_bar: SearchBar
+    private lateinit var ldg_pop: ProgressBar
+    private lateinit var txt_title: TextView
+    private lateinit var pop_space: LinearLayout
+    private lateinit var no_int_space: LinearLayout
+    private lateinit var showpopup: popWhereToFragment
+
+    private  lateinit var myIntent: Intent
+
+    private  var response : Boolean = false
+
 
     override fun onCreate(  savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = FragmentHomePassengerBinding.inflate(layoutInflater)
 
 
 
@@ -44,23 +61,23 @@ class HomePassengerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home_passenger, container, false)
+        binding = FragmentHomePassengerBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        val sch_bar = view.findViewById<SearchBar>(R.id.where_to)
-        val ldg_pop = view.findViewById<ProgressBar>(R.id.poploadingbar)
-        val txt_title = view.findViewById<TextView>(R.id.popdestiTitle)
-        val pop_space = view.findViewById<LinearLayout>(R.id.poplocations)
-        val no_int_space = view.findViewById<LinearLayout>(R.id.NoIntenernet)
+        recyclerView = binding.recyclerView
+         sch_bar = binding.whereTo
+         ldg_pop = binding.poploadingbar
+         txt_title = binding.popdestiTitle
+         pop_space = binding.poplocations
+         no_int_space = binding.NoIntenernet
 
-        val showpopup = popWhereToFragment()
+         showpopup = popWhereToFragment()
 
-        var response : Boolean
 
         viewModel.connectivityStatus.observe(viewLifecycleOwner){status ->
             when (status) {
@@ -151,23 +168,9 @@ class HomePassengerFragment : Fragment() {
 
 
     private fun openDetailActivity() {
-        val intent = Intent(requireContext(), TripActivity::class.java)
-        startActivity(intent)
+         myIntent = Intent(requireContext(), TripActivity::class.java)
+        startActivity(myIntent)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @return A new instance of fragment HomeDriverFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(  ) =
-            HomePassengerFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
-    }
+
 }

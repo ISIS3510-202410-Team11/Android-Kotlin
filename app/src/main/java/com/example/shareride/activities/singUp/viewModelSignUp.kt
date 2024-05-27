@@ -38,6 +38,7 @@ class viewModelSignUp(private val networkConnectivityObserver: NetworkConnectivi
 
     var pending_singup = false
 
+     lateinit var newUser : User
     private val firestore: FirebaseFirestore
 
     init {
@@ -76,23 +77,23 @@ class viewModelSignUp(private val networkConnectivityObserver: NetworkConnectivi
 
     fun change_password(new_pass: String, warn: Boolean){
         //_inputPassword.value = new_pass
-        prefPopularLocations.save_password( new_pass)
-        prefPopularLocations.save_assword_warn(warn)
+        prefPopularLocations.savePassword( new_pass)
+        prefPopularLocations.savePasswordWarn(warn)
 
     }
 
     fun change_email(new_email: String, warn: Boolean){
         //_inputEmail.value = new_email
-        prefPopularLocations.save_email( new_email)
-        prefPopularLocations.save_email_warn(warn)
+        prefPopularLocations.saveEmail( new_email)
+        prefPopularLocations.saveEmailWarn(warn)
 
 
     }
     fun change_name (new_name: String, warn: Boolean){
 
         Firebase.analytics.logEvent("Close_sign_up", null)
-        prefPopularLocations.save_name( new_name)
-        prefPopularLocations.save_name_warn(warn)
+        prefPopularLocations.saveName( new_name)
+        prefPopularLocations.saveEmailWarn(warn)
 
         //_inputText.value = new_name
     }
@@ -104,11 +105,11 @@ class viewModelSignUp(private val networkConnectivityObserver: NetworkConnectivi
     fun loadUserData(callback: (User) -> Unit) {
         viewModelScope.launch {
 
-                     _inputPassword.value = prefPopularLocations.get_password()
-                    _inputEmail.value = prefPopularLocations.get_email()
-                   _inputText.value = prefPopularLocations.get_name()
-                    val newUser = User(_inputText.value.toString(), _inputEmail.value.toString(), _inputPassword.value.toString())
-            println(prefPopularLocations.get_password())
+                     _inputPassword.value = prefPopularLocations.getPassword()
+                    _inputEmail.value = prefPopularLocations.getEmail()
+                   _inputText.value = prefPopularLocations.getName()
+                     newUser = User(_inputText.value.toString(), _inputEmail.value.toString(), _inputPassword.value.toString())
+            println(prefPopularLocations.getPassword())
             println(  _inputEmail.value )
 
             callback(newUser)
@@ -118,9 +119,9 @@ class viewModelSignUp(private val networkConnectivityObserver: NetworkConnectivi
     fun loadWarning(callback: (Warnings) -> Unit) {
         viewModelScope.launch {
 
-            match_mail = prefPopularLocations.get_email_warn().toBoolean()
-            match_pass = prefPopularLocations.get_password_warn().toBoolean()
-            match_name = prefPopularLocations.get_name_warn().toBoolean()
+            match_mail = prefPopularLocations.getEmailWarn().toBoolean()
+            match_pass = prefPopularLocations.getPasswordWarn().toBoolean()
+            match_name = prefPopularLocations.getNameWarn().toBoolean()
             val active_warnings = Warnings(match_mail, match_pass, match_name)
 
             callback(active_warnings)
