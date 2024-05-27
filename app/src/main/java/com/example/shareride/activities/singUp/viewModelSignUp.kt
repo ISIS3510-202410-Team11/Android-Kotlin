@@ -1,20 +1,41 @@
 package com.example.shareride.activities.singUp
 
-
+import android.content.Context
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shareride.clases.User
+import com.example.shareride.clases.Warnings
 import com.example.shareride.connectivity.ConnectivityObserver
 import com.example.shareride.connectivity.NetworkConnectivityObserver
+import com.example.shareride.storage.PrefPopularLocations
 import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
-class viewModelSignUp(private val networkConnectivityObserver: NetworkConnectivityObserver) :
-    ViewModel() {
-    var inputpassword: String = ""
-    var inputEmail: String = ""
-    var inputText: String = ""
+class viewModelSignUp(private val networkConnectivityObserver: NetworkConnectivityObserver,private val context: Context):ViewModel(){
+    private val _inputPassword = MutableLiveData<String>()
+    val inputPassword: LiveData<String> = _inputPassword
+
+    private val _inputEmail = MutableLiveData<String>()
+    val inputEmail: LiveData<String> = _inputEmail
+
+    private val _inputText = MutableLiveData<String>()
+    val inputText: LiveData<String> = _inputText
+    private val prefPopularLocations = PrefPopularLocations(context)
+
+    var match_mail: Boolean= false
+    var match_pass: Boolean= false
+    var match_name: Boolean= false
+
+
     var pending_singup = false
 
      lateinit var newUser : User
@@ -39,6 +60,8 @@ class viewModelSignUp(private val networkConnectivityObserver: NetworkConnectivi
 
     init {
         observeNetworkConnectivity()
+
+
     }
 
     private fun observeNetworkConnectivity() {
@@ -107,18 +130,4 @@ class viewModelSignUp(private val networkConnectivityObserver: NetworkConnectivi
     }
 
 
-    fun change_password(new_pass: String) {
-        inputpassword = new_pass
-    }
-
-    fun change_email(new_email: String) {
-        inputEmail = new_email
-    }
-
-    fun change_name(new_name: String) {
-
-        Firebase.analytics.logEvent("Close_sign_up", null)
-
-        inputText = new_name
-    }
 }
