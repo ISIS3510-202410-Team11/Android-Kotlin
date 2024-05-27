@@ -16,6 +16,7 @@ class TripPersistence {
     private val _tripByIdLvdata = MutableLiveData<Trip?>()
     val tripById: LiveData<Trip?> = _tripByIdLvdata
 
+    private val tripsRet: MutableList<Trip> = mutableListOf()
 
 
 
@@ -48,6 +49,18 @@ class TripPersistence {
 
 
 
+    fun getTripsWhileOffline(destination: String, origin: String): List<Trip> {
+        val trips = mutableListOf<Trip>()
+        if (TripCache.origin == origin && TripCache.destination == destination) {
+            for (tripId in TripCache.idValid) {
+                TripCache.tripMap[tripId]?.let {
+                    trips.add(it)
+                }
+            }
+        }
+        return trips
+    }
+
 
 
     fun getTrips(count: Int, destination: String, origin:String,callback: (List<Trip>?) -> Unit) {
@@ -57,16 +70,29 @@ class TripPersistence {
 
         repository.getTrips(count, destination, origin){ trips ->
 
+            TripCache.origin = origin
+            TripCache.destination = destination
+            TripCache.clearCache()
+
             if(trips != null) {
 
                 for (trip in trips) {
+                    TripCache.idValid.add(trip.id)
+
+
+
 
 
                     if (TripCache.tripMap[trip.id] == null) {
+                        println("cached")
 
                         TripCache.tripMap[trip.id] = trip
                         TripCache.tripMap_update[trip.id] = getCurrentDateTime()
 
+
+                    }
+                    else{
+                        println("already cahced")
 
                     }
                 }

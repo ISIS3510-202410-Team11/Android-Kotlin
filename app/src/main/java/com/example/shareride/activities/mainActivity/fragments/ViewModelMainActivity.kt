@@ -129,6 +129,14 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
 
     private val prefPopularLocations = PrefPopularLocations(context)
 
+    fun save_destination(destination:String){
+        prefPopularLocations.save_destination(destination)
+    }
+
+    fun save_origin(origin:String){
+        prefPopularLocations.save_destination(origin)
+    }
+
     fun getcachePopLocations(callback: (List<String>?) -> Unit) {
 
         val cachedLocations = prefPopularLocations.getTopNlocations()
@@ -344,16 +352,7 @@ class ViewModelMainActivity (private val networkConnectivityObserver: NetworkCon
     fun updateDestination(newValue: String) {
        destination.value = newValue
     }
-    fun fetchTrips(){
-        viewModelScope.launch {
-            val trips = tripsPersistence.getTrips(5, destination.value.toString(), origin.value.toString()) { trips ->
-                if(trips!= null){
-                    _tripsLvdata.value = trips
 
-                }
-            }
-        }
-    }
 
 
 
