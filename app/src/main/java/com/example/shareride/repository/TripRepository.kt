@@ -128,7 +128,7 @@ class TripRepository {
 
         mFirestore = FirebaseFirestore.getInstance()
         mFirestore.collection("active_trips")
-            .whereEqualTo("end_destination",destination)
+            .whereEqualTo("end_location",destination)
             .limit(count.toLong()).get()
 
             .addOnSuccessListener { querySnapshot ->
